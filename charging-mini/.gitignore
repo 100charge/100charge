@@ -1,0 +1,76 @@
+# uni-app编译产物
+unpackage/
+uni_modules/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 编辑器配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 日志文件
+*.log
+logs/
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 构建产物
+dist/
+build/
+
+# 微信小程序
+.wxpackage
+
+# 支付宝小程序
+.tea/
+
+# 百度小程序
+.swan/
+
+# 字节跳动小程序
+.taro/
+
+# QQ小程序
+.qqpackage
+
+# 快手小程序
+.kspackage
+
+# 华为快应用
+.hap/
+
+old/

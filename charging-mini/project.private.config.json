@@ -1,0 +1,8 @@
+{
+  "libVersion": "1.0.1",
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。",
+  "projectname": "100Charge充电平台",
+  "setting": {
+    "compileHotReLoad": true
+  }
+}

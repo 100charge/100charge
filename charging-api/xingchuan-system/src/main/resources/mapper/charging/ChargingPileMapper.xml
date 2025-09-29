@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xingchuan.charging.mapper.ChargingPileMapper">
+
+    <select id="selectPageList" resultType="com.xingchuan.charging.domain.resp.ChargingPilePageListResponse">
+        SELECT
+        cp.id,
+        cp.station_id AS stationId,
+        cs.name AS stationName,
+        cp.device_no AS deviceNo,
+        cp.name AS chargingPileName,
+        cp.max_power AS maxPower,
+        cp.min_power AS minPower,
+        cp.max_voltage AS maxVoltage,
+        cp.min_voltage AS minVoltage,
+        cp.max_current AS maxCurrent,
+        cp.min_current AS minCurrent,
+        cp.pile_type AS pileType,
+        (CASE cp.pile_type when 0 then '交流' when 1 then '直流' end) AS pileTypeDesc,
+        cp.pile_status AS pileStatus,
+        (CASE cp.pile_status when 0 then '禁用' when 1 then '启用' end) AS pileStatusDesc,
+        cp.supplier AS supplier,
+        cp.hardware_version AS hardwareVersion,
+        cp.api_version AS apiVersion,
+        cp.gun_number AS gunNumber,
+        cp.connector_type AS connectorType,
+        cp.national_standard AS nationalStandard
+        FROM charging_pile AS cp
+        LEFT JOIN charging_stations AS cs ON cs.id = cp.station_id
+        <where>
+            <if test="request.stationName != null ">
+                AND cs.name LIKE CONCAT('%', #{request.stationName}, '%')
+            </if>
+            <if test="request.deviceNo != null and request.deviceNo != ''">
+                AND cp.device_no LIKE CONCAT('%', #{request.deviceNo}, '%')
+            </if>
+            <if test="request.chargingPileName != null and request.chargingPileName != ''">
+                AND cp.name LIKE CONCAT('%', #{request.chargingPileName}, '%')
+            </if>
+            <if test="request.pileType != null ">
+                AND cp.pile_type = #{request.pileType}
+            </if>
+            <if test="request.pileStatus != null ">
+                AND cp.pile_status = #{request.pileStatus}
+            </if>
+            AND cp.del_flag = '0'
+        </where>
+        ORDER BY cp.device_no ASC
+    </select>
+
+    <select id="getGunNoByStationId" resultType="com.xingchuan.charging.domain.model.GunInfoModel">
+        SELECT cp.device_no AS deviceNo,
+               cp.id        AS pileId,
+               cg."no"      AS gunNo
+        FROM charging_pile AS cp
+                 LEFT JOIN charging_guns AS cg ON cg.device_no = cp.device_no
+        WHERE cp.station_id = #{id}
+          AND cp.del_flag = '0'
+          AND cg.del_flag = '0'
+        ORDER BY cp.device_no, cg."no" ASC
+    </select>
+
+</mapper>

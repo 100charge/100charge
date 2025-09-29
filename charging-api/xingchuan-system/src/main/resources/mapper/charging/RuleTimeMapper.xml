@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xingchuan.charging.mapper.RuleTimeMapper">
+
+
+    <select id="getCurrentPeriodCostByRuleId" resultType="com.xingchuan.charging.domain.entity.RuleDetails">
+        SELECT rd.start_time,
+               rd.end_time,
+               rd."type",
+               rd.charge_fee,
+               rd.service_fee,
+               rd.parking_fee,
+               rd.occupancy_fee
+        FROM "rule_time" rt
+                 LEFT JOIN "rule_details" rd ON rd.rule_time_id = rt."id"
+        WHERE rt.rule_id = #{ruleId}
+          AND rt.del_flag = '0'
+          AND rd.del_flag = '0'
+          AND TO_CHAR(rt.begin_time, 'MMDD') &lt;= TO_CHAR(CURRENT_DATE, 'MMDD')
+          AND TO_CHAR(rt.end_time, 'MMDD') &gt;= TO_CHAR(CURRENT_DATE, 'MMDD')
+          AND rd.start_time &lt;= #{date}
+          AND rd.end_time &gt;= #{date} LIMIT 1;
+    </select>
+
+    <select id="listCurrentPeriodCostByRuleId" resultType="com.xingchuan.charging.domain.entity.RuleDetails">
+        SELECT rd.start_time,
+               rd.end_time,
+               rd."type",
+               rd.charge_fee,
+               rd.service_fee,
+               rd.parking_fee,
+               rd.occupancy_fee
+        FROM "rule_time" rt
+                 LEFT JOIN "rule_details" rd ON rd.rule_time_id = rt."id"
+        WHERE rt.rule_id = #{ruleId}
+          AND TO_CHAR(rt.begin_time, 'MMDD') &lt;= TO_CHAR(CURRENT_DATE, 'MMDD')
+          AND TO_CHAR(rt.end_time, 'MMDD') &gt;= TO_CHAR(CURRENT_DATE, 'MMDD')
+          AND rt.del_flag = '0'
+          AND rd.del_flag = '0'
+        ORDER BY rd.start_time ASC
+    </select>
+</mapper>

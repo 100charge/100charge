@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xingchuan.charging.mapper.ChargingStationsMapper">
+
+    <select id="listChargingStationsCount" resultType="java.lang.Long">
+        SELECT
+        COUNT(cs."id")
+        FROM charging_stations cs
+        <where>
+            <if test="request.cityCode != null and request.cityCode != ''">
+                AND cs.city LIKE CONCAT(#{request.cityCode}, '%')
+            </if>
+            <if test="request.serviceLabel != null and request.serviceLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.serviceLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(service_label, ','))
+                </foreach>
+            </if>
+            <if test="request.facilityLabel != null and request.facilityLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.facilityLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(facility_label, ','))
+                </foreach>
+            </if>
+            <if test="request.parkingFeeLabel != null and request.parkingFeeLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.parkingFeeLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(parking_fee_label, ','))
+                </foreach>
+            </if>
+            <if test="request.chargingSpeed != null">
+                <if test="request.chargingSpeed.name == 'SUPERCHARGE'">
+                    AND cs.max_power &gt; 180
+                </if>
+                <if test="request.chargingSpeed.name == 'FAST_CHARGE'">
+                    AND cs.max_power &gt; 30
+                </if>
+                <if test="request.chargingSpeed.name == 'SLOW_CHARGE'">
+                    AND cs.max_power &lt; 30
+                </if>
+            </if>
+            AND cs.show_status = '1'
+            AND cs.status = 1
+            AND cs.del_flag = '0'
+        </where>
+    </select>
+
+    <select id="listChargingStations"
+            resultType="com.xingchuan.charging.domain.resp.StationsPageResponse">
+        SELECT cs."id",
+        cs."name",
+        round(
+        6371000 * acos(
+        sin(radians(cs.lat)) * sin(radians(#{request.lat})) + cos(radians(cs.lat)) * cos(radians(
+        #{request.lat})) * cos(radians(#{request.lng}) - radians(cs.lng)))
+        ) AS distance,
+        cs.plug_charge,
+        cs.star_label,
+        cs.service_label,
+        cs.facility_label,
+        cs.parking_fee_tip,
+        cs.recommend,
+        cs.max_power,
+        cs.lat,
+        cs.lng,
+        cs.address,
+        cs.parking_fee_tip,
+        cs.operator_id operatorId,
+        (rd.charge_fee + rd.service_fee)AS fee
+        FROM charging_stations cs
+        LEFT JOIN rule_time rt ON rt.rule_id = cs.rule_id
+        LEFT JOIN rule_details rd ON rd.rule_time_id = rt."id" AND rd.start_time &lt;= CURRENT_TIME AND rd.end_time &gt;=
+        CURRENT_TIME
+        <where>
+            <if test="request.cityCode != null and request.cityCode != ''">
+                AND cs.city LIKE CONCAT(#{request.cityCode}, '%')
+            </if>
+            AND TO_CHAR( rt.begin_time, 'MMDD' ) &lt;= TO_CHAR( CURRENT_DATE, 'MMDD' )
+            AND TO_CHAR( rt.end_time, 'MMDD' ) &gt;= TO_CHAR( CURRENT_DATE, 'MMDD' )
+            <if test="request.chargingStationName != null and request.chargingStationName != ''">
+                AND cs."name" LIKE CONCAT('%', #{request.chargingStationName}, '%')
+            </if>
+            <if test="request.serviceLabel != null and request.serviceLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.serviceLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(service_label, ','))
+                </foreach>
+            </if>
+            <if test="request.facilityLabel != null and request.facilityLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.facilityLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(facility_label, ','))
+                </foreach>
+            </if>
+            <if test="request.parkingFeeLabel != null and request.parkingFeeLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="request.parkingFeeLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(parking_fee_label, ','))
+                </foreach>
+            </if>
+            <if test="request.chargingSpeed != null">
+                <if test="request.chargingSpeed.name == 'SUPERCHARGE'">
+                    AND cs.max_power &gt; 180
+                </if>
+                <if test="request.chargingSpeed.name == 'FAST_CHARGE'">
+                    AND cs.max_power &gt; 30
+                </if>
+                <if test="request.chargingSpeed.name == 'SLOW_CHARGE'">
+                    AND cs.max_power &lt; 30
+                </if>
+            </if>
+            AND cs.show_status = '1'
+            AND cs.status = 1
+            AND rt.del_flag = '0'
+            AND cs.del_flag = '0'
+            AND rd.del_flag = '0'
+            GROUP BY cs."id",
+            cs."name",
+            cs.plug_charge,
+            cs.star_label,
+            cs.service_label,
+            cs.facility_label,
+            cs.parking_fee_tip,
+            cs.operator_id,
+            cs.recommend,
+            cs.max_power,
+            cs.lat,
+            cs.lng,
+            cs.address,
+            rd."type",
+            fee
+            ORDER BY
+            <if test="request.recommendType != null">
+                <if test="request.recommendType.name == 'AI'">
+                    distance, fee ASC
+                </if>
+                <if test="request.recommendType.name == 'DISTANCE'">
+                    distance ASC
+                </if>
+                <if test="request.recommendType.name == 'PRICE'">
+                    fee ASC
+                </if>
+            </if>
+            LIMIT #{pageSize} OFFSET #{pageNum}
+        </where>
+    </select>
+
+    <select id="listStationDeviceByStationIds"
+            resultType="com.xingchuan.charging.domain.model.ChargingPileModel">
+        SELECT cp.device_no,
+        cp.station_id,
+        cp.device_no,
+        cp.max_power,
+        cp.pile_type,
+        cg."no" gunsNo
+        FROM charging_pile cp
+        LEFT JOIN charging_guns cg ON cg.device_no = cp.device_no
+        <where>
+            cp.station_id IN
+            <foreach collection="stationIds" item="stationId" open="(" separator="," close=")">
+                #{stationId}
+            </foreach>
+            AND cp.del_flag = '0'
+            AND cg.del_flag = '0'
+            ORDER BY cp.create_time DESC
+        </where>
+    </select>
+
+    <select id="listMapStation"
+            resultType="com.xingchuan.charging.domain.resp.StationsPageResponse">
+        SELECT cs."id",
+        cs."name",
+        round(
+        6371000 * acos(
+        sin(radians(cs.lat)) * sin(radians(#{lat})) + cos(radians(cs.lat)) * cos(radians(
+        #{lat})) * cos(radians(#{lng}) - radians(cs.lng)))
+        ) AS distance,
+        cs.plug_charge,
+        cs.star_label,
+        cs.service_label,
+        cs.facility_label,
+        cs.parking_fee_tip,
+        cs.recommend,
+        cs.max_power,
+        cs.lat,
+        cs.lng,
+        cs.address,
+        cs.parking_fee_tip,
+        cs.operator_id operatorId,
+        (rd.charge_fee + rd.service_fee)AS fee
+        FROM charging_stations cs
+        LEFT JOIN rule_time rt ON rt.rule_id = cs.rule_id
+        LEFT JOIN rule_details rd ON rd.rule_time_id = rt."id" AND rd.start_time &lt;= CURRENT_TIME AND rd.end_time &gt;=
+        CURRENT_TIME
+        <where>
+            <if test="cityCode != null and cityCode != ''">
+                AND cs.city LIKE CONCAT(#{cityCode}, '%')
+            </if>
+            AND TO_CHAR( rt.begin_time, 'MMDD' ) &lt;= TO_CHAR( CURRENT_DATE, 'MMDD' )
+            AND TO_CHAR( rt.end_time, 'MMDD' ) &gt;= TO_CHAR( CURRENT_DATE, 'MMDD' )
+            <if test="chargingStationName != null and chargingStationName != ''">
+                AND cs."name" LIKE CONCAT('%', #{chargingStationName}, '%')
+            </if>
+            <if test="serviceLabel != null and serviceLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="serviceLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(service_label, ','))
+                </foreach>
+            </if>
+            <if test="facilityLabel != null and facilityLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="facilityLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(facility_label, ','))
+                </foreach>
+            </if>
+            <if test="parkingFeeLabel != null and parkingFeeLabel.size > 0">
+                AND
+                <foreach item="item" index="index" collection="parkingFeeLabel" open="(" separator=" OR "
+                         close=")">
+                    #{item} = ANY(STRING_TO_ARRAY(parking_fee_label, ','))
+                </foreach>
+            </if>
+            <if test="chargingSpeed != null">
+                <if test="chargingSpeed.name == 'SUPERCHARGE'">
+                    AND cs.max_power &gt; 180
+                </if>
+                <if test="chargingSpeed.name == 'FAST_CHARGE'">
+                    OR cs.max_power &gt; 30
+                </if>
+                <if test="chargingSpeed.name == 'SLOW_CHARGE'">
+                    OR cs.max_power &lt; 30
+                </if>
+            </if>
+            AND cs.show_status = '1'
+            AND cs.status = 1
+            AND rt.del_flag = '0'
+            AND cs.del_flag = '0'
+            AND rd.del_flag = '0'
+            GROUP BY cs."id",
+            cs."name",
+            cs.plug_charge,
+            cs.star_label,
+            cs.service_label,
+            cs.facility_label,
+            cs.parking_fee_tip,
+            cs.operator_id,
+            cs.recommend,
+            cs.max_power,
+            cs.lat,
+            cs.lng,
+            cs.address,
+            rd."type",
+            fee
+            ORDER BY
+            <if test="recommendType != null">
+                <if test="recommendType.name == 'AI'">
+                    distance, fee ASC
+                </if>
+                <if test="recommendType.name == 'DISTANCE'">
+                    distance ASC
+                </if>
+                <if test="recommendType.name == 'PRICE'">
+                    fee ASC
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="getMiniStationInfoById" resultType="com.xingchuan.charging.domain.resp.MiniStationsDetailResponse">
+        SELECT "id",
+               "name",
+               address,
+               lat,
+               lng,
+               peration_begin_time,
+               peration_end_time,
+               max_power,
+               star_label,
+               service_label,
+               facility_label,
+               parking_fee_label,
+               parking_fee_tip,
+               company_name,
+               rule_id,
+               operator_id,
+               round(
+                       6371000 * acos(
+                               sin(radians(lat)) * sin(radians(#{lat})) + cos(radians(lat)) * cos(radians(
+                                       #{lat})) * cos(radians(#{lng}) - radians(lng)))
+               ) AS distance
+        FROM charging_stations
+        WHERE "id" = #{id}
+    </select>
+    <select id="listStationDeviceByStationId"
+            resultType="com.xingchuan.charging.domain.model.ChargingPileModel">
+        SELECT cp.station_id,
+               cp.device_no,
+               cp.max_power,
+               cp.pile_type,
+               cg."no" gunsNo
+        FROM charging_pile cp
+                 LEFT JOIN charging_guns cg ON cg.device_no = cp.device_no
+        WHERE cp.station_id = #{stationId}
+          AND cp.del_flag = '0'
+          AND cg.del_flag = '0'
+    </select>
+
+    <select id="listStationDeviceByStationIdAndType"
+            resultType="com.xingchuan.charging.domain.model.ChargingPileModel">
+        SELECT cp.station_id,
+        cp.device_no,
+        cp.max_power,
+        cp.pile_type,
+        cp.operator_id,
+        cg."no" gunsNo
+        FROM charging_pile cp
+        LEFT JOIN charging_guns cg ON cg.device_no = cp.device_no
+        WHERE cp.station_id = #{stationId}
+        <if test="type != null">
+            and cp.pile_type = #{type.code}
+        </if>
+        AND cp.del_flag = '0'
+        AND cg.del_flag = '0'
+        ORDER BY cp.device_no, cg.no ASC
+    </select>
+
+    <select id="getChargePreparationInfo"
+            resultType="com.xingchuan.charging.domain.resp.ReadyChargingResponse">
+        SELECT cs."id"   stationId,
+               cs."name" stationName,
+               cs.rule_id,
+               cp.name   deviceName,
+               cp.device_no,
+               cg.no     gunsNo,
+               cp.max_power,
+               cs.address,
+               cs.operator_id,
+               cs.parking_fee_tip
+        FROM charging_stations cs
+                 LEFT JOIN charging_pile cp ON cp.station_id = cs."id"
+                 LEFT JOIN charging_guns cg ON cg.device_no = cp.device_no
+        WHERE cp.device_no = #{deviceNo}
+          AND cg."no" = #{gunsNo}
+          AND cp.pile_status = 1
+          AND cs.status = 1
+          AND cs.del_flag = '0'
+          AND cp.del_flag = '0'
+          AND cg.del_flag = '0' LIMIT 1
+    </select>
+
+    <select id="getChargePreparationInfoByDeviceNoAndGunsNo"
+            resultType="com.xingchuan.charging.domain.resp.ReadyChargingResponse">
+        SELECT cs."id"   stationId,
+               cs."name" stationName,
+               cs.rule_id,
+               cp.name   deviceName,
+               cp.device_no,
+               cg.no     gunsNo,
+               cp.max_power,
+               cs.address,
+               cs.operator_id,
+               cs.parking_fee_tip
+        FROM charging_stations cs
+                 LEFT JOIN charging_pile cp ON cp.station_id = cs."id"
+                 LEFT JOIN charging_guns cg ON cg.device_no = cp.device_no
+        WHERE cg."connector_id" = #{gunsNo}
+          AND cp.pile_status = 1
+          AND cs.status = 1
+          AND cs.del_flag = '0'
+          AND cp.del_flag = '0'
+          AND cg.del_flag = '0' LIMIT 1
+    </select>
+</mapper>
