@@ -1,4 +1,4 @@
-<p align="center"><img src='https://gitee.com/ustcyc/100charge/images/LOGO.png'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/LOGO.png'></img></p>
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">100Charge基于若依的充电运营平台</h1>
 <p align="center">基于SpringBoot和若依框架开发</p>
 <p align="center">充电管理平台，小程序和API接口已上传，其余代码持续上传中</p>
