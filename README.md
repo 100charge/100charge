@@ -76,8 +76,18 @@
 #### 项目结构
 `
 ![输入图片说明](image.png)
-
 `
+
+## 小程序截图
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E9%A6%96%E9%A1%B5.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E9%A6%96%E9%A1%B5-%E6%90%9C%E7%B4%A2.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E7%94%B5%E7%AB%99%E8%AF%A6%E6%83%85.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E5%85%85%E7%94%B5%E7%A1%AE%E8%AE%A4.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E5%85%85%E7%94%B5%E4%B8%AD.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E5%85%85%E7%94%B5%E4%B8%AD2.jpg'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E6%88%91%E7%9A%84.png'></img></p>
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E8%AE%A2%E5%8D%95%E5%88%97%E8%A1%A8.jpg'></img></p>
+
 ## 安装教程
 `TODO: 后续完善`
 
