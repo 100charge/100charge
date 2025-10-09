@@ -24,7 +24,7 @@
 - 业务直达用户：同步打通微信小程序端，让充电业务快速触达终端用户，用户可通过小程序完成找桩、预约、充电、支付全流程，助力场站主快速搭建线上服务渠道，提升用户体验与运营效率。
 
 ## 开源协议
-100Charge是基于 [AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html) 和 [ZTPL](./LICENSE) 双协议的开源软件。  
+100Charge是基于 [AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html) 和 [XCPL](./LICENSE) 双协议的开源软件。  
 
 另，学生学习、老师用于教学，可免费指导
 
