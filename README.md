@@ -10,62 +10,70 @@
 </p>
 
 ## 介绍
-本充电管理系统聚焦中小充电站场站主核心需求，以 “快速上云、轻量运营” 为核心目标，助力场站主高效开启数字化充电业务。系统整合四大核心功能模块，同时提供充电桩云端接入与微信小程序业务落地的一体化解决方案，具体如下：
+
+本充电管理系统聚焦中小充电站场站主核心需求，以 “快速上云、轻量运营”
+为核心目标，助力场站主高效开启数字化充电业务。系统整合四大核心功能模块，同时提供充电桩云端接入与微信小程序业务落地的一体化解决方案，具体如下：
 
 ##### 一、核心功能模块
+
 1. 充电桩管理：实现对充电桩设备的集中化管控，支持设备状态实时监控、远程参数配置，确保设备稳定运行。
 2. 场站管理：覆盖场站基础信息维护、运营状态可视化展示，帮助场站主高效管理线下场地资源，提升场地利用效率。
 3. 计费策略：提供灵活可配置的计费规则设置功能，支持按峰谷时段等多维度自定义计费方案，满足不同场景下的定价需求。
 4. 订单管理：自动记录充电订单详情（如充电时长、电量、费用等），支持订单查询、统计与导出，实现充电业务流水的清晰化管理。
 
 ##### 二、核心服务价值
+
 针对中小充电站场站主 “数字化门槛高、落地周期长” 的痛点，系统提供两大关键支撑：
+
 - 快速设备上云：简化充电桩接入流程，无需复杂技术开发，即可实现设备数据实时上传云端，降低场站数字化改造难度；
 - 业务直达用户：同步打通微信小程序端，让充电业务快速触达终端用户，用户可通过小程序完成找桩、预约、充电、支付全流程，助力场站主快速搭建线上服务渠道，提升用户体验与运营效率。
 
 ## 开源协议
-100Charge是基于 [AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html) 和 [XCPL](./LICENSE) 双协议的开源软件。  
+
+100Charge是基于 [AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html) 和 [XCPL](./LICENSE) 双协议的开源软件。
 
 另，学生学习、老师用于教学，可免费指导
 
 ## 不同版本功能对比
 
-| 父模块 | 子模块 | 开源版 | 增强版本 |
-|--------------------------|---|---|---|
-|首页|首页|√|√|
-|订单管理|订单管理|√|√|
-|客户运营|个人用户|√|√|
-||用户车辆	|√|√|
-||企业客户	|×|√|
-||车队管理	|×|√|
-||卡管理	|×|√|
-||白名单管理	|×|√|
-|电站运营	|场站管理	|√	|√|
-|	|充电桩管理|√|√|
-|	|计费策略|√|√|
-|财务管理|用户余额变动|√|	√|
-|	|企业余额变动|×|√|
-|	|结算单管理	|×|√|
-|	营销管理	|营销策略	|×	|√|
-||优惠券管理|	×|	√|
-||券使用记录|	×|	√|
-|运营商	|运营商管理|	×|	√|
-||运营商分润管理|	×|	√|
-|运维管理|	运维报表|	×|	√
-||报文管理|	×|	√|
-|报表	|多维度分析|	×|	√|
-|	|运营报表      |	×|	√|
-|	|电站数据报表  |	×|	√|
-|	|订单扣费明细  |	×|	√|
-|	|账户信息汇总  |	×|	√|
-|	|电站运营状况  |	×|	√|
-|	|终端利用率	  |	×|	√|
-|	|企业收退款报表|	×|	√|
-|	|尖峰平谷统计  |	×|	√|
-|	|车辆峰谷统计  |	×|	√|
+| 父模块    | 子模块     | 开源版 | 增强版本 |
+|--------|---------|-----|------|
+| 首页     | 首页      | √   | √    |
+| 订单管理   | 订单管理    | √   | √    |
+| 客户运营   | 个人用户    | √   | √    |
+|        | 用户车辆	   | √   | √    |
+|        | 企业客户	   | ×   | √    |
+|        | 车队管理	   | ×   | √    |
+|        | 卡管理	    | ×   | √    |
+|        | 白名单管理	  | ×   | √    |
+| 电站运营	  | 场站管理	   | √	  | √    |
+| 	      | 充电桩管理   | √   | √    |
+| 	      | 计费策略    | √   | √    |
+| 财务管理   | 用户余额变动  | √   | 	√   |
+| 	      | 企业余额变动  | ×   | √    |
+| 	      | 结算单管理	  | ×   | √    |
+| 	营销管理	 | 营销策略	   | ×	  | √    |
+|        | 优惠券管理   | 	×  | 	√   |
+|        | 券使用记录   | 	×  | 	√   |
+| 运营商	   | 运营商管理   | 	×  | 	√   |
+|        | 运营商分润管理 | 	×  | 	√   |
+| 运维管理   | 	运维报表   | 	×  | 	√   
+|        | 报文管理    | 	×  | 	√   |
+| 报表	    | 多维度分析   | 	×  | 	√   |
+| 	      | 运营报表    | 	×  | 	√   |
+| 	      | 电站数据报表  | 	×  | 	√   |
+| 	      | 订单扣费明细  | 	×  | 	√   |
+| 	      | 账户信息汇总  | 	×  | 	√   |
+| 	      | 电站运营状况  | 	×  | 	√   |
+| 	      | 终端利用率	  | 	×  | 	√   |
+| 	      | 企业收退款报表 | 	×  | 	√   |
+| 	      | 尖峰平谷统计  | 	×  | 	√   |
+| 	      | 车辆峰谷统计  | 	×  | 	√   |
 
 ## 软件架构
+
 基于若依Spring Boot单体版本修改的后端架构，若依框架开发文档齐全，社区活跃；
+
 - 数据库： PGSQL 14.10及以上
 - 网络框架： Netty
 - Redis: Redis6.0以上
@@ -74,28 +82,36 @@
 - 其他中间件等
 
 #### 项目结构
+
 `
 ![输入图片说明](image.png)
 `
 
 ## 小程序截图
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/home.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/search.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging-confirm.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging2.jpg'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/my.png'></img></p>
-<p align="center"><img height="600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/orders.jpg'></img></p>
 
+<div style="text-align: center;">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/home.jpg' alt="首页">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/search.jpg' alt="搜索">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg' alt="详情">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging-confirm.jpg' alt="充电确认">
+</div>
+<div style="text-align: center;">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging.jpg' alt="充电中">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging2.jpg' alt="充电中2">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/my.jpg' alt="我的">
+<img style="display: inline-block; margin: 5px;height: 600px" src='https://gitee.com/ustcyc/100charge/raw/master/images/orders.jpg' alt="订单列表">
+</div>
 ## 沟通交流
+
 扫码添加微信交流，加微信请备注：100charge+姓名。
 <p align="center"><img height="500px" width="500px" src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></img></p>
 
 ## 安装教程
+
 `TODO: 后续完善`
 
 ## 使用说明
+
 `TODO: 后续完善`
 
 ## 参与贡献
