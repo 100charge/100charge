@@ -90,7 +90,7 @@
 
 ## 沟通交流
 扫码添加微信交流，加微信请备注：100charge+姓名。
-<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></img></p>
+<p align="center"><img height="500px" width="500px" src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></img></p>
 
 ## 安装教程
 `TODO: 后续完善`
