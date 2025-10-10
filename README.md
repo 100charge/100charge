@@ -34,6 +34,40 @@
 
 另，学生学习、老师用于教学，可免费指导
 
+## 软件架构
+
+基于若依Spring Boot单体版本修改的后端架构，若依框架开发文档齐全，社区活跃；
+
+- 数据库： PGSQL 14.10及以上
+- 网络框架： Netty
+- Redis: Redis6.0以上
+- ES（增强版）: 大数据存储
+- Minio: 文件存储
+- 其他中间件等
+
+#### 项目结构
+
+`
+![输入图片说明](image.png)
+`
+
+## 小程序截图
+
+<div>
+<img height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/home.jpg' alt="首页">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/search.jpg' alt="搜索">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging-confirm.jpg' alt="充电确认">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging.jpg' alt="充电中">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/my.png' alt="我的">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/orders.jpg' alt="订单列表">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg' alt="详情">
+</div>
+
+## 沟通交流
+
+扫码添加微信交流，加微信请备注：100charge+姓名。
+<p align="center"><img height="600px" alt="wechat" src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></p>
+
 ## 不同版本功能对比
 
 | 父模块    | 子模块     | 开源版 | 增强版本 |
@@ -70,39 +104,6 @@
 | 	      | 尖峰平谷统计  | 	×  | 	√   |
 | 	      | 车辆峰谷统计  | 	×  | 	√   |
 
-## 软件架构
-
-基于若依Spring Boot单体版本修改的后端架构，若依框架开发文档齐全，社区活跃；
-
-- 数据库： PGSQL 14.10及以上
-- 网络框架： Netty
-- Redis: Redis6.0以上
-- ES（增强版）: 大数据存储
-- Minio: 文件存储
-- 其他中间件等
-
-#### 项目结构
-
-`
-![输入图片说明](image.png)
-`
-
-## 小程序截图
-
-<div>
-<img height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/home.jpg' alt="首页">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/search.jpg' alt="搜索">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging-confirm.jpg' alt="充电确认">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging.jpg' alt="充电中">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/my.png' alt="我的">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/orders.jpg' alt="订单列表">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg' alt="详情">
-</div>
-
-## 沟通交流
-
-扫码添加微信交流，加微信请备注：100charge+姓名。
-<p align="center"><img height="600px" alt="wechat" src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></p>
 
 ## 安装教程
 
