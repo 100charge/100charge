@@ -88,6 +88,10 @@
 <p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E6%88%91%E7%9A%84.png'></img></p>
 <p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/%E8%AE%A2%E5%8D%95%E5%88%97%E8%A1%A8.jpg'></img></p>
 
+## 沟通交流
+扫码添加微信交流，加微信请备注：100charge+姓名。
+<p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></img></p>
+
 ## 安装教程
 `TODO: 后续完善`
 
