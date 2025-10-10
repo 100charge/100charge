@@ -92,12 +92,12 @@
 <div>
 <img height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/home.jpg' alt="首页">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/search.jpg' alt="搜索">
-<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg' alt="详情">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging-confirm.jpg' alt="充电确认">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging.jpg' alt="充电中">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/charging2.jpg' alt="充电中2">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/my.png' alt="我的">
 <img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/orders.jpg' alt="订单列表">
+<img  height="600px" style="display: inline-block; margin: 5px;" src='https://gitee.com/ustcyc/100charge/raw/master/images/station-detail.jpg' alt="详情">
 </div>
 
 ## 沟通交流
