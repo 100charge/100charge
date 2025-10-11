@@ -65,7 +65,7 @@
 
 ## 沟通交流
 
-扫码添加微信交流，加微信请备注：100charge+姓名。
+扫码添加微信交流，加微信请备注：100+姓名。
 <p align="center"><img height="600px" alt="wechat" src='https://gitee.com/ustcyc/100charge/raw/master/images/wechat.jpg'></p>
 
 ## 不同版本功能对比
