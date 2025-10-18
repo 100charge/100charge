@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.excel;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class AppUserExportExcel {
      * 用户ID
      */
     @Excel(name = "编号", width = 30)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**

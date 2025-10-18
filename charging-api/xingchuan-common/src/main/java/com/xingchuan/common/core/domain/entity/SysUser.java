@@ -2,6 +2,8 @@ package com.xingchuan.common.core.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.annotation.Excels;
 import com.xingchuan.common.core.domain.BaseEntity;
@@ -28,12 +30,14 @@ public class SysUser extends BaseEntity {
      * 用户ID
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "用户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "用户编号")
     private Long userId;
 
     /**
      * 部门ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "部门编号", type = Excel.Type.IMPORT)
     private Long deptId;
 
@@ -127,6 +131,7 @@ public class SysUser extends BaseEntity {
     /**
      * 角色ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long roleId;
 
     public SysUser() {

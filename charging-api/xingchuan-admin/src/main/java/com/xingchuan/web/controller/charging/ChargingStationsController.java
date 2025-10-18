@@ -16,11 +16,14 @@ import com.xingchuan.common.core.page.TableDataInfo;
 import com.xingchuan.common.enums.BusinessType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -96,6 +99,19 @@ public class ChargingStationsController extends BaseController {
         }
         chargingStationsService.deleteChargingStations(id);
         return success();
+    }
+
+    /**
+     * 生成场站下所有枪的微信二维码
+     */
+    @RepeatSubmit
+    @GetMapping("/generateQRCodeZip")
+    @ApiOperation(value = "平台-充电桩生成二维码压缩包 ”场站名称:桩号_枪号“拼接")
+    @Log(title = "平台-充电桩生成二维码压缩包", businessType = BusinessType.QRCODE)
+    public void generateQRCodeZip(@ApiParam("场站id") @NotNull(message = MessageConstants.CHARGING_STATIONS_NOT_EXIST) @RequestParam(value = "stationId") Long stationId,
+                                  HttpServletResponse servletResponse) {
+
+        chargingStationsService.generateQRCodeZip(stationId, servletResponse);
     }
 
     /**

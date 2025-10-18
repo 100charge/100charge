@@ -197,6 +197,7 @@ public class ChargingStationsDetailResponse {
      * 道闸品牌编号
      */
     @ApiModelProperty("道闸品牌id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long gateBrandId;
 
     /**

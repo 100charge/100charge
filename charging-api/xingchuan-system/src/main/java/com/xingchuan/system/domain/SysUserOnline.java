@@ -1,5 +1,8 @@
 package com.xingchuan.system.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 /**
  * 当前在线会话
  *
@@ -44,6 +47,7 @@ public class SysUserOnline {
     /**
      * 登录时间
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long loginTime;
 
     public String getTokenId() {

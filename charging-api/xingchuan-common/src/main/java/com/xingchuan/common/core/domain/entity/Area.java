@@ -1,5 +1,7 @@
 package com.xingchuan.common.core.domain.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -18,6 +20,7 @@ public class Area extends BaseEntity {
     /**
      * $column.columnComment
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -48,6 +51,7 @@ public class Area extends BaseEntity {
      * 上级id
      */
     @Excel(name = "上级id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**
@@ -72,6 +76,7 @@ public class Area extends BaseEntity {
      * 部门id
      */
     @Excel(name = "部门id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**

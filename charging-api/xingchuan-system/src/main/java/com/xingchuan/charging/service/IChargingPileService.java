@@ -10,6 +10,7 @@ import com.xingchuan.charging.domain.req.ChargingPileUpdateRequest;
 import com.xingchuan.charging.domain.resp.ChargingPileDetailResponse;
 import com.xingchuan.charging.domain.resp.ChargingPilePageListResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -69,4 +70,12 @@ public interface IChargingPileService extends IService<ChargingPile> {
      * @param id 桩id
      */
     void updateShowStatus(Long id);
+
+    /**
+     * 平台-生成充电桩二维码
+     *
+     * @param deviceNo        桩编号
+     * @param servletResponse 响应
+     */
+    void generateQRCodeZip(String deviceNo, HttpServletResponse servletResponse);
 }

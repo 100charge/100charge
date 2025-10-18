@@ -6,10 +6,9 @@ import com.xingchuan.charging.domain.excel.AppUserExportExcel;
 import com.xingchuan.charging.domain.req.AppUserDisableOrEnableRequest;
 import com.xingchuan.charging.domain.req.AppUserQueryRequest;
 import com.xingchuan.charging.domain.req.CompanyUserQueryRequest;
-import com.xingchuan.charging.domain.resp.AppEnterpriseUserListResponse;
-import com.xingchuan.charging.domain.resp.AppUserInfoResponse;
-import com.xingchuan.charging.domain.resp.AppUserListResponse;
-import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
+import com.xingchuan.charging.domain.req.UserCarPageRequest;
+import com.xingchuan.charging.domain.resp.*;
+import com.xingchuan.charging.service.IAppUserCarService;
 import com.xingchuan.charging.service.IAppUserService;
 import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.common.annotation.Log;
@@ -43,6 +42,8 @@ public class AppUserController extends BaseController {
 
     @Autowired
     private IAppUserService appUserService;
+    @Autowired
+    private IAppUserCarService appUserCarService;
     @Autowired
     private IUserWithdrawalRequestService userWithdrawalRequestService;
 
@@ -123,6 +124,16 @@ public class AppUserController extends BaseController {
         String userOpenId = SecurityUtils.getUserOpenId();
         Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPage(userOpenId);
         return getDataTable(response);
+    }
+
+    /**
+     * 查询用户车辆列表
+     */
+    @GetMapping("/userCarList")
+    @ApiOperation("查询用户车辆列表-分页")
+    public TableDataInfo userCarList(UserCarPageRequest request) {
+        Page<UserCarPageResponse> page = appUserCarService.userCarList(request);
+        return getDataTable(page);
     }
 
 }

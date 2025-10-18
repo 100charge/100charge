@@ -3,6 +3,8 @@ package com.xingchuan.charging.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -20,12 +22,14 @@ public class ChargingPile extends BaseEntity {
     /**
      * id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
      * 场站id
      */
     @Excel(name = "场站id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long stationId;
 
     /**

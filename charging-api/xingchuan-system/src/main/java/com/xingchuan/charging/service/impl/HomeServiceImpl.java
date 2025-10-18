@@ -4,15 +4,16 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xingchuan.charging.domain.entity.ChargingOrder;
+import com.xingchuan.charging.domain.entity.ChargingPile;
 import com.xingchuan.charging.domain.entity.ChargingStations;
 import com.xingchuan.charging.domain.model.ChargingRealtimeData;
 import com.xingchuan.charging.domain.model.GunInfoModel;
 import com.xingchuan.charging.domain.req.HomeBusinessTrendRequest;
-import com.xingchuan.charging.domain.resp.HomeBusinessTrendResponse;
-import com.xingchuan.charging.domain.resp.HomeChargingPileStatusResponse;
-import com.xingchuan.charging.domain.resp.HomeDayChargingDataResponse;
-import com.xingchuan.charging.domain.resp.StationDataStatisticsResponse;
+import com.xingchuan.charging.domain.resp.*;
+import com.xingchuan.charging.enums.OrderPayStatusEnum;
+import com.xingchuan.charging.enums.OrderStatusEnum;
 import com.xingchuan.charging.enums.TimeType;
+import com.xingchuan.charging.mapper.ChargingGunsMapper;
 import com.xingchuan.charging.mapper.ChargingOrderMapper;
 import com.xingchuan.charging.mapper.ChargingPileMapper;
 import com.xingchuan.charging.mapper.ChargingStationsMapper;
@@ -23,11 +24,14 @@ import com.xingchuan.common.core.redis.RedisCache;
 import com.xingchuan.common.utils.DateUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +47,15 @@ public class HomeServiceImpl implements IHomeService {
     @Resource
     private RedisCache redisCache;
     @Resource
+    private ChargingGunsMapper gunsMapper;
+    @Resource
     private ChargingOrderMapper orderMapper;
     @Resource
     private ChargingStationsMapper stationsMapper;
     @Resource
     private ChargingPileMapper chargingPileMapper;
+    @Autowired
+    private ChargingOrderMapper chargingOrderMapper;
 
     /**
      * 处理订单信息
@@ -350,6 +358,94 @@ public class HomeServiceImpl implements IHomeService {
         response.setTotalAmount(totalAmount.setScale(2, RoundingMode.HALF_UP));
         response.setTotalPower(totalPower.setScale(3, RoundingMode.HALF_UP));
         response.setUserQty(userQty);
+        return response;
+    }
+
+
+    @Override
+    public DashboardOperatorInfoResponse getDashboardOperatorInfo() {
+        // 查询电站数量
+        Long stationCount = stationsMapper.selectCount(Wrappers.<ChargingStations>lambdaQuery()
+                .eq(ChargingStations::getShowStatus, 1)
+        );
+        // 查询终端数量
+        Long terminalCount = gunsMapper.selectCount(Wrappers.lambdaQuery());
+
+        // 查询充电桩数量
+        Long pileCount = chargingPileMapper.selectCount(Wrappers.<ChargingPile>lambdaQuery().eq(ChargingPile::getPileStatus, 1));
+
+        return DashboardOperatorInfoResponse.builder()
+                .pileCount(Math.toIntExact(pileCount))
+                .stationCount(Math.toIntExact(stationCount))
+                .terminalCount(Math.toIntExact(terminalCount))
+                .build();
+    }
+
+    @Override
+    public DashboardOperationDataResponse queryOperationData() {
+        List<ChargingOrder> dataList = chargingOrderMapper.selectList(Wrappers.<ChargingOrder>lambdaQuery()
+                .select(ChargingOrder::getEndTime, ChargingOrder::getTotalPower, ChargingOrder::getRealAmount)
+                .eq(ChargingOrder::getOrderState, OrderStatusEnum.BILL_HAS_BEEN_UPLOADED.getCode())
+                .eq(ChargingOrder::getPayStatus, OrderPayStatusEnum.PAY_SUCCESS.getCode())
+                .isNotNull(ChargingOrder::getEndTime)
+                .le(ChargingOrder::getCreateTime, LocalDateTime.now())
+                .ge(ChargingOrder::getCreateTime, LocalDate.of(LocalDate.now().getYear(), 1, 1).atStartOfDay())
+        );
+        if (dataList.isEmpty()) {
+            return new DashboardOperationDataResponse();
+        }
+        // 年度充电量
+        BigDecimal annualChargingVolume = BigDecimal.ZERO;
+        // 年度充电次数
+        int annualChargingCount = 0;
+        // 年营收
+        BigDecimal annualRevenue = BigDecimal.ZERO;
+        // 月度充电次数
+        int monthlyChargingCount = 0;
+        // 月度充电量
+        BigDecimal monthlyChargingVolume = BigDecimal.ZERO;
+        // 月度营收
+        BigDecimal monthlyRevenue = BigDecimal.ZERO;
+        // 今日充电次数
+        int todayChargingCount = 0;
+        // 今日充电量
+        BigDecimal todayChargingVolume = BigDecimal.ZERO;
+        // 今日营收
+        BigDecimal todayRevenue = BigDecimal.ZERO;
+
+        for (ChargingOrder data : dataList) {
+            // 月度
+            LocalDate localDate = DateUtils.toLocalDate(data.getEndTime());
+
+            if (localDate != null && localDate.getMonthValue() == LocalDate.now().getMonthValue()) {
+                monthlyChargingVolume = monthlyChargingVolume.add(data.getTotalPower());
+                monthlyChargingCount += 1;
+                monthlyRevenue = monthlyRevenue.add(data.getRealAmount());
+            }
+            // 今日
+            if (localDate != null && localDate.equals(LocalDate.now())) {
+                todayChargingVolume = todayChargingVolume.add(data.getTotalPower());
+                todayChargingCount += 1;
+                todayRevenue = todayRevenue.add(data.getRealAmount());
+            }
+
+            // 年度
+            annualChargingVolume = annualChargingVolume.add(data.getTotalPower());
+            annualChargingCount += 1;
+            annualRevenue = annualRevenue.add(data.getRealAmount());
+        }
+
+        DashboardOperationDataResponse response = new DashboardOperationDataResponse();
+        response.setAnnualChargingVolume(annualChargingVolume);
+        response.setAnnualChargingCount(annualChargingCount);
+        response.setAnnualRevenue(annualRevenue);
+        response.setMonthlyChargingCount(monthlyChargingCount);
+        response.setMonthlyChargingVolume(monthlyChargingVolume);
+        response.setMonthlyRevenue(monthlyRevenue);
+        response.setTodayChargingCount(todayChargingCount);
+        response.setTodayChargingVolume(todayChargingVolume);
+        response.setTodayRevenue(todayRevenue);
+
         return response;
     }
 

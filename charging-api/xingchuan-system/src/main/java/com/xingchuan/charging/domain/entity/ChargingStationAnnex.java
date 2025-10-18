@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,6 +22,7 @@ public class ChargingStationAnnex extends BaseEntity {
      * $column.columnComment
      */
     @ApiModelProperty("用户ID")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**

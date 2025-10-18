@@ -6,9 +6,13 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:postgresql://127.0.0.1:5432/charge
+#        url: jdbc:postgresql://127.0.0.1:5432/charge
+#        username: postgres
+#        password: postgres
+#        url: jdbc:postgresql://47.105.127.73:5432/smart_charge_dev
+        url: jdbc:postgresql://47.105.127.73:5432/charge_test
         username: postgres
-        password: postgres
+        password: 2Jj3566eC2d2Yz3T
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭

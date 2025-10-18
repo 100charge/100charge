@@ -2,10 +2,7 @@ package com.xingchuan.charging.service;
 
 
 import com.xingchuan.charging.domain.req.HomeBusinessTrendRequest;
-import com.xingchuan.charging.domain.resp.HomeBusinessTrendResponse;
-import com.xingchuan.charging.domain.resp.HomeChargingPileStatusResponse;
-import com.xingchuan.charging.domain.resp.HomeDayChargingDataResponse;
-import com.xingchuan.charging.domain.resp.StationDataStatisticsResponse;
+import com.xingchuan.charging.domain.resp.*;
 
 import java.util.List;
 
@@ -44,4 +41,14 @@ public interface IHomeService {
      * 首页-获取场站数据统计
      */
     StationDataStatisticsResponse getStationDataStatistics(Long stationId);
+
+    /**
+     * 首页-查询场站数据
+     */
+    DashboardOperatorInfoResponse getDashboardOperatorInfo();
+
+    /**
+     * 首页-场站收益数据
+     */
+    DashboardOperationDataResponse queryOperationData();
 }

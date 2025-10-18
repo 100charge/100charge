@@ -30,7 +30,6 @@ public class ChargingStationsAddRequest {
      * 运营商id
      */
     @ApiModelProperty("运营商id")
-    @NotNull(message = "请选择所属运营商")
     private Long tenantId;
 
     /**
