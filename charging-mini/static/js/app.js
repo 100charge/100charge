@@ -1,12 +1,9 @@
 var imgUrl =
   "https://charging-hz-oss-bucket.oss-cn-hangzhou.aliyuncs.com/static/";
 // 100Charge
-var appid = "wxa590a3e7e6962b56" // 开充云
+var appid = "您的appid"
 // 测试
-var api = "https://wxapi.kaichongcharge.com/"; // 开充
-// var api = "https://devwxapi.kaichongcharge.com/"; // 开充
-// var api = "http://140.143.191.24:9080/"; // 测试api
-// var appid = "wxe22e0fa150c28cec"; // 智碳充电
+var api = "/";
 
 
 function toDecimal2(x) {
