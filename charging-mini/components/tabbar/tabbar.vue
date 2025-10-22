@@ -216,7 +216,7 @@ view {
 }
 
 .tabbar-container .item-active {
-  color: $primary-color;
+  color: #ff6b01;
 }
 
 .tabbar-container .center-item {

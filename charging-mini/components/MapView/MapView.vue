@@ -164,8 +164,8 @@ export default {
         return {
           id: index + 1,
           stationId: station.id || index,
-          latitude: station.latitude || 36.066964 + Math.random() * 0.01,
-          longitude: station.longitude || 120.382681 + Math.random() * 0.01,
+          latitude: station.latitude || 36.6667 + Math.random() * 0.01,
+          longitude: station.longitude || 116.9949 + Math.random() * 0.01,
           title: station.name,
           fee: station.price,
           type: station.fastTotal > 0 ? "fast" : "slow",
