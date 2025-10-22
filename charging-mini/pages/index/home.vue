@@ -134,7 +134,9 @@ export default {
       pageNum: 1,
       stickySearchParams: {},
       loadStatus: "",
-      swiperList: [],
+      swiperList: [
+        { imageUrl: "https://demofile.zhitancloud.com/demo-file/2025/08/13/27a18d4e5ed04ba46989306b1bbe8434.png" },
+      ],
       showAuthLocation: true,
     }
   },
@@ -402,9 +404,9 @@ export default {
       }
     },
     getBanner() {
-      getBannerList({}).then((res) => {
-        this.swiperList = res.data || []
-      })
+      // getBannerList({}).then((res) => {
+      //   this.swiperList = res.data || []
+      // })
     },
     bindCityChange(e) {
       let index = e.detail.value
@@ -414,10 +416,7 @@ export default {
         // 重新定位，获取当前位置
         console.log("getCurrentLocation:home.vue")
         uni.getLocation({
-          // #ifdef MP-WEIXIN
           type: "gcj02",
-          // #endif
-          // type: "wgs84",
           success: function (res) {
             console.log("重新定位，获取当前位置", res)
             uni.setStorageSync("latitude", res.latitude)
@@ -425,23 +424,11 @@ export default {
             that.latitude = res.latitude
             that.longitude = res.longitude
             uni.request({
-              // #ifdef MP-ALIPAY
-              url: "https://restapi.amap.com/v3/geocode/regeo", // 高德
-              // #endif
-
-              // #ifdef MP-WEIXIN
               url: "https://apis.map.qq.com/ws/geocoder/v1/", // 腾讯
-              // #endif
               data: {
                 extensions: "all",
-                // #ifdef MP-ALIPAY
-                key: "e177845859438725fbc666bab63c9e23", // 高德
-                location: res.longitude + "," + res.latitude,
-                // #endif
-                // #ifdef MP-WEIXIN
                 key: "JGABZ-OJUKV-G6MPB-56GIH-3O2D2-SEBUR", // 腾讯
                 location: res.latitude + "," + res.longitude,
-                // #endif
               },
               success(response) {
                 let city = ""
@@ -449,16 +436,6 @@ export default {
                 uni.setStorageSync("hasAuthLocation", true)
                 that.showAuthLocation = false
                 that.$refs.stickySearchRef.changeShowAuth(false)
-                // #ifdef MP-ALIPAY
-                let province = response.data.regeocode.addressComponent.province
-                city = response.data.regeocode.addressComponent.city
-                cityCode = response.data.regeocode.addressComponent.adcode
-                uni.setStorageSync("city", city.length === 0 ? province : city)
-                uni.setStorageSync("cityCode", cityCode)
-                that.currentCity = city
-                that.cityCode = cityCode
-                // #endif
-                // #ifdef MP-WEIXIN
                 console.log("腾讯解析地址", response)
                 city = response.data.result.address_component.city
                 cityCode = response.data.result.ad_info.adcode
@@ -466,7 +443,6 @@ export default {
                 uni.setStorageSync("cityCode", cityCode)
                 that.currentCity = city
                 that.cityCode = cityCode
-                // #endif
               },
               fail() {
                 console.log("定位失败，默认经纬度为山东济南市")
@@ -568,19 +544,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    /* #ifdef MP-WEIXIN */
     width: 520rpx;
-    /* #endif */
-
-    /* #ifdef MP-ALIPAY */
-    padding: 8rpx 24rpx 10rpx;
-    background-color: #fff;
-    position: fixed;
-    top: -1px;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    /* #endif */
 
     .switch-display-type {
       width: 124rpx;
