@@ -26,7 +26,7 @@
               <text class="tag rating">{{ stationDetail.starLabel || 5 }}分</text>
 
               <view v-for="(item, index) in stationDetail.labelList" :key="index">
-                {{ item }}
+                <text class="tag open">{{ item }}</text>
                 <text
                   class="tag-line"
                   v-if="stationDetail.labelList.length && index !== stationDetail.labelList.length - 1"
@@ -91,7 +91,7 @@
               >闲{{ stationDetail.fastChargingIdle
               }}<text class="status-divider">/{{ stationDetail.fastCharging }}</text></text
             >
-            <view class="detail-wrapper" @click="openChargerDetails('fast')">
+            <view class="detail-wrapper" @click="pileHandle('DC')">
               <text class="detail-text">详情</text>
               <uni-icons type="right" size="14" color="#999"></uni-icons>
             </view>
@@ -104,7 +104,7 @@
               >闲{{ stationDetail.slowChargingIdle
               }}<text class="status-divider">/{{ stationDetail.slowCharging }}</text></text
             >
-            <view class="detail-wrapper" @click="openChargerDetails('slow')">
+            <view class="detail-wrapper" @click="pileHandle('AC')">
               <text class="detail-text">详情</text>
               <uni-icons type="right" size="14" color="#999"></uni-icons>
             </view>
@@ -125,7 +125,7 @@
         </view>
         <view class="price-schedule">
           <text class="schedule-text">{{ stationDetail.currentTime }}</text>
-          <view class="all-periods" @click="openPriceDetails">
+          <view class="all-periods" @click="priceHandle">
             <text class="all-text">全部时段</text>
             <uni-icons type="right" size="14" color="#999"></uni-icons>
           </view>
@@ -154,6 +154,16 @@
         </view>
       </view>
 
+      <!-- 评价信息 -->
+      <view class="business-section" v-if="commentList && commentList.length !== 0">
+        <view class="section-title">评论</view>
+        <view class="comment-list">
+          <view class="comment-item flex-row flex-ali-center" v-for="item in commentList" :key="item.value">
+            {{ item.label }} ({{ item.qty || 0 }})
+          </view>
+        </view>
+      </view>
+
       <!-- 底部空白 -->
       <view class="bottom-space"></view>
     </scroll-view>
@@ -170,108 +180,44 @@
       </view>
     </view>
 
-    <!-- 充电终端列表弹层 -->
-    <view v-if="showChargerModal" class="modal-mask" @click.self="closeChargerModal">
-      <view class="bottom-sheet">
-        <view class="sheet-header">
-          <text class="sheet-title">充电终端({{ pileList.length }})</text>
-          <uni-icons type="closeempty" color="#999" size="22" @click="closeChargerModal"></uni-icons>
-        </view>
-        <scroll-view class="sheet-body" scroll-y>
-          <view v-for="(charger, idx) in pileList" :key="idx" class="charger-cell">
-            <view
-              class="status-circle"
-              :class="{ busy: charger.deviceStatus == 4, offline: charger.deviceStatus == 0 }"
-            >
-              <view class="status-inner">
-                <text class="status-text">{{
-                  charger.deviceStatusName == "充电中" ? charger.ratio + "%\n充电中" : charger.deviceStatusName
-                }}</text>
-              </view>
-            </view>
-            <view class="cell-right">
-              <text class="cell-sub">终端编号：{{ charger.deviceNo }}</text>
-              <text class="cell-sub">最大功率：{{ charger.maxPower }}kW</text>
-              <text class="cell-sub">{{ charger.pileType }}</text>
-            </view>
-          </view>
-        </scroll-view>
-        <view class="sheet-footer">
-          <view class="sheet-bottom-actions">
-            <view class="price-info">
-              <text class="price-symbol">¥</text>
-              <text class="price-value">{{ stationDetail.chargeFee }}</text>
-              <text class="price-unit">/度</text>
-            </view>
-            <view class="sheet-scan-btn" @click="scanCodeHandle">
-              <image src="/static/img/saoma.png" mode="widthFix" class="sheet-scan-image"></image>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 价格详情弹层 -->
-    <view v-if="showPriceModal" class="modal-mask" @click.self="closePriceModal">
-      <view class="bottom-sheet">
-        <view class="sheet-header">
-          <text class="sheet-title">价格详情</text>
-          <uni-icons type="closeempty" color="#999" size="22" @click="closePriceModal"></uni-icons>
-        </view>
-        <view class="price-table">
-          <view class="table-head">
-            <text class="th time">充电时段</text>
-            <text class="th type">类型</text>
-            <text class="th price">价格(元/度)</text>
-            <text class="th elec">电费(元/度)</text>
-            <text class="th service">服务费(元/度)</text>
-          </view>
-          <scroll-view class="table-body" scroll-y>
-            <view class="table-row" v-for="(row, idx) in priceDetails" :key="idx">
-              <text class="td time">{{ row.timePeriod }}</text>
-              <text class="td type">{{ row.type }}</text>
-              <text class="td price strong">{{ row.totalAmount }}</text>
-              <text class="td elec">{{ row.electricityFee }}</text>
-              <text class="td service">{{ row.serviceFee }}</text>
-              <view v-if="row.currentTimePeriod" class="tag-badge now"><text class="tag-text">当前</text></view>
-              <view v-else-if="row.lowestPrice" class="tag-badge low"><text class="tag-text">最低</text></view>
-            </view>
-          </scroll-view>
-          <view class="table-tip">
-            由于服务运营成本等综合影响，平台浮动收费服务费采用时段计费，不同站内暂存在在价差异。
-          </view>
-        </view>
-      </view>
-    </view>
-
+    <stationPrice ref="stationPriceRef" />
+    <pileListPopup ref="pileListPopupRef" />
     <businessLicense ref="businessLicenseRef" />
   </view>
 </template>
 <script>
 import app from "@/static/js/app.js"
-import { stationDetail, getStationRuleById, getStationDevice } from "@/config/api.js"
+import { stationDetail, getEvaluationByStationId } from "@/config/api.js"
+import stationPrice from "./components/station-price.vue"
 import businessLicense from "./components/business-license.vue"
+import pileListPopup from "./components/pile-list.vue"
 export default {
   components: {
+    stationPrice,
     businessLicense,
+    pileListPopup,
   },
   data() {
     return {
       stationId: "",
       isIpx: uni.getStorageSync("isIpx"),
       stationDetail: {},
-      // 弹层控制
-      showChargerModal: false,
-      showPriceModal: false,
-      priceDetails: [],
-      pileList: [],
+      commentList: [],
     }
   },
   onLoad(options) {
     this.stationId = options.id
     this.getDetailData()
+    this.getEvaluationList()
   },
   methods: {
+    getEvaluationList() {
+      getEvaluationByStationId({
+        stationId: this.stationId,
+      }).then((res) => {
+        this.commentList = res.data
+      })
+    },
     getDetailData() {
       stationDetail({
         id: this.stationId,
@@ -341,69 +287,6 @@ export default {
       uni.navigateTo({
         url: "/pages/stations/site/stationComment?id=" + this.stationId,
       })
-    },
-
-    openChargerDetails(type) {
-      getStationDevice({
-        stationId: this.stationDetail.id,
-        type: type == "fast" ? "DC" : "AC", // AC是慢充、DC是快充
-      }).then((res) => {
-        this.showChargerModal = true
-        this.pileList = res.data
-          ? res.data.map((item) => {
-              return {
-                ...item,
-                deviceStatus: item.deviceStatus || 0,
-                deviceStatusName: item.deviceStatusName || "离线",
-                color: this.getColor(item.deviceStatus || 0),
-                circleColor: item.deviceStatus ? this.getColor(item.deviceStatus) : "#d8d8d8",
-                ratio: item.ratio || 0,
-              }
-            })
-          : []
-      })
-    },
-    getColor(status) {
-      // 0 离线-999999
-      // 1 故障-FA5151
-      // 2 空闲-85E2C2
-      // 3 启动中-FF6B01
-      // 4 充电中-FF6B01
-      // 5 已插枪-FF6B01
-      switch (status) {
-        case 0:
-          return "#999999"
-        case 1:
-          return "#FA5151"
-        case 2:
-          return "#85E2C2"
-        case 3:
-          return "#FF6B01"
-        case 4:
-          return "#FF6B01"
-        case 5:
-          return "#FF6B01"
-        default:
-          break
-      }
-    },
-    closeChargerModal() {
-      this.showChargerModal = false
-      this.isModalOpen = false
-    },
-    openPriceDetails() {
-      getStationRuleById({ stationId: this.stationDetail.id }).then((res) => {
-        this.showPriceModal = true
-        this.priceDetails = res.data
-        // this.$nextTick(() => {
-        //   console.log("nextTick")
-        //   this.toView = "currentTimeId"
-        // })
-      })
-    },
-    closePriceModal() {
-      this.showPriceModal = false
-      this.isModalOpen = false
     },
 
     //预览图片
@@ -885,6 +768,23 @@ page {
   margin: 20rpx;
   border-radius: 20rpx;
 }
+.comment-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: space-between;
+  flex-wrap: wrap;
+}
+.comment-item {
+  height: 60rpx;
+  background: #f8f9fa;
+  border-radius: 34rpx;
+  font-size: 28rpx;
+  padding: 0 24rpx;
+  line-height: 50rpx;
+  margin-top: 24rpx;
+  margin-right: 32rpx;
+  color: #333;
+}
 
 .business-item {
   display: flex;
@@ -1056,249 +956,7 @@ page {
 .scan-charge-btn image {
   width: 350rpx;
 }
-
-/* 通用弹层 */
-.modal-mask {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: flex-end;
-  z-index: 9999;
-  overscroll-behavior: contain;
-  touch-action: none;
-}
-
-.bottom-sheet {
-  width: 100%;
-  background: #fff;
-  border-top-left-radius: 24rpx;
-  border-top-right-radius: 24rpx;
-  max-height: 70vh;
-  overflow: hidden;
-  touch-action: pan-y;
-}
-
-.sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 28rpx 32rpx;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-
-.sheet-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
-.sheet-body {
-  max-height: 48vh;
-}
-
-/* 充电终端列表 */
-.charger-cell {
-  display: flex;
-  align-items: center;
-  padding: 32rpx;
-}
-
-/* 更粗的进度/状态圈 */
-.status-circle {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  background: #ecfff5;
-  position: relative;
-}
-
-.status-circle::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 10rpx #20d26a;
-}
-
-.status-circle.busy {
-  background: #eaf5ff;
-}
-
-.status-circle.busy::before {
-  box-shadow: inset 0 0 0 10rpx #149fff;
-}
-
-.status-circle.offline {
-  background: #999;
-}
-.status-circle.offline::before {
-  box-shadow: inset 0 0 0 10rpx #999;
-}
-
-.status-inner {
-  position: absolute;
-  inset: 10rpx;
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.status-text {
-  font-size: 24rpx;
-  text-align: center;
-  white-space: pre-line;
-  line-height: 34rpx;
-  color: #20d26a;
-}
-
-.status-circle.busy .status-text {
-  color: #149fff;
-}
-.status-circle.offline .status-text {
-  color: #999;
-}
-
-.cell-right {
-  margin-left: 24rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-}
-
-.cell-title {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.cell-name {
-  font-size: 30rpx;
-  color: #1a1a1a;
-  font-weight: 700;
-}
-
-.cell-tag {
-  font-size: 22rpx;
-  color: #ff8a00;
-  background: #fff4e6;
-  padding: 4rpx 10rpx;
-  border-radius: 8rpx;
-}
-
-.cell-sub {
-  font-size: 26rpx;
-  color: #8a8a8a;
-}
-
-.sheet-footer {
-  padding: 0 0 28rpx 0;
-}
-
-.sheet-bottom-actions {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
-  padding: 24rpx 28rpx;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sheet-scan-btn {
-  display: flex;
-  align-items: center;
-}
-
-.sheet-scan-image {
-  width: 350rpx;
-}
-
-/* 让弹窗底部的扫码区域与主页面一致居右贴底 */
-.sheet-bottom-actions .sheet-scan-btn {
-  margin-right: 0;
-}
-
-/* 价格详情表 */
-.price-table {
-  padding: 0 24rpx 24rpx 24rpx;
-}
-
-.table-head,
-.table-row {
-  display: grid;
-  grid-template-columns: 2.4fr 1.4fr 1.2fr 1.2fr 1.4fr;
-  align-items: center;
-  column-gap: 12rpx;
-}
-
-.table-head {
-  padding: 20rpx 12rpx;
-  color: #a0a0a0;
-  font-size: 24rpx;
-}
-
-.table-body {
-  max-height: 48vh;
-}
-
-.table-row {
-  position: relative;
-  background: #f7f7f8;
-  margin-bottom: 14rpx;
-  padding: 22rpx 24rpx;
-  border-radius: 14rpx;
-  color: #333;
-  font-size: 26rpx;
-}
-
-.td.strong {
-  font-weight: 700;
-}
-
-/* 右上角角标（带文字） */
-.tag-badge {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 48rpx;
-  padding: 0 16rpx 0 24rpx;
-  border-bottom-left-radius: 24rpx;
-  display: flex;
-  align-items: center;
-}
-.tag-badge.now {
-  background: url("/static/img/now-price.png") no-repeat right top / contain;
-  /* 若切图含透明，只为占位，可按需去掉 */
-}
-.tag-badge.low {
-  background: url("/static/img/blue-low.png") no-repeat right top / contain;
-}
-.tag-text {
-  color: #fff;
-  font-size: 22rpx;
-}
-
-.table-tip {
-  color: #b0b0b0;
-  font-size: 22rpx;
-  padding: 16rpx 12rpx;
-  line-height: 32rpx;
-}
-
-.scan-icon {
-  width: 40rpx;
-  height: 40rpx;
-}
-
 .bottom-space {
-  height: 160rpx;
+  height: 200rpx;
 }
 </style>

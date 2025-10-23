@@ -81,12 +81,6 @@
             "navigationBarTitleText": "正在充电",
             "navigationStyle": "custom"
           }
-        },
-        {
-          "path": "site/stationComment",
-          "style": {
-            "navigationBarTitleText": "场站评价"
-          }
         }
       ]
     },
