@@ -129,7 +129,7 @@ export default {
         height: 36rpx;
         font-size: 20rpx;
         color: #fff;
-        background: $primary-color;
+        background: #19a0ff;
         border-radius: 0 16rpx 0 16rpx;
       }
       .price {

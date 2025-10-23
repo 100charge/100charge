@@ -126,7 +126,7 @@ export default {
           clearInterval(this.heartbeatInterval)
           setTimeout(() => {
             uni.redirectTo({
-              // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
+              // url: "/pages/stations/orders/orderDetail?orderNo=" + this.orderNo,
               url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
             })
           }, 2000)
@@ -188,7 +188,7 @@ export default {
       setTimeout(() => {
         that.$refs.chargingCountdownRef.close()
         uni.redirectTo({
-          // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
+          // url: "/pages/stations/orders/orderDetail?orderNo=" + this.orderNo,
           url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
         })
         that.disabled = false
@@ -212,7 +212,7 @@ export default {
             setTimeout(() => {
               that.$refs.chargingCountdownRef.close()
               uni.redirectTo({
-                // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
+                // url: "/pages/stations/orders/orderDetail?orderNo=" + this.orderNo,
                 url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
               })
               that.disabled = false

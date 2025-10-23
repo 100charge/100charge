@@ -72,7 +72,7 @@ export default {
       if (this.type == "end") {
         setTimeout(() => {
           uni.redirectTo({
-            url: "/pages/stations/charging/chargingOrder?orderNo=" + this.orderNo,
+            url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
           })
         }, 1000)
       }

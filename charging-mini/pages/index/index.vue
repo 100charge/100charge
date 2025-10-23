@@ -285,7 +285,7 @@ export default {
               success: (result) => {
                 if (result.confirm) {
                   uni.navigateTo({
-                    url: "/pages/stations/charging/chargingDetail?orderNo=" + res.data.tradeNo,
+                    url: "/pages/stations/orders/orderDetail?orderNo=" + res.data.tradeNo,
                   })
                 }
               },
