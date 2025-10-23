@@ -58,7 +58,7 @@ export default {
       tabList: [
         {
           id: "home",
-          path: "/pages/index/home",
+          path: "/pages/index/index",
           icon: require("./tabbar/index-no.png"),
           selectIcon: require("./tabbar/index.png"),
           text: "首页",

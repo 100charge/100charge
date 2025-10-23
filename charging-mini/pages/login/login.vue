@@ -131,7 +131,7 @@ export default {
                   uni.navigateBack()
                 } else {
                   uni.switchTab({
-                    url: "/pages/index/home",
+                    url: "/pages/index/index",
                   })
                 }
               }

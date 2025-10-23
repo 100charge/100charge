@@ -21,13 +21,13 @@ export default {
     finishCountDown() {
       uni.setStorageSync("hasShowFirstScreen", true)
       uni.switchTab({
-        url: "/pages/index/home",
+        url: "/pages/index/index",
       })
     },
     handleFinish() {
       uni.setStorageSync("hasShowFirstScreen", true)
       uni.switchTab({
-        url: "/pages/index/home",
+        url: "/pages/index/index",
       })
     },
     onChangeCountDown(e) {

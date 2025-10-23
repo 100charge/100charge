@@ -79,7 +79,7 @@ export default {
   methods: {
     toHome() {
       uni.switchTab({
-        url: "/pages/index/home",
+        url: "/pages/index/index",
       })
     },
     handleCoupon() {

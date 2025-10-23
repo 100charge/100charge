@@ -110,7 +110,7 @@ export default {
     },
     goHome() {
       uni.switchTab({
-        url: "/pages/index/home",
+        url: "/pages/index/index",
       })
     },
   },
