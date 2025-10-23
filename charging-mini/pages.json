@@ -1,149 +1,199 @@
 {
-	"pages": [
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "100Charge充电",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/scan/scan",
-			"style": {
-				"navigationBarTitleText": "扫码充电",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/profile/profile",
-			"style": {
-				"navigationBarTitleText": "个人中心",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/charging/charging",
-			"style": {
-				"navigationBarTitleText": "充电详情",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/station-detail/station-detail",
-			"style": {
-				"navigationBarTitleText": "电站详情",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "white"
-			}
-		},
-		{
-			"path": "pages/add-car/add-car",
-			"style": {
-				"navigationBarTitleText": "添加爱车",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/charging-countdown/charging-countdown",
-			"style": {
-				"navigationBarTitleText": "充电确认",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "black"
-			}
-		},
-
-		{
-			"path": "pages/charging-settlement/charging-settlement",
-			"style": {
-				"navigationBarTitleText": "支付账单",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/orders/orders",
-			"style": {
-				"navigationBarTitleText": "充电订单",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/invoice/invoice",
-			"style": {
-				"navigationBarTitleText": "开具发票",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/invoice/invoice-header",
-			"style": {
-				"navigationBarTitleText": "抬头管理",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/invoice/invoice-header-add",
-			"style": {
-				"navigationBarTitleText": "新增发票抬头",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/coupons/coupons",
-			"style": {
-				"navigationBarTitleText": "优惠券",
-				"navigationBarBackgroundColor": "#ffffff",
-				"navigationBarTextStyle": "black"
-			}
-		}
-	],
-	"subPackages": [
-		{
-			"root": "subpkg/charging",
-			"name": "charging",
-			"pages": [
-				{
-					"path": "charging-in-progress/charging-in-progress",
-					"style": {
-						"navigationBarTitleText": "充电中",
-						"navigationStyle": "custom",
-						"navigationBarTextStyle": "black"
-					}
-				}
-			]
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "100Charge充电",
-		"navigationBarBackgroundColor": "#4a90e2",
-		"backgroundColor": "#f5f5f5"
-	},
-	"tabBar": {
-		"list": [
-			{
-				"pagePath": "pages/index/index"
-			},
-			{
-				"pagePath": "pages/profile/profile"
-			}
-		]
-	},
-	"easycom": {
-		"autoscan": true,
-		"custom": {
-			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-			"MapView": "@/components/MapView/MapView.vue"
-		}
-	},
-	"uniIdRouter": {}
+  "easycom": {
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "100Charge",
+        "enablePullDownRefresh": true,
+        "usingComponents": {
+          "privacy": "/wxcomponents/privacy/privacy"
+        },
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/index/start",
+      "style": {
+        "navigationBarTitleText": "100Charge",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom",
+        "transparentTitle": "always", // 导航栏透明设置,"always"：标题栏区域完全透明
+        "titlePenetrate": "YES" // 允许点击穿透后，才能触发导航栏上的 onTap 事件
+      }
+    },
+    {
+      "path": "pages/index/wode",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom",
+        "transparentTitle": "always", // 导航栏透明设置,"always"：标题栏区域完全透明
+        "titlePenetrate": "YES" // 允许点击穿透后，才能触发导航栏上的 onTap 事件
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom",
+        "transparentTitle": "always", // 导航栏透明设置,"always"：标题栏区域完全透明
+        "titlePenetrate": "YES" // 允许点击穿透后，才能触发导航栏上的 onTap 事件
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "pages/stations",
+      "pages": [
+        {
+          "path": "orders/orderList",
+          "style": {
+            "navigationBarTitleText": "充电订单",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "charging/chargingDetail",
+          "style": {
+            "navigationBarTitleText": "订单详情",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "site/stationDetail",
+          "style": {
+            "navigationBarTitleText": "电站详情"
+          }
+        },
+        {
+          "path": "site/previewCharge",
+          "style": {
+            "navigationBarTitleText": "充电确认",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "site/charging",
+          "style": {
+            "navigationBarTitleText": "正在充电",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "site/stationComment",
+          "style": {
+            "navigationBarTitleText": "场站评价"
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages/wode",
+      "pages": [
+        {
+          "path": "userInfo",
+          "style": {
+            "navigationBarTitleText": "基本资料"
+          }
+        },
+        {
+          "path": "recharge/myCoupon",
+          "style": {
+            "navigationBarTitleText": "我的优惠券",
+            "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#fff",
+            "navigationBarTextStyle": "black"
+          }
+        },
+        {
+          "path": "car/myCarList",
+          "style": {
+            "navigationBarTitleText": "车辆管理",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "car/carAuth",
+          "style": {
+            "navigationBarTitleText": "车辆认证",
+            "app-plus": {
+              "softinputMode": "adjustResize"
+            }
+          }
+        },
+        {
+          "path": "car/addCar",
+          "style": {
+            "navigationBarTitleText": "我的爱车"
+          }
+        },
+        {
+          "path": "recharge/recharge",
+          "style": {
+            "navigationBarTitleText": "充值"
+          }
+        },
+        {
+          "path": "recharge/balance",
+          "style": {
+            "navigationBarTitleText": "充电余额",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "recharge/withdrawal",
+          "style": {
+            "navigationBarTitleText": "提现"
+          }
+        },
+        {
+          "path": "recharge/withdrawalResult",
+          "style": {
+            "navigationBarTitleText": "提现记录",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "extend/article",
+          "style": {
+            "navigationBarTitleText": "文章"
+          }
+        },
+        {
+          "path": "extend/kefu",
+          "style": {
+            "navigationBarTitleText": "客服中心"
+          }
+        }
+      ]
+    }
+  ],
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index"
+      },
+      {
+        "pagePath": "pages/index/start"
+      },
+      {
+        "pagePath": "pages/index/wode"
+      }
+    ]
+  },
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["pages/wode"]
+    }
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "100Charge",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#fff"
+  }
 }

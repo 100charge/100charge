@@ -15,14 +15,14 @@
           <view class="order-content">
             <view class="content-title">
               <view class="title-box">
-                <image class="icon-title" src="/static/img/station-vip.png" mode="scaleToFill" />
+                <image class="icon-title" src="/static/images/index/station-vip.png" mode="scaleToFill" />
                 <text class="title">{{ item.stationName || "" }}</text>
               </view>
               <view class="state-box">
-                <text :class="item.status == 0 || item.status == 1 || item.status == 3 ? 'status-nopay' : 'status'">{{
+                <text :class="item.status == 1 || item.status == 3 ? 'status-nopay' : 'status'">{{
                   item.statusDesc
                 }}</text>
-                <image class="icon-right" src="/static/img/right-gray.png" mode="scaleToFill" />
+                <image class="icon-right" src="/static/images/index/right-gray.png" mode="scaleToFill" />
               </view>
             </view>
             <view class="time"> {{ item.startTime }} </view>
@@ -32,9 +32,9 @@
             </view>
             <view class="content"> 充电{{ item.totalPower || 0 }}度·用时{{ item.realDuration }} </view>
             <view class="btn-box">
-              <button v-if="item.status == 0" @click.stop="goCharging(item)">去查看</button>
-              <button class="evaluate" v-else-if="item.status == 1" @click.stop="goPay(item)">去付款</button>
-              <button v-if="item.status == 2 && !item.reviewed" @click.stop="goEvaluate(item)">去评价</button>
+              <button v-if="item.status == 0">去查看</button>
+              <button class="evaluate" v-else-if="item.status == 1">去付款</button>
+              <button v-if="item.status == 2 && !item.reviewed">去评价</button>
             </view>
           </view>
         </u-transition>
@@ -46,7 +46,7 @@
     </view>
     <!-- 空状态 -->
     <view class="nodata" v-if="list && list.length === 0">
-      <image src="/static/img/empty1.png" mode="scaleToFill"></image>
+      <image src="/static/images/index/empty1.png" mode="scaleToFill"></image>
       <view class="nodata-text">
         <span>暂无订单</span>
       </view>
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { getChargingOrderList } from "@/config/api.js"
+import { onLoad } from "uview-ui/libs/mixin/mixin"
 export default {
   components: {},
   data() {
@@ -68,10 +70,6 @@ export default {
       totalRows: 0,
       modeFade: "fade-down",
     }
-  },
-  onLoad() {
-    // 初始化模拟数据
-    this.initMockData()
   },
   onShow() {
     this.sTab("all")
@@ -96,49 +94,6 @@ export default {
     }
   },
   methods: {
-    // 初始化模拟数据
-    initMockData() {
-      this.list = [
-        {
-          id: 1,
-          stationName: "青岛劲松三路金泽供热站充电站",
-          status: 1,
-          statusDesc: "待支付",
-          startTime: "2025-07-17 14:23",
-          realAmount: "8.34",
-          totalPower: "6",
-          realDuration: "2分钟31秒",
-          tradeNo: "202507171423001",
-          reviewed: false
-        },
-        {
-          id: 2,
-          stationName: "青岛劲松三路金泽供热站充电站",
-          status: 2,
-          statusDesc: "已完成",
-          startTime: "2025-07-17 14:23",
-          realAmount: "8.34",
-          totalPower: "6",
-          realDuration: "2分钟31秒",
-          tradeNo: "202507171423002",
-          reviewed: false
-        },
-        {
-          id: 3,
-          stationName: "青岛劲松三路金泽供热站充电站",
-          status: 0,
-          statusDesc: "进行中",
-          startTime: "2025-07-17 14:23",
-          realAmount: "--",
-          totalPower: "6",
-          realDuration: "1分钟31秒",
-          tradeNo: "202507171423003",
-          reviewed: false
-        }
-      ]
-      this.totalRows = this.list.length
-    },
-    
     handleDetail(item) {
       if (item.status == 3) {
         uni.showToast({
@@ -148,50 +103,36 @@ export default {
         return
       }
       if (item.status == 0) {
-        this.goCharging(item)
+        uni.navigateTo({
+          url: "/pages/stations/site/charging?orderNo=" + item.tradeNo,
+        })
       }
       if (item.status == 1 || item.status == 2) {
-        this.goOrderDetail(item)
+        uni.navigateTo({
+          url: "/pages/stations/charging/chargingDetail?orderNo=" + item.tradeNo,
+        })
       }
     },
-    
-    goCharging(item) {
-      uni.navigateTo({
-        url: "/subpkg/charging/charging-in-progress/charging-in-progress?orderNo=" + item.tradeNo + "&stationName=" + encodeURIComponent(item.stationName)
-      })
-    },
-    
-    goPay(item) {
-      uni.showToast({
-        title: "跳转支付页面",
-        icon: "none"
-      })
-    },
-    
-    goEvaluate(item) {
-      uni.showToast({
-        title: "跳转评价页面",
-        icon: "none"
-      })
-    },
-    
-    goOrderDetail(item) {
-      uni.navigateTo({
-        url: "/pages/charging-settlement/charging-settlement?orderNo=" + item.tradeNo
-      })
-    },
-    
     sTab(status) {
       this.status = status
-      this.filterList()
+      this.list = []
+      this.pageNum = 1
+      this.orderList()
     },
-    
-    filterList() {
-      // 根据状态筛选订单
-      this.initMockData() // 重新获取全部数据
-      if (this.status !== 'all') {
-        this.list = this.list.filter(item => item.status == this.status)
-      }
+    /**
+     * 获取订单列表
+     */
+    orderList() {
+      var that = this
+      getChargingOrderList({
+        status: this.status == "all" ? null : this.status,
+        pageNum: this.pageNum,
+      }).then((res) => {
+        if (res && res.code == 200) {
+          that.totalRows = res.total
+          that.list.push(...res.rows)
+        }
+      })
     },
 
     //计算两个时间之间的时间差 多少天时分秒
@@ -279,10 +220,22 @@ image {
       bottom: 0rpx;
       width: 26rpx;
       height: 5rpx;
-      background: #ff6b01;
+      background: $primary-color;
       border-radius: 54rpx 54rpx 54rpx 54rpx;
     }
   }
+}
+
+.main .mu-tabs .item {
+  padding: 5px 10px;
+  line-height: 35px;
+  text-align: center;
+  border-bottom: 1px solid #010c3d;
+}
+
+.main .mu-tabs .active {
+  color: #1ec5f1;
+  border-bottom: 1px solid #1ec5f1;
 }
 
 .order-nlist {
@@ -323,7 +276,7 @@ image {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        word-break: break-all;
+        word-break: break-all; // 数字 字母换行
       }
 
       .state-box {
@@ -342,11 +295,7 @@ image {
         }
 
         .status-nopay {
-          color: #ff6b01;
-        }
-        
-        .status-progress {
-          color: #ff6b01;
+          color: $primary-color;
         }
 
         .icon-right {
@@ -369,7 +318,7 @@ image {
 
     .price-box {
       padding-left: 16rpx;
-      color: #ff6b01;
+      color: $primary-color;
       position: relative;
 
       .unit {
@@ -410,7 +359,6 @@ image {
         display: flex;
         align-items: center;
         justify-content: center;
-        border: none;
       }
 
       button.evaluate {

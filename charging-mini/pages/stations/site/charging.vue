@@ -127,7 +127,7 @@ export default {
           setTimeout(() => {
             uni.redirectTo({
               // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
-              url: "/pages/stations/charging/chargingOrder?orderNo=" + this.orderNo,
+              url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
             })
           }, 2000)
         }
@@ -189,7 +189,7 @@ export default {
         that.$refs.chargingCountdownRef.close()
         uni.redirectTo({
           // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
-          url: "/pages/stations/charging/chargingOrder?orderNo=" + this.orderNo,
+          url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
         })
         that.disabled = false
       }, 7500)
@@ -213,7 +213,7 @@ export default {
               that.$refs.chargingCountdownRef.close()
               uni.redirectTo({
                 // url: "/pages/stations/charging/chargingDetail?orderNo=" + this.orderNo,
-                url: "/pages/stations/charging/chargingOrder?orderNo=" + this.orderNo,
+                url: "/pages/stations/orders/orderList?orderNo=" + this.orderNo,
               })
               that.disabled = false
             }, 7500)

@@ -29,7 +29,7 @@
       <view class="common-functions">
         <view class="function-title">常用功能</view>
         <view class="function-grid">
-          <view class="function-item" @click="navigateToPage('/pages/stations/charging/chargingOrder')">
+          <view class="function-item" @click="navigateToPage('/pages/stations/orders/orderList')">
             <view class="function-icon">
               <image src="/static/img/mine/dingdan.png" mode="heightFix"></image>
             </view>
