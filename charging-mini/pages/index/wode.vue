@@ -35,19 +35,18 @@
             </view>
             <text>订单</text>
           </view>
+          <view class="function-item" @click="navigateToPage('/pages/wode/recharge/myCoupon')">
+            <view class="function-icon">
+              <image src="/static/img/mine/youhui.png" mode="heightFix"></image>
+              <view class="coupon-badge" v-if="couponCount > 0">{{ couponCount }}</view>
+            </view>
+            <text>优惠券</text>
+          </view>
           <view class="function-item" @click="navigateToPage()">
             <view class="function-icon">
               <image src="/static/img/mine/kaipiao.png" mode="heightFix"></image>
             </view>
             <text>开票</text>
-          </view>
-          <view class="function-item" @click="navigateToPage('/pages/wode/recharge/myCoupon')">
-            <view class="function-icon">
-              <image src="/static/img/mine/youhui.png" mode="heightFix"></image>
-
-              <view class="coupon-badge" v-if="couponCount > 0">{{ couponCount }}</view>
-            </view>
-            <text>优惠券</text>
           </view>
           <view class="function-item" @click="navigateToPage()">
             <view class="function-icon">
