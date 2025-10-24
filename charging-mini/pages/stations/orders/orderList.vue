@@ -56,7 +56,6 @@
 
 <script>
 import { getChargingOrderList } from "@/config/api.js"
-import { onLoad } from "uview-ui/libs/mixin/mixin"
 export default {
   components: {},
   data() {
@@ -109,7 +108,7 @@ export default {
       }
       if (item.status == 1 || item.status == 2) {
         uni.navigateTo({
-          url: "/pages/stations/charging/chargingDetail?orderNo=" + item.tradeNo,
+          url: "/pages/stations/orders/orderDetail?orderNo=" + item.tradeNo,
         })
       }
     },
