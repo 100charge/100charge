@@ -108,12 +108,6 @@ export const constantRoutes = [
         name: "chargingPileDetail",
         meta: { title: "充电桩详情", activeMenu: "/device/pile" },
       },
-      {
-        path: "monitor",
-        component: () => import("@/views/device/monitor/index.vue"),
-        name: "monitorDetail",
-        meta: { title: "充电实况", activeMenu: "" },
-      },
     ],
   },
 ]
