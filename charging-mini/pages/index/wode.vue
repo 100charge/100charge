@@ -5,7 +5,7 @@
       <view class="my-info-box" style="padding-top: 10vh">
         <view class="my-info-content">
           <view class="content-info">
-            <image class="avatat" :src="userInfo.avatar || '/static/img/default-avatar.png'" mode="scaleToFill"></image>
+            <image class="avatat" :src="userInfo.avatar || '/static/img/head-img.png'" mode="scaleToFill"></image>
             <view class="my-phone" v-if="isLogin">
               {{ userInfo.userName || encryptPhoneNumber(userInfo.mobile) }}
             </view>
@@ -35,7 +35,7 @@
             </view>
             <text>订单</text>
           </view>
-          <view class="function-item" @click="navigateToPage('/pages/wode/recharge/myCoupon')">
+          <view class="function-item" @click="navigateToPage('')">
             <view class="function-icon">
               <image src="/static/img/mine/youhui.png" mode="heightFix"></image>
               <view class="coupon-badge" v-if="couponCount > 0">{{ couponCount }}</view>
