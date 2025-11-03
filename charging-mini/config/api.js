@@ -49,7 +49,6 @@ export const onStartupSuccess = (params) =>
 // 启动-轮训查询是否启动成功
 export const getOrderInfoByTradeNo = (params) =>
     http.get("/chargingOrder/getOrderInfoByTradeNo", { params });
-// /realtime-data/{operatorId}/{deviceNo}/{gunNo}
 export const getRealtimeData = (params) =>
     http.get("/realtime-data/status", { params });
 // 结束充电
