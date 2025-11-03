@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <el-form ref="registerRef" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">充电桩后台管理系统</h3>
+      <h3 class="title">充电桩后台运营系统</h3>
       <el-form-item prop="username">
         <el-input v-model="registerForm.username" type="text" size="large" auto-complete="off" placeholder="账号">
           <template #prefix><svg-icon icon-class="user" class="el-input__icon input-icon" /></template>

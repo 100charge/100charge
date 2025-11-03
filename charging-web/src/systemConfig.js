@@ -12,7 +12,7 @@ const defaultConfig = {
   /**
    * 默认标题
    */
-  defaultTitle: '铱佰能链充电桩管理系统',
+  defaultTitle: '铱佰能链充电桩运营系统',
   /**
    * login页面底部copyright
    */
