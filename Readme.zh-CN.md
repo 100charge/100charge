@@ -56,15 +56,15 @@
 
     我们提供两种版本，以满足不同阶段和规模的用户选择：
 
-**社区版**
+## 1.社区版
 
     如果您想快速推进业务落地，社区版是适合的选择，它包含的四项核心功能足以满足您的需求。社区版包含了稳定可靠的充电桩管理，计费策略，订单管理。助力您快速低成本开启充电场站运营。
 
-**商业版**
+## 2.商业版
 
     如果你要想要更精细化的运营与管理，商业版将是您的最佳选择。在**社区版**的基础上，额外提供了企业级的高阶运营功能，比如多维度的数据分析，营销工具等。并且提供官方技术保障与支持，满足复杂的商业场景。
 
-**版本对比**
+## 3.功能对比
 
 | 父模块  | 子模块     | 社区版 | 商业版 |
 | ---- | ------- | --- | --- |
@@ -113,15 +113,67 @@
 
 ## 1 项目结构
 
+```
+100charge/
+├─ charging-api/                    # 后端（多模块 Maven 聚合工程，业务与支撑服务）
+│  ├─ pom.xml                       # 父 POM：统一依赖 & 版本管理 (Spring Boot 2.6.x, Java 8 -> 计划升级 21)
+│  ├─ start.bat / start.sh          # 启动脚本（打包 & 运行封装）
+│  ├─ sql/                          # 数据库初始化脚本
+│  │  ├─ BaseAdminAPI.sql
+│  │  └─ postgresql/                # 分步骤建库脚本（step1/step2）
+│  ├─ xingchuan-admin/              # Admin 接口层模块（可能聚合管理端业务入口，Controller/接口适配）
+│  ├─ xingchuan-framework/          # 框架核心：基础配置、通用组件（安全、异常、日志、序列化等）
+│  ├─ xingchuan-system/             # 系统业务模块：用户、角色、权限、配置、认证集成等
+│  ├─ xingchuan-quartz/             # 定时任务调度模块（Quartz 封装，任务定义 & 执行管理）
+│  ├─ xingchuan-generator/          # 代码生成模块（基于 Velocity/模板生成 CRUD、前端页面等）
+│  ├─ xingchuan-common/             # 通用工具类：POJO、枚举、工具方法、常量、通用响应封装
+│  └─ target/                       # 编译输出（各子模块也有各自 target）
+│
+├─ charging-web/                    # Vue3 + Vite 管理后台前端
+│  ├─ package.json                  # 前端依赖 (Vue3, ElementPlus, Pinia, Axios, ECharts)
+│  ├─ vite.config.js                # Vite 构建配置（按环境区分 dev/staging/prod）
+│  ├─ src/
+│  │  ├─ main.js                    # 入口文件（注册全局组件、路由、状态）
+│  │  ├─ App.vue
+│  │  ├─ permission.js              # 路由权限守卫（token/role 校验）
+│  │  ├─ systemConfig.js            # 系统常量或运行时配置
+│  │  ├─ api/                       # 后端接口封装（Axios 封装、模块化 API）
+│  │  ├─ assets/                    # 静态资源（样式、图片、图标）
+│  │  ├─ components/                # 通用业务组件（表格、上传、富文本、选择器等）
+│  │  ├─ directive/                 # 全局指令（权限指令、焦点指令等）
+│  │  ├─ layout/                    # 主布局（侧边栏、头部、标签页容器）
+│  │  ├─ plugins/                   # 插件注册（图标、富文本、SVG 等）
+│  │  ├─ router/                    # 路由定义（动态菜单/权限路由）
+│  │  ├─ store/                     # Pinia 状态（用户、菜单、设置）
+│  │  ├─ utils/                     # 工具方法（请求封装、缓存、加解密）
+│  │  └─ views/                     # 业务页面（用户管理、订单管理、统计报表等）
+│  └─ public/                       # 公共静态资源
+│
+├─ charging-mini/                   # 微信/小程序 & H5 端（基于 uni-app）
+│  ├─ package.json                  # 依赖 (uview-ui, echarts, md5 等)
+│  ├─ pages.json / manifest.json    # 页面与应用配置（路由/窗口/运行时）
+│  ├─ main.js                       # 入口初始化（全局组件 & 请求封装挂载）
+│  ├─ App.vue
+│  ├─ uni.scss / common.scss        # 全局样式/主题
+│  ├─ components/                   # 复用组件（站点卡片、地图、搜索、优惠券等）
+│  │  ├─ home-map/
+│  │  ├─ home-station-card/
+│  │  ├─ tabbar/
+│  ├─ config/
+│  │  ├─ api.js                     # 后端接口地址集中管理
+│  │  ├─ request.js                 # 请求封装（拦截器、token 注入）
+│  │  └─ md5Utils.js                # 加密/签名工具
+│  ├─ pages/
+│  │  ├─ index/                     # 首页/个人中心/启动页
+│  │  ├─ login/                     # 登录流程（手机号/验证码/微信授权）
+│  │  ├─ scan/                      # 扫码充电入口
+│  │  ├─ stations/                  # 站点列表 & 地图模式
+│  │  └─ wode/                      # 我的订单/账户/优惠券等
+│  ├─ utils/                        # mixin、通用方法
+│  ├─ wxcomponents/                 # 微信官方组件（隐私弹窗等）
+│  └─ static/                       # 图片/脚本资源
 
-
-## 2 前端
-
-### 2.1 运营系统
-
-### 2.2 小程序
-
-## 3 后端
+```
 
 # 五 运维环境
 
@@ -192,10 +244,10 @@
 
 # 十 联系我们
 
+**QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**：766266573，入群请填写：100+姓名
+
+<img src="./images/3aec43df-6a54-4515-ad4d-9c890771ba09.png" title="" alt="3aec43df-6a54-4515-ad4d-9c890771ba09" data-align="center">
+
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
 <img src="./images/fae88e40-6921-4b36-a24b-ab1397ee86bc.png" title="" alt="fae88e40-6921-4b36-a24b-ab1397ee86bc" data-align="center">
-
-**QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**，入群请填写：100+姓名
-
-<img src="./images/98bafeed-b960-4d95-adf5-303c13c96d48.png" title="" alt="98bafeed-b960-4d95-adf5-303c13c96d48" data-align="center">
