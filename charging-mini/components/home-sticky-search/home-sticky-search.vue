@@ -475,7 +475,7 @@ export default {
       height: 44rpx;
       font-size: 24rpx;
       border-radius: 22rpx;
-      background: linear-gradient(90deg, #ffb86c 0%, #ff4d00 100%);
+      background: #333;
       color: #fff;
       display: flex;
       justify-content: center;

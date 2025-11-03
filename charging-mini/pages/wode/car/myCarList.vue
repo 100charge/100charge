@@ -21,7 +21,7 @@
     </view>
     <view class="add-c-box" v-else>
       <view class="empty-wrapper">
-        <image src="/static/images/index/empty1.png" mode="aspectFit"></image>
+        <image src="/static/images/index/empty.png" mode="aspectFit"></image>
         <view class="empty-text">暂未添加车辆</view>
       </view>
     </view>

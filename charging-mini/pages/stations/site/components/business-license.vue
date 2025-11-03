@@ -3,7 +3,7 @@
     <view class="popup-content">
       <image v-if="licenseImg" @click="previewImage" :src="licenseImg" mode="aspectFit"></image>
       <view v-else class="empty-wrapper">
-        <image src="/static/images/index/empty2.png" mode="aspectFit"></image>
+        <image src="/static/images/index/empty.png" mode="aspectFit"></image>
         <view class="empty-text">暂未上传执照照片</view>
       </view>
     </view>

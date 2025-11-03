@@ -15,7 +15,7 @@
     </view>
 
     <view class="empty-wrapper" style="padding-top: 200rpx" v-if="list.length === 0">
-      <image src="/static/images/index/empty1.png" mode="aspectFit"></image>
+      <image src="/static/images/index/empty.png" mode="aspectFit"></image>
       <view class="empty-text">暂无优惠券</view>
     </view>
   </view>
