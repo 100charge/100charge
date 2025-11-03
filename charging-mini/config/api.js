@@ -1,19 +1,13 @@
 const http = uni.$u.http;
 // 微信登录
 export const appletWeChatLogin = (params) => http.post("/wxQuickLogin", params);
-// 支付宝登录
-export const appletAlipayLogin = (params) =>
-    http.post("/aLiQuickLogin", params);
 // 绑定手机号
 export const appletBindMobile = (params) =>
     http.get("/appletBindMobile", { params });
-export const alipayBindMobile = (params) =>
-    http.get("/alipayBindMobile", { params });
-// 账号密码登录
-export const accountLogin = (params) => http.post("/accountLogin", params);
+
 // 获取字典值
 export const getDictDataByType = (params) =>
-    http.get("/dictData/getDictDataByType", { params });
+    http.get("/system/dict/data/getDictDataByType", { params });
 // 首页-获取开放城市
 export const getOpenCities = (params) =>
     http.get("/area/getOpenCities", { params });
@@ -24,12 +18,12 @@ export const getBannerList = (params) =>
 export const getPendingPaymentOrder = (params) =>
     http.get("/chargingOrder/getPendingPaymentOrder", { params });
 // 分页场站
-export const pageStation = (params) => http.get("/stations/list", { params });
+export const pageStation = (params) => http.get("/stations/miniStationList", { params });
 export const listMapStation = (params) =>
     http.get("/stations/listMapStation", { params });
 // 场站管理-查询详情
 export const stationDetail = (params) =>
-    http.get("/stations/getDetailById", { params });
+    http.get("/stations/getMiniStationDetailById", { params });
 // 场站管理-根据场站id查询电桩信息
 export const getStationDevice = (params) =>
     http.get("/stations/getStationDevice", { params });
@@ -76,12 +70,7 @@ export const deleteCar = (params) =>
 // 我的-车列表
 export const getUserCarList = (params) =>
     http.get("/appUser/listAppUserCar", { params });
-// 我的-车辆认证
-export const vehicleCertification = (params) =>
-    http.post("/appUser/vehicleCertification", params);
-// 我的-车辆ocr
-export const ocrRecognition = (params) =>
-    http.post("/appUser/ocrRecognition", params);
+
 // 我的-获取用户余额
 export const getUserBalance = (params) =>
     http.get("/appUser/getUserBalance", { params });
@@ -90,9 +79,9 @@ export const getUserInfo = (params) =>
     http.get("/appUser/getUserInfo", { params });
 // 我的-订单列表
 export const getChargingOrderList = (params) =>
-    http.get("/chargingOrder/list", { params });
+    http.get("/chargingOrder/miniOrderList", { params });
 export const getOrderDetail = (params) =>
-    http.get("/chargingOrder/orderDetail", { params });
+    http.get("/chargingOrder/miniOrderDetail", { params });
 // 评价-根据订单查看评价
 export const getEvaluationByOrder = (params) =>
     http.get("/stationEvaluation/getEvaluationByOrder", { params });
@@ -108,26 +97,16 @@ export const getConfigKey = (params) =>
 // 我的-优惠券列表
 export const appUserPromotionList = (params) =>
     http.get("/appUserPromotion/list", { params });
-// 通过充值金额获取优惠信息
-export const showPromotionInfo = (params) =>
-    http.get("/appUser/showPromotionInfo", { params });
-export const preRechargeAlipay = (params) =>
-    http.get("/appUser/aLiUserRecharge", { params });
-export const preRechargeWX = (params) =>
-    http.get("/appUser/wxUserRecharge", { params });
+
+export const preRecharge = (params) =>
+    http.post("/pay/recharge", params);
 // 提现申请
 export const userWithdrawal = (params) =>
-    http.get("/appUser/userWithdrawal", { params });
+    http.get("/pay/withdrawal", { params });
 // 提现申请记录
 export const getWithdrawalApplicationPage = (params) =>
-    http.get("/appUser/getWithdrawalApplicationPage", { params });
+    http.get("/pay/getWithdrawalApplicationPage", { params });
 // 获取文章
 export const getNoticeDetail = (params) =>
     http.get("/banner/getNoticeDetail", { params });
-// 获取活动
-export const getUserMarketingStrategy = (params) =>
-    http.get("/marketingStrategy/getUserMarketingStrategy", { params });
-export const getUserMarketingStrategyById = (params) =>
-    http.get("/marketingStrategy/getUserMarketingStrategyById", { params });
-export const claimCoupon = (params) =>
-    http.get("/marketingStrategy/claimCoupon", { params });
+

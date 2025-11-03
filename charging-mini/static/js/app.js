@@ -1,9 +1,11 @@
 var imgUrl =
   "https://charging-hz-oss-bucket.oss-cn-hangzhou.aliyuncs.com/static/";
 // 100Charge
-var appid = "您的appid"
-// 测试
-var api = "/";
+var appName = "100Charge"
+var appid = "wx361b3b951a7d5f54"
+var api = "http://192.168.110.135:8083/"; // api
+var qqMapKey = "5E2BZ-ZDS3L-3JEPJ-MYBKS-ZCMHS-EEF7A" // 王腾
+
 
 
 function toDecimal2(x) {
