@@ -16,12 +16,10 @@
 
       <!-- 账户余额区域 -->
       <view class="balance-box">
-        <view class="balance-content">
+        <view class="balance-content" @click="navigateToPage('/pages/wode/recharge/balance')">
           <image class="balance-icon" src="/static/img/mine/yue.png" mode="aspectFit"></image>
-          <text class="balance-text" @click="navigateToPage('/pages/wode/recharge/balance')"
-            >账户余额：{{ accountBalance }}</text
-          >
-          <view class="recharge-btn" @click="navigateToPage('/pages/wode/recharge/recharge')"> 去充值 </view>
+          <text class="balance-text">账户余额：{{ accountBalance }}</text>
+          <view class="recharge-btn"> 去充值 </view>
         </view>
       </view>
 

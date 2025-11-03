@@ -1074,18 +1074,17 @@
 
 	.empty-wrapper {
 		text-align: center;
-		padding: 100rpx 0;
+		padding: 30rpx 0;
 		margin: 0 auto;
 		image {
 			width: 480rpx;
-			height: 280rpx;
+			height: 400rpx;
 			margin: 0 auto;
 		}
 		.empty-text {
 			font-weight: 400;
 			font-size: 28rpx;
 			color: #999999;
-			margin-top: 28rpx;
 		}
 	}
 	/* 适配 iPhoneX */

@@ -56,7 +56,7 @@
           }
         },
         {
-          "path": "charging/chargingDetail",
+          "path": "orders/orderDetail",
           "style": {
             "navigationBarTitleText": "订单详情",
             "enablePullDownRefresh": true
@@ -88,12 +88,6 @@
       "root": "pages/wode",
       "pages": [
         {
-          "path": "userInfo",
-          "style": {
-            "navigationBarTitleText": "基本资料"
-          }
-        },
-        {
           "path": "recharge/myCoupon",
           "style": {
             "navigationBarTitleText": "我的优惠券",
@@ -107,15 +101,6 @@
           "style": {
             "navigationBarTitleText": "车辆管理",
             "enablePullDownRefresh": true
-          }
-        },
-        {
-          "path": "car/carAuth",
-          "style": {
-            "navigationBarTitleText": "车辆认证",
-            "app-plus": {
-              "softinputMode": "adjustResize"
-            }
           }
         },
         {
