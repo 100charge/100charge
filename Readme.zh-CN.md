@@ -1,5 +1,5 @@
 <p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/LOGO.png'  height="100" width="231"></img></p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">100Charge基于若依的充电运营平台</h1>
+<p align="center" style="margin: 30px 0 30px; font-weight: bold;font-size: larger;">100Charge基于若依的充电运营平台</h1>
 <p align="center">基于SpringBoot和若依框架开发</p>
 
 <p align="center">
@@ -104,9 +104,9 @@
 
 # 三 演示系统
 
-|     | 地址                               |
-| --- | -------------------------------- |
-| 社区版 | TODO                             |
+|     | 地址   |
+| --- | ---- |
+| 社区版 | TODO |
 | 商业版 | TODO |
 
 # 四 开发环境
@@ -177,5 +177,3 @@
 **QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**，入群请填写：100+姓名
 
 <img src="./images/98bafeed-b960-4d95-adf5-303c13c96d48.png" title="" alt="98bafeed-b960-4d95-adf5-303c13c96d48" data-align="center">
-
-
