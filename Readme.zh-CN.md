@@ -192,10 +192,14 @@
 
 # 十 联系我们
 
+**QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**，入群请填写：100+姓名
+
+<img src="./images/98bafeed-b960-4d95-adf5-303c13c96d48.png" title="" alt="98bafeed-b960-4d95-adf5-303c13c96d48" data-align="center">
+
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
 <img src="./images/fae88e40-6921-4b36-a24b-ab1397ee86bc.png" title="" alt="fae88e40-6921-4b36-a24b-ab1397ee86bc" data-align="center">
 
-**QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**，入群请填写：100+姓名
 
-<img src="./images/98bafeed-b960-4d95-adf5-303c13c96d48.png" title="" alt="98bafeed-b960-4d95-adf5-303c13c96d48" data-align="center">
+
+
