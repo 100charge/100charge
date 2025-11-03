@@ -122,7 +122,7 @@
           </scroll-view>
         </view>
         <view v-else class="empty-wrapper">
-          <image src="/static/images/index/empty1.png" mode="aspectFit"></image>
+          <image src="/static/images/index/empty.png" mode="aspectFit"></image>
           <view class="empty-text">暂无可用优惠券</view>
         </view>
         <view class="coupon-bottom-tip" @click="handleSelectedCoupon(null)">

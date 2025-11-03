@@ -46,7 +46,7 @@
     </view>
     <!-- 空状态 -->
     <view class="nodata" v-if="list && list.length === 0">
-      <image src="/static/images/index/empty1.png" mode="scaleToFill"></image>
+      <image src="/static/images/index/empty.png" mode="scaleToFill"></image>
       <view class="nodata-text">
         <span>暂无订单</span>
       </view>

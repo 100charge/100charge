@@ -29,7 +29,7 @@
         <view class="info-txt" style="color: #eb3713"> 用户未登录 </view>
         <view class="info-txt"> 您还未登录，无法使用此功能。 </view>
         <view class="info-login">
-          <image src="/static/images/index/empty2.png" mode="heightFix"></image>
+          <image src="/static/images/index/empty.png" mode="heightFix"></image>
         </view>
         <view class="info-btn-box">
           <view class="btn-cancel" @click="modalShow = false"> 我在看看 </view>

@@ -6,7 +6,7 @@
         <u-loadmore :status="loadStatus" />
       </view>
       <view v-else class="empty-wrapper">
-        <image src="/static/images/index/empty1.png" mode="aspectFit"></image>
+        <image src="/static/images/index/empty.png" mode="aspectFit"></image>
         <view class="empty-text">暂无场站</view>
       </view>
     </view>
