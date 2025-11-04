@@ -177,19 +177,37 @@
 
 # 六 安装部署
 
-## 1. 快速部署
+## 1. 依赖组件
+```mermaid
+flowchart TB
+    APP[充电桩管理系统<br/>Spring Boot 应用]
+    
+    APP --> PG[(PostgreSQL 14+<br/>:5432<br/>业务数据存储)]
+    APP --> REDIS[(Redis 6.2+<br/>:6379<br/>缓存/会话)]
+    APP --> MQ[(RocketMQ 4.9.4<br/>:9876<br/>消息队列)]
+    APP --> WECHAT[微信支付 API<br/>外部服务]
+    
+    PG -.-> PGDATA[业务数据<br/>用户订单<br/>场站桩枪]
+    REDIS -.-> RCACHE[会话缓存<br/>Token<br/>验证码]
+    MQ -.-> MQMSG[消息队列<br/>充电指令<br/>订单通知]
+    WECHAT -.-> PAY[支付退款<br/>余额充值]
+    
+    style APP fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style PG fill:#336791,stroke:#1a4d6d,stroke-width:2px,color:#fff
+    style REDIS fill:#DC382D,stroke:#a72822,stroke-width:2px,color:#fff
+    style MQ fill:#D77310,stroke:#a85a0a,stroke-width:2px,color:#fff
+    style WECHAT fill:#07C160,stroke:#059748,stroke-width:2px,color:#fff
+    
+    style PGDATA fill:#E3F2FD,stroke:#1976D2,stroke-width:1px
+    style RCACHE fill:#FFE0B2,stroke:#F57C00,stroke-width:1px
+    style MQMSG fill:#FFF9C4,stroke:#F9A825,stroke-width:1px
+    style PAY fill:#C8E6C9,stroke:#388E3C,stroke-width:1px
+```
+## 2. 快速部署
 
 
 
-## 2. 独立组件部署
-
-### 2. 数据库以及中间件
-
-#### 2.1 数据库
-
-#### 2.2 Redis
-
-#### 2.3 Elasticsearch
+## 3. 独立组件部署
 
 ## 3. 初始化数据库
 
@@ -277,3 +295,5 @@
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
 <img src="./images/fae88e40-6921-4b36-a24b-ab1397ee86bc.png" title="" alt="fae88e40-6921-4b36-a24b-ab1397ee86bc" data-align="center">
+
+
