@@ -288,7 +288,7 @@ docker run -itd \
 #### 数据库配置
 
 ```yaml
-# application-dev.yml
+# charging-api/application-dev.yml
 spring:
   datasource:
     druid:
@@ -301,7 +301,7 @@ spring:
 #### Redis配置
 
 ```yaml
-# application.yml
+# charging-api/application-dev.yml
 spring:
   redis:
     host: 服务器IP
@@ -320,7 +320,7 @@ spring:
 #### RocketMQ配置
 
 ```yaml
-# application-dev.yml
+# charging-api/application-dev.yml
 rocketmq:
   name-server: 服务器IP:9876
   topic: Charging
@@ -353,11 +353,72 @@ rocketmq:
 
 ### 2. 运营平台配置
 
+```json
+// charging-web/vite.config.js
+server: {
+      port: 8080,
+      host: true,
+      open: true,
+      proxy: {
+        "/dev-api": {
+          target: "http://127.0.0.1/prod-api", // 此处更改接口地址
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/dev-api/, ""),
+        },
+      },
+    }
+```
 
 
 
+### 3. 小程序以及支付配置
 
-### 3. 小程序配置
+```yaml
+# charging-api/application-dev.yml
+# 微信小程序
+wx:
+  miniapp:
+    configs:
+      #微信小程序的appid
+      - appid: appid
+        #微信小程序的Secret
+        secret: secret
+        #微信小程序消息服务器配置的token
+        token:
+        #微信小程序消息服务器配置的EncodingAESKey
+        aesKey:
+        msgDataFormat: JSON
+        # 小程序版本
+        envVersion: "trial"
+        # 跳转地址
+        page: /pages/index/home
+        # 启动充电提示模板
+        startChargingNotificationTemplate: w
+        # 停止充电提示模板
+        stopChargingNotificationTemplate: x
+        # sendMessage 发送订阅消息 POST
+        wxSendMessageUrl: https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s
+
+# 微信支付
+pay:
+  wechat:
+    appId: 123456789
+    secret: 123456789
+    merchantId: 1715546065
+    privateKeyPath: ./apiclient_key.pem
+    merchantSerialNumber: 123456789
+    apiV3key: 123456789
+    profitSharing: false
+    expireMinute: 5
+    rechargeNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/ #这里是回调服务器地址
+    refundNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/   #这里是回调服务器地址
+    httpProxyEnabled: true
+    httpProxyHost: 127.0.0.1
+    httpProxyPort: 8213
+    readTimeoutMs: 5000
+    connectTimeoutMs: 5000
+    writeTimeoutMs: 5000
+```
 
 
 
