@@ -177,29 +177,185 @@
 
 # 六 安装部署
 
-## 1. 快速部署
+## 1. 依赖组件
+
+```mermaid
+flowchart TB
+    APP[充电桩管理系统<br/>Spring Boot 应用]
+
+    APP --> PG[(PostgreSQL 14+<br/>业务数据存储)]
+    APP --> REDIS[(Redis 6.2+<br/>缓存/会话)]
+    APP --> MQ[(RocketMQ 4.9.4<br/>消息队列)]
+    APP --> WECHAT[微信支付 API<br/>外部服务]
+
+    PG -.-> PGDATA[业务数据<br/>用户订单<br/>场站桩枪]
+    REDIS -.-> RCACHE[会话缓存<br/>Token<br/>验证码]
+    MQ -.-> MQMSG[消息队列<br/>充电指令<br/>订单通知]
+    WECHAT -.-> PAY[支付退款<br/>余额充值]
+
+    style APP fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style PG fill:#336791,stroke:#1a4d6d,stroke-width:2px,color:#fff
+    style REDIS fill:#DC382D,stroke:#a72822,stroke-width:2px,color:#fff
+    style MQ fill:#D77310,stroke:#a85a0a,stroke-width:2px,color:#fff
+    style WECHAT fill:#07C160,stroke:#059748,stroke-width:2px,color:#fff
+
+    style PGDATA fill:#E3F2FD,stroke:#1976D2,stroke-width:1px
+    style RCACHE fill:#FFE0B2,stroke:#F57C00,stroke-width:1px
+    style MQMSG fill:#FFF9C4,stroke:#F9A825,stroke-width:1px
+    style PAY fill:#C8E6C9,stroke:#388E3C,stroke-width:1px
+```
 
 
 
-## 2. 独立组件部署
-
-### 2. 数据库以及中间件
-
-#### 2.1 数据库
-
-#### 2.2 Redis
-
-#### 2.3 Elasticsearch
-
-## 3. 初始化数据库
 
 
+## 2. 快速部署
+
+项目提供简易部署命令，可供您快速部署，学习并使用。**请勿该部署方式应用于生产环境**，请按照以下顺序进行执行部署
+
+### 1. 数据库
+
+```bash
+# 拉取镜像
+docker pull docker.1ms.run/library/postgres:14-alpine
+docker tag docker.1ms.run/library/postgres:14-alpine postgres:14-alpine
+
+# 启动容器
+docker run -d \
+  --name charging-postgres \
+  --restart always \
+  -p 5432:5432 \
+  -e POSTGRES_DB=charge \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e TZ=Asia/Shanghai \
+  postgres:14-alpine
+
+
+```
+
+### 2. Redis
+
+```bash
+# 拉取镜像
+docker pull docker.1ms.run/library/redis:6.2.21
+docker tag docker.1ms.run/library/redis:6.2.21 redis:6.2.21
+
+# 启动容器
+docker run -d \
+  --name charging-redis \
+  --restart always \
+  -p 6379:6379 \
+  redis:6.2.21 \
+  redis-server --appendonly yes
+```
+
+### 3. RocketMQ
+
+```bash
+# 创建网络
+docker network create charging-net
+# 拉取镜像
+docker pull docker.1ms.run/xuchengen/rocketmq
+docker tag docker.1ms.run/xuchengen/rocketmq xuchengen/rocketmq:latest
+
+# 启动容器
+docker run -itd \
+ --name=rocketmq \
+ --hostname rocketmq \
+ --restart=always \
+ -p 8080:8080 \
+ -p 9876:9876 \
+ -p 10909:10909 \
+ -p 10911:10911 \
+ -p 10912:10912 \
+ -v /etc/localtime:/etc/localtime \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --net=host \
+ xuchengen/rocketmq:latest
+```
+
+## 3. 数据库初始化
+
+- `charging-api/sql/postgresql/step1-basic.sql` - 基础表结构
+
+- `charging-api/sql/postgresql/step2-setKey.sql` - 主键和索引
 
 ## 4. 项目配置
 
 ### 1. 后端服务配置
 
+#### 数据库配置
+
+```yaml
+# application-dev.yml
+spring:
+  datasource:
+    druid:
+      master:
+        url: jdbc:postgresql://服务器IP:5432/charge
+        username: postgres
+        password: postgres
+```
+
+#### Redis配置
+
+```yaml
+# application.yml
+spring:
+  redis:
+    host: 服务器IP
+    port: 6379
+    database: 0
+    password: ""
+    timeout: 10s
+```
+
+**相关代码：**
+
+- `xingchuan-framework/config/RedisConfig.java` - Redis配置
+
+- `xingchuan-common/core/redis/RedisCache.java` - Redis工具类
+
+#### RocketMQ配置
+
+```yaml
+# application-dev.yml
+rocketmq:
+  name-server: 服务器IP:9876
+  topic: Charging
+  tags:
+    control: Control
+    order-bill: OrderBill
+  groups:
+    invoice: PlatformInvoiceGroup1
+  producer:
+    group: ProducerGroup1
+```
+
+**消息主题（Topic）：**
+
+- `Charging` - 充电相关消息
+
+**消息标签（Tags）：**
+
+- `Control` - 充电桩控制指令（启动/停止充电）
+
+- `OrderBill` - 订单结算通知
+
+**生产者组：**
+
+- `ProducerGroup1` - 业务消息生产者
+
+**消费者组：**
+
+- `PlatformInvoiceGroup1` - 订单处理消费者
+
 ### 2. 运营平台配置
+
+
+
+
 
 ### 3. 小程序配置
 
