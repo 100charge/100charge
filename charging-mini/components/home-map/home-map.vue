@@ -352,7 +352,7 @@ export default {
           latitude: item.lat,
         }
       })
-      let dist = this.markers[0].distanceNumber
+      let dist = this.markers && this.markers.length > 0 ? this.markers[0].distanceNumber : 0
       if (dist < 800) {
         this.mapScale = 16.01
       } else {

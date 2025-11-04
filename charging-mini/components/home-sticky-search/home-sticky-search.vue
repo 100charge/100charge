@@ -1,6 +1,10 @@
 <template>
   <block>
-    <view class="home-sticky-search-location" :style="'top:' + homeNavHeight">
+    <view
+      class="home-sticky-search-location"
+      :style="'top:' + (homeNavHeight || '38px')"
+      :key="'sticky-' + forceUpdateKey"
+    >
       <view class="home-sticky-wrapper">
         <view
           class="search-item"
@@ -160,9 +164,6 @@ export default {
   data() {
     return {
       homeNavHeight: "38px",
-      // #ifdef MP-WEIXIN
-      homeNavHeight: uni.getStorageSync("homeNavHeight"),
-      // #endif
       activeType: 0,
       showOverlay: false,
       sortList: [
@@ -204,18 +205,45 @@ export default {
       // scrollTop
       scrollTop: uni.getStorageSync("homeScrollTop"),
       showAuthLocation: !uni.getStorageSync("hasAuthLocation"),
+      // 用于强制重新渲染以修复 sticky
+      forceUpdateKey: 0,
     }
   },
 
   mounted() {
     // #ifdef MP-WEIXIN
-    // this.homeNavHeight = uni.getStorageSync("homeNavHeight")
+    // 使用 $nextTick 确保父组件的 navHeight 已经设置
+    this.$nextTick(() => {
+      const navHeight = uni.getStorageSync("homeNavHeight")
+      if (navHeight) {
+        // 确保有 px 单位
+        this.homeNavHeight = typeof navHeight === "number" ? navHeight + "px" : navHeight
+      } else {
+        // 如果还没有设置，延迟获取
+        setTimeout(() => {
+          const navHeight = uni.getStorageSync("homeNavHeight")
+          if (navHeight) {
+            this.homeNavHeight = typeof navHeight === "number" ? navHeight + "px" : navHeight
+          }
+        }, 100)
+      }
+    })
     // #endif
 
     // #ifdef MP-ALIPAY
     this.homeNavHeight = "38px"
     // #endif
     this.getDict()
+  },
+
+  onShow() {
+    // 页面显示时检查并更新导航栏高度
+    // #ifdef MP-WEIXIN
+    const navHeight = uni.getStorageSync("homeNavHeight")
+    if (navHeight) {
+      this.homeNavHeight = typeof navHeight === "number" ? navHeight + "px" : navHeight
+    }
+    // #endif
   },
 
   watch: {
@@ -233,6 +261,10 @@ export default {
   },
 
   methods: {
+    updateNavHeight(height) {
+      // 确保有 px 单位
+      this.homeNavHeight = typeof height === "number" ? height + "px" : height
+    },
     changeShowAuth(show) {
       this.showAuthLocation = show
     },
@@ -449,12 +481,16 @@ export default {
 <style lang="scss" scoped>
 .home-sticky-search-location {
   background: #fff;
-  // top: 79px; // 微信
   /* #ifdef MP-ALIPAY */
   top: 38px;
   /* #endif */
   position: sticky;
   z-index: 99;
+  /* 确保 sticky 生效 */
+  will-change: transform;
+  /* 确保在滚动容器内正确工作 */
+  left: 0;
+  right: 0;
   .home-location-wrapper {
     height: 80rpx;
     background: #f0f4f5;
@@ -494,7 +530,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   background: #fff;
-  position: sticky;
+  // 加个下阴影
+  box-shadow: 0rpx 3rpx 9rpx 0rpx rgba(0, 0, 0, 0.12);
   .search-item,
   .search-item-active {
     display: flex;

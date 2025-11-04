@@ -155,7 +155,13 @@ export default {
     // #ifdef MP-WEIXIN
     this.$nextTick(() => {
       this.navHeight = this.$refs.navRef.$mp.data.$root.g0
-      uni.setStorageSync("homeNavHeight", this.navHeight)
+      // 确保存储的值包含 px 单位
+      const navHeightValue = typeof this.navHeight === "number" ? this.navHeight + "px" : this.navHeight
+      uni.setStorageSync("homeNavHeight", navHeightValue)
+      // 通知子组件更新
+      if (this.$refs.stickySearchRef) {
+        this.$refs.stickySearchRef.updateNavHeight(navHeightValue)
+      }
     })
     // #endif
     this.getCityData()
@@ -336,6 +342,13 @@ export default {
           } else {
             this.stationList.push(...rows)
           }
+          // 数据更新后，强制重新计算 sticky 布局
+          this.$nextTick(() => {
+            // 通过更新 key 来强制重新渲染，修复 sticky 失效问题
+            if (this.$refs.stickySearchRef) {
+              this.$refs.stickySearchRef.forceUpdateKey++
+            }
+          })
         }
       })
     },
@@ -533,7 +546,7 @@ export default {
   width: 100%;
   background-color: #fff;
   background-size: cover;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
 
   ::v-deep .u-navbar--fixed {
