@@ -205,21 +205,159 @@ flowchart TB
     style PAY fill:#C8E6C9,stroke:#388E3C,stroke-width:1px
 ```
 
+
+
+
+
 ## 2. 快速部署
 
+项目提供简易部署中间件命令，可供您快速部署，学习并使用。**请勿该部署方式应用于生产环境**，请按照以下顺序进行执行部署
+
+### 1. 数据库
+
+```bash
+# 拉取镜像
+docker pull docker.1ms.run/library/postgres:14-alpine
+docker tag docker.1ms.run/library/postgres:14-alpine postgres:14-alpine
+
+# 启动容器
+docker run -d \
+  --name charging-postgres \
+  --restart always \
+  -p 5432:5432 \
+  -e POSTGRES_DB=charge \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e TZ=Asia/Shanghai \
+  postgres:14-alpine
 
 
-## 3. 独立组件部署
+```
 
-## 3. 初始化数据库
+### 2. Redis
+
+```bash
+# 拉取镜像
+docker pull docker.1ms.run/library/redis:6.2.21
+docker tag docker.1ms.run/library/redis:6.2.21 redis:6.2.21
+
+# 启动容器
+docker run -d \
+  --name charging-redis \
+  --restart always \
+  -p 6379:6379 \
+  redis:6.2.21 \
+  redis-server --appendonly yes
+```
+
+### 3. RocketMQ
+
+```bash
+# 创建网络
+docker network create charging-net
+# 拉取镜像
+docker pull docker.1ms.run/xuchengen/rocketmq
+docker tag docker.1ms.run/xuchengen/rocketmq xuchengen/rocketmq:latest
+
+# 启动容器
+docker run -itd \
+ --name=rocketmq \
+ --hostname rocketmq \
+ --restart=always \
+ -p 8080:8080 \
+ -p 9876:9876 \
+ -p 10909:10909 \
+ -p 10911:10911 \
+ -p 10912:10912 \
+ -v /etc/localtime:/etc/localtime \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --net=host \
+ xuchengen/rocketmq:latest
+```
+
+## 3. 数据库初始化
 
 
+
+- `charging-api/sql/postgresql/step1-basic.sql` - 基础表结构
+
+- `charging-api/sql/postgresql/step2-setKey.sql` - 主键和索引
 
 ## 4. 项目配置
 
 ### 1. 后端服务配置
 
+#### 数据库配置
+
+```yaml
+# application-dev.yml
+spring:
+  datasource:
+    druid:
+      master:
+        url: jdbc:postgresql://服务器IP:5432/charge
+        username: postgres
+        password: postgres
+```
+
+#### Redis配置
+
+```yaml
+# application.yml
+spring:
+  redis:
+    host: 服务器IP
+    port: 6379
+    database: 0
+    password: ""
+    timeout: 10s
+```
+
+**相关代码：**
+
+- `xingchuan-framework/config/RedisConfig.java` - Redis配置
+
+- `xingchuan-common/core/redis/RedisCache.java` - Redis工具类
+
+#### RocketMQ配置
+
+```yaml
+# application-dev.yml
+rocketmq:
+  name-server: 服务器IP:9876
+  topic: Charging
+  tags:
+    control: Control
+    order-bill: OrderBill
+  groups:
+    invoice: PlatformInvoiceGroup1
+  producer:
+    group: ProducerGroup1
+```
+
+**消息主题（Topic）：**
+
+- `Charging` - 充电相关消息
+
+**消息标签（Tags）：**
+
+- `Control` - 充电桩控制指令（启动/停止充电）
+
+- `OrderBill` - 订单结算通知
+
+**生产者组：**
+
+- `ProducerGroup1` - 业务消息生产者
+
+**消费者组：**
+
+- `PlatformInvoiceGroup1` - 订单处理消费者
+
 ### 2. 运营平台配置
+
+
+
+
 
 ### 3. 小程序配置
 
