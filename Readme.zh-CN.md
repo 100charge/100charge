@@ -356,12 +356,12 @@ rocketmq:
 ```json
 // charging-web/vite.config.js
 server: {
-      port: 8080,
+      port: 8081,
       host: true,
       open: true,
       proxy: {
         "/dev-api": {
-          target: "http://127.0.0.1/dev-api", // 此处更改接口地址
+          target: "http://127.0.0.1:8080/", // 此处更改接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
         },
@@ -371,7 +371,7 @@ server: {
 
 
 
-### 3. 小程序以及支付配置
+### 3. 小程序以及支付配置(可选)
 
 ```yaml
 # charging-api/application-dev.yml
@@ -420,7 +420,13 @@ pay:
     writeTimeoutMs: 5000
 ```
 
+### 4. 本地运行
 
+账号：admin
+
+密码：admin123
+
+![edf3014a-7eca-44df-a638-47d3d121bf7e](./images/edf3014a-7eca-44df-a638-47d3d121bf7e.png)
 
 # 七 版权须知
 
