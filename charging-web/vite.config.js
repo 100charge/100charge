@@ -25,12 +25,12 @@ export default defineConfig(({ mode, command }) => {
     },
     // vite 相关配置
     server: {
-      port: 8080,
+      port: 8081,
       host: true,
       open: true,
       proxy: {
         "/dev-api": {
-          target: "http://127.0.0.1/prod-api", // 接口地址
+          target: "http://127.0.0.1:8080/prod-api", // 接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
         },
