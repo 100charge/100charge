@@ -416,9 +416,12 @@ pay:
 
 ### 4. 本地运行
 
-账号：admin
+本地运行api服务以及Web运营平台,测试账号：
 
+```
+账号：admin
 密码：admin123
+```
 
 ![edf3014a-7eca-44df-a638-47d3d121bf7e](./images/edf3014a-7eca-44df-a638-47d3d121bf7e.png)
 
