@@ -293,7 +293,7 @@ spring:
   datasource:
     druid:
       master:
-        url: jdbc:postgresql://服务器IP:5432/charge
+        url: jdbc:postgresql://[服务器IP]:5432/charge
         username: postgres
         password: postgres
 ```
