@@ -311,12 +311,6 @@ spring:
     timeout: 10s
 ```
 
-**相关代码：**
-
-- `xingchuan-framework/config/RedisConfig.java` - Redis配置
-
-- `xingchuan-common/core/redis/RedisCache.java` - Redis工具类
-
 #### RocketMQ配置
 
 ```yaml
