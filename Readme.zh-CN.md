@@ -355,18 +355,18 @@ rocketmq:
 
 ```json
 // charging-web/vite.config.js
-server: {
+    server: {
       port: 8081,
       host: true,
       open: true,
       proxy: {
         "/dev-api": {
-          target: "http://127.0.0.1:8080/", // 此处更改接口地址
+          target: "http://127.0.0.1:8080/", // 接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
         },
       },
-    }
+    },
 ```
 
 
