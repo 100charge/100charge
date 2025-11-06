@@ -90,7 +90,7 @@ public class LoginUser implements UserDetails {
     /**
      * 是否管理员
      */
-    private boolean admin;
+    // private boolean admin;
 
     /**
      * 是否平台管理员
