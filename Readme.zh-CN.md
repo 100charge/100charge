@@ -284,6 +284,18 @@ docker run -itd \
 ## 4. 项目配置
 
 ### 1. 后端服务配置
+#### API端口
+
+```yaml
+# charging-api/application.yml
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /
+```
 
 #### 数据库配置
 
