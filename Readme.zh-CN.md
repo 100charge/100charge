@@ -288,7 +288,6 @@ docker run -itd \
 
 ```yaml
 # charging-api/application.yml
-# 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
   port: 8080
@@ -339,24 +338,6 @@ rocketmq:
     group: ProducerGroup1
 ```
 
-**消息主题（Topic）：**
-
-- `Charging` - 充电相关消息
-
-**消息标签（Tags）：**
-
-- `Control` - 充电桩控制指令（启动/停止充电）
-
-- `OrderBill` - 订单结算通知
-
-**生产者组：**
-
-- `ProducerGroup1` - 业务消息生产者
-
-**消费者组：**
-
-- `PlatformInvoiceGroup1` - 订单处理消费者
-
 ### 2. 运营平台配置
 
 ```json
@@ -367,7 +348,7 @@ rocketmq:
       open: true,
       proxy: {
         "/dev-api": {
-          target: "http://127.0.0.1:8080/", // 接口地址
+          target: "http://127.0.0.1:8080/", // API接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
         },
@@ -377,7 +358,7 @@ rocketmq:
 
 
 
-### 3. 小程序以及支付配置(可选)
+### 3. 小程序以及微信支付配置(可选)
 
 ```yaml
 # charging-api/application-dev.yml
