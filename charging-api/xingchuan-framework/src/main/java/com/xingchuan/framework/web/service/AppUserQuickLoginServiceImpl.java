@@ -27,8 +27,8 @@ public class AppUserQuickLoginServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String openId) throws UsernameNotFoundException {
         // 小程序登录 没有则需要新增，存在则直接查询出来
         AppUser appUser = appUserMapper.getInfoByOpenId(openId);
-        if (StringUtils.isNull(openId)) {
-            log.info("登录用户:{} 不存在.", appUser);
+        if (StringUtils.isNull(appUser)) {
+            log.info("登录用户:{} 不存在.", openId);
             throw new ServiceException("用户不存在");
         } else if (AppUserStatusEnum.DISABLED.getCode() == appUser.getStatus()) {
             log.info("登录用户:{} 已被停用.", appUser);

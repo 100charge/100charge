@@ -27,6 +27,7 @@ import com.xingchuan.system.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,6 +59,7 @@ public class SysLoginService {
     @Resource
     private ISysConfigService configService;
     @Resource
+    @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
 
@@ -72,9 +74,9 @@ public class SysLoginService {
      */
     public String login(String username, String password, String code, String uuid) {
         // 验证码校验
-//        validateCaptcha(username, code, uuid);
+        validateCaptcha(username, code, uuid);
         // 登录前置校验
-//        loginPreCheck(username, password);
+        loginPreCheck(username, password);
         // 用户验证
         Authentication authentication = null;
         try {
@@ -190,7 +192,7 @@ public class SysLoginService {
                 appUser.setOpenId(openId);
                 appUser.setType(AppUserEnum.WECHAT.getCode());
                 appUserService.saveAndBalance(appUser);
-                // 更新通联授权协议号
+                // 更新授权协议号
                 String authorizationCode = RandomUtils.getAppUserAuthorizationCode(appUser.getId());
                 appUser.setAuthorizationCode(authorizationCode);
                 appUserService.updateById(appUser);

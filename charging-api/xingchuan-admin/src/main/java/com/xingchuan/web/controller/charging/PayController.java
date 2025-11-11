@@ -1,19 +1,22 @@
 package com.xingchuan.web.controller.charging;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xingchuan.charging.domain.req.PayRequest;
 import com.xingchuan.charging.domain.req.RefundRequest;
+import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
+import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.charging.wechat.service.IPayService;
 import com.xingchuan.common.annotation.Log;
 import com.xingchuan.common.annotation.RepeatSubmit;
+import com.xingchuan.common.core.controller.BaseController;
 import com.xingchuan.common.core.domain.AjaxResult;
+import com.xingchuan.common.core.page.TableDataInfo;
 import com.xingchuan.common.enums.BusinessType;
+import com.xingchuan.common.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 支付相关的接口
@@ -21,13 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(tags = "支付")
 @RequestMapping("/pay")
-public class PayController {
+public class PayController extends BaseController {
 
     private final IPayService payService;
+    private final IUserWithdrawalRequestService userWithdrawalRequestService;
 
     @Autowired
-    public PayController(IPayService payService) {
+    public PayController(IPayService payService, IUserWithdrawalRequestService userWithdrawalRequestService) {
         this.payService = payService;
+        this.userWithdrawalRequestService = userWithdrawalRequestService;
     }
 
     /**
@@ -56,5 +61,16 @@ public class PayController {
     public AjaxResult userWithdrawal(@RequestBody RefundRequest refundRequest) {
         payService.refund(refundRequest);
         return AjaxResult.success();
+    }
+
+    /**
+     * 分页查询用户提现申请记录
+     */
+    @GetMapping("/getWithdrawalApplicationPage")
+    @ApiOperation(value = "分页查询用户提现申请记录")
+    public TableDataInfo queryByPage() {
+        String userOpenId = SecurityUtils.getUserOpenId();
+        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPage(userOpenId);
+        return getDataTable(response);
     }
 }

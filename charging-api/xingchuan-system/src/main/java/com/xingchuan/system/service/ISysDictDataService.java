@@ -1,8 +1,9 @@
 package com.xingchuan.system.service;
 
-import java.util.List;
-
 import com.xingchuan.common.core.domain.entity.SysDictData;
+import com.xingchuan.system.domain.vo.DictDataByTypeResponse;
+
+import java.util.List;
 
 /**
  * 字典 业务层
@@ -57,4 +58,9 @@ public interface ISysDictDataService {
      * @return 结果
      */
     int updateDictData(SysDictData dictData);
+
+    /**
+     * 根据类型获取字典值
+     */
+    List<DictDataByTypeResponse> getDictDataByType(String type);
 }
