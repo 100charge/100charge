@@ -57,7 +57,6 @@ public class BaseEntity implements Serializable {
      */
     @TableField(exist = false)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @TableField(exist = false)
     private Map<String, Object> params;
 
     public String getSearchValue() {
