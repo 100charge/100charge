@@ -1,6 +1,7 @@
 package com.xingchuan.framework.config;
 
 import com.xingchuan.framework.config.properties.PermitAllUrlProperties;
+import com.xingchuan.framework.miniLoginConfig.MiniAppAuthenticationSecurityConfig;
 import com.xingchuan.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.xingchuan.framework.security.handle.AuthenticationEntryPointImpl;
 import com.xingchuan.framework.security.handle.LogoutSuccessHandlerImpl;
@@ -67,6 +68,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private PermitAllUrlProperties permitAllUrl;
 
     /**
+     * 小程序登录配置
+     */
+    @Resource
+    private MiniAppAuthenticationSecurityConfig miniAppAuthenticationSecurityConfig;
+
+    /**
      * 解决 无法直接注入 AuthenticationManager
      *
      * @return
@@ -110,12 +117,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/register", "/captchaImage").permitAll()
+                .antMatchers("/login", "/register", "/captchaImage", "/wxQuickLogin", "/appletBindMobile").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
+                .and()
+                // 应用小程序登录配置
+                .apply(miniAppAuthenticationSecurityConfig)
                 .and()
                 .headers().frameOptions().disable();
         // 添加Logout filter

@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -19,12 +21,14 @@ public class RuleDetails extends BaseEntity {
     /**
      * $column.columnComment
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
      * 计费规则id
      */
     @Excel(name = "计费规则id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long ruleTimeId;
 
     /**
@@ -67,6 +71,7 @@ public class RuleDetails extends BaseEntity {
      * 组织架构id
      */
     @Excel(name = "组织架构id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**

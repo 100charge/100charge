@@ -10,7 +10,7 @@ import lombok.Data;
 /**
  * 通知公告表 sys_notice
  *
- * @author xingchuan
+ * @author zhitan
  */
 @Data
 @ApiModel(value = "获取文章详情返回")

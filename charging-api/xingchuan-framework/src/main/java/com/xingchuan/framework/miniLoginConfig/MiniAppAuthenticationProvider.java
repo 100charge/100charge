@@ -1,6 +1,6 @@
 package com.xingchuan.framework.miniLoginConfig;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.xingchuan.framework.web.service.AppUserQuickLoginServiceImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,17 +16,16 @@ import javax.annotation.Resource;
 public class MiniAppAuthenticationProvider implements AuthenticationProvider {
 
     @Resource
-    @Qualifier("appUserQuickLoginServiceImpl")
-    private UserDetailsService userDetailsService;
+    private AppUserQuickLoginServiceImpl userDetailsService;
 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         MiniAppAuthenticationToken authenticationToken = (MiniAppAuthenticationToken) authentication;
 
-        String mobile = (String) authenticationToken.getPrincipal();
+        String openId = (String) authenticationToken.getPrincipal();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(mobile);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(openId);
 
         // 此时鉴权成功后，应当重新 new 一个拥有鉴权的 authenticationResult 返回
         MiniAppAuthenticationToken authenticationResult = new MiniAppAuthenticationToken(userDetails, userDetails.getAuthorities());
@@ -47,6 +46,6 @@ public class MiniAppAuthenticationProvider implements AuthenticationProvider {
     }
 
     public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+        this.userDetailsService = (AppUserQuickLoginServiceImpl) userDetailsService;
     }
 }

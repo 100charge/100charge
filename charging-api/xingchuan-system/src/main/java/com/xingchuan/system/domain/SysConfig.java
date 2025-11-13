@@ -1,15 +1,17 @@
 package com.xingchuan.system.domain;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.annotation.Excel.ColumnType;
 import com.xingchuan.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 参数配置表 sys_config
@@ -24,6 +26,7 @@ public class SysConfig extends BaseEntity {
      * 参数主键
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "参数主键", cellType = ColumnType.NUMERIC)
     private Long configId;
 

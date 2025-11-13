@@ -1,20 +1,5 @@
 package com.xingchuan.web.controller.system;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import javax.annotation.Resource;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.xingchuan.common.annotation.Log;
 import com.xingchuan.common.core.controller.BaseController;
 import com.xingchuan.common.core.domain.AjaxResult;
@@ -23,8 +8,20 @@ import com.xingchuan.common.core.page.TableDataInfo;
 import com.xingchuan.common.enums.BusinessType;
 import com.xingchuan.common.utils.StringUtils;
 import com.xingchuan.common.utils.poi.ExcelUtil;
+import com.xingchuan.system.domain.vo.DictDataByTypeResponse;
 import com.xingchuan.system.service.ISysDictDataService;
 import com.xingchuan.system.service.ISysDictTypeService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据字典信息
@@ -109,5 +106,15 @@ public class SysDictDataController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] dictCodes) {
         dictDataService.deleteDictDataByIds(dictCodes);
         return success();
+    }
+
+    /**
+     * 根据类型获取字典值
+     */
+    @ApiOperation("根据类型获取字典值")
+    @GetMapping(value = "/getDictDataByType")
+    public AjaxResult getDictDataByType(@ApiParam("字典类型") @NotBlank(message = "字典类型不能为空!") @RequestParam(value = "type") String type) {
+        List<DictDataByTypeResponse> responses = dictDataService.getDictDataByType(type);
+        return success(responses);
     }
 }

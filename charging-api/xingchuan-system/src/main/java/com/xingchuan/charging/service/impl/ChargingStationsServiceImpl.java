@@ -16,12 +16,14 @@ import com.xingchuan.charging.service.IChargingStationsService;
 import com.xingchuan.common.constant.CacheConstants;
 import com.xingchuan.common.constant.MessageConstants;
 import com.xingchuan.common.core.domain.model.AreaModel;
+import com.xingchuan.common.core.domain.model.QRCodeParam;
 import com.xingchuan.common.core.page.PageDomain;
 import com.xingchuan.common.core.page.TableSupport;
 import com.xingchuan.common.core.redis.RedisCache;
 import com.xingchuan.common.exception.ServiceException;
 import com.xingchuan.common.utils.PageUtils;
 import com.xingchuan.common.utils.SecurityUtils;
+import com.xingchuan.common.utils.WxQRCodeUtil;
 import com.xingchuan.common.utils.bean.BeanUtils;
 import com.xingchuan.system.service.IQrCodeRuleService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,6 +58,8 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
     private IAreaService areaService;
     @Resource
     private RuleTimeMapper ruleTimeMapper;
+    @Resource
+    private ChargingGunsMapper gunsMapper;
     @Resource
     private ChargingPileMapper pileMapper;
     @Resource
@@ -687,6 +692,53 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             }
         }
         return response;
+    }
+
+    /**
+     * 生成场站下所有枪的微信二维码
+     */
+    @Override
+    public void generateQRCodeZip(Long stationId, HttpServletResponse servletResponse) {
+        ChargingStations stations = baseMapper.selectById(stationId);
+        if (ObjectUtils.isEmpty(stations)) {
+            throw new ServiceException(MessageConstants.CHARGING_STATIONS_NOT_EXIST);
+        }
+        List<ChargingPile> chargingPileList = pileMapper.selectList(Wrappers.<ChargingPile>lambdaQuery()
+                .select(ChargingPile::getDeviceNo)
+                .eq(ChargingPile::getStationId, stationId));
+        if (ObjectUtils.isEmpty(chargingPileList)) {
+            throw new ServiceException(MessageConstants.CHARGING_PILE_NOT_EXIST);
+        }
+        List<QRCodeParam> codeParamList = new ArrayList<>();
+        String appQRCodeUrl = "https://wxapi.xxx.com?code=%sG%s";
+        for (ChargingPile pile : chargingPileList) {
+            List<ChargingGuns> chargingGunList = gunsMapper.selectList(Wrappers.<ChargingGuns>lambdaQuery()
+                    .select(ChargingGuns::getNo).eq(ChargingGuns::getDeviceNo, pile.getDeviceNo())
+            );
+            if (CollectionUtils.isNotEmpty(chargingGunList)) {
+                for (ChargingGuns chargingGuns : chargingGunList) {
+                    String gunNo = chargingGuns.getNo();
+                    QRCodeParam qrCodeParam = new QRCodeParam();
+
+                    qrCodeParam.setContent(String.format(appQRCodeUrl, pile.getDeviceNo(), gunNo));
+
+                    String name = stations.getName() + "_" + pile.getDeviceNo() + "_" + gunNo + ".png";
+                    qrCodeParam.setName(name);
+
+                    codeParamList.add(qrCodeParam);
+                }
+            }
+        }
+        try {
+            //核心代码-生成二维码
+            if (CollectionUtils.isEmpty(codeParamList)) {
+                throw new ServiceException(MessageConstants.CHARGING_GUN_NOT_EXIST);
+            }
+            WxQRCodeUtil.createZipOfQRCodes(codeParamList, servletResponse.getOutputStream());
+        } catch (Exception e) {
+            log.error("生成二维码失败", e);
+            throw new RuntimeException("二维码生成失败，请查看日志");
+        }
     }
 
     /**

@@ -1,9 +1,9 @@
 package com.xingchuan.system.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 用户和岗位关联 sys_user_post
@@ -16,14 +16,17 @@ public class SysUserPost {
      * 主键
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     /**
      * 用户ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
      * 岗位ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long postId;
 }

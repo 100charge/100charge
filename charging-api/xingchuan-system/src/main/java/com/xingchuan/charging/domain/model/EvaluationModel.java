@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,5 +14,6 @@ public class EvaluationModel {
     private String value;
 
     @ApiModelProperty(value = "是否已选")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long qty = 0L;
 }

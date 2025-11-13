@@ -7,6 +7,7 @@ import com.xingchuan.charging.domain.req.*;
 import com.xingchuan.charging.domain.resp.*;
 import com.xingchuan.charging.enums.ChargePileEnum;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -113,5 +114,8 @@ public interface IChargingStationsService extends IService<ChargingStations> {
      */
     ReadyChargingResponse readyCharge(String code);
 
-
+    /**
+     * 生成场站下所有枪的微信二维码
+     */
+    void generateQRCodeZip(Long stationId, HttpServletResponse servletResponse);
 }

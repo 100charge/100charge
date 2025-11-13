@@ -1,6 +1,8 @@
 package com.xingchuan.system.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.core.domain.BaseEntity;
 import com.xingchuan.common.xss.Xss;
 import lombok.Data;
@@ -20,6 +22,7 @@ public class SysNotice extends BaseEntity {
      * 公告ID
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long noticeId;
 
     /**

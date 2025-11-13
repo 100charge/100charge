@@ -1,13 +1,15 @@
 package com.xingchuan.system.domain;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.annotation.Excel.ColumnType;
 import com.xingchuan.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 系统访问记录表 sys_logininfor
@@ -22,6 +24,7 @@ public class SysLoginInfo extends BaseEntity {
      * ID
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "序号", cellType = ColumnType.NUMERIC)
     private Long infoId;
 
