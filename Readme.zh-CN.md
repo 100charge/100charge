@@ -108,10 +108,10 @@
 
 # 三 演示系统
 
-|     | 地址   |
-| --- | ---- |
-| 社区版 | http://demo-admin.100charge.cn:2080/ |
-| 商业版 | TODO |
+|     | 地址   |用户名与密码|
+| --- | ---- |----|
+| 社区版 | http://demo-admin.100charge.cn:2080/ |admin admin123|
+| 商业版 | TODO |TODO |
 
 # 四 开发环境
 
