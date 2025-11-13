@@ -117,7 +117,7 @@ public class FileUploadUtils {
         File desc = new File(uploadDir + File.separator + fileName);
         // undertow文件上传，因底层实现不同,无需创建新文件
         if (!desc.getParentFile().exists()) {
-            boolean mkSuccess = desc.getParentFile().mkdirs();
+            desc.getParentFile().mkdirs();
         }
         return desc;
     }

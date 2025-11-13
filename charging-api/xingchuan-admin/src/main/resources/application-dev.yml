@@ -6,13 +6,9 @@ spring:
     druid:
       # 主库数据源
       master:
-#        url: jdbc:postgresql://127.0.0.1:5432/charge
-#        username: postgres
-#        password: postgres
-#        url: jdbc:postgresql://47.105.127.73:5432/smart_charge_dev
-        url: jdbc:postgresql://47.105.127.73:5432/charge_test
-        username: postgres
-        password: 2Jj3566eC2d2Yz3T
+        url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/charge
+        username: ${DB_USER:postgres}
+        password: ${DB_PASSWORD:postgres}
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
@@ -64,7 +60,7 @@ spring:
           config:
             multi-statement-allow: true
 rocketmq:
-  name-server: 127.0.0.1:9876 # 访问地址
+  name-server: ${ROCKETMQ_NAME_SERVER:127.0.0.1:9876} # 访问地址
   topic: Charging
   tags:
     control: Control
