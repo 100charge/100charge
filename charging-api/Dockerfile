@@ -1,12 +1,12 @@
 # Build stage
-FROM docker.1ms.run/library/maven:3.9.11-eclipse-temurin-8 AS builder
+FROM maven:3.9.11-eclipse-temurin-8 AS builder
 
 WORKDIR /build
 COPY . .
 RUN mvn clean package -DskipTests -q
 
 # Runtime stage
-FROM docker.1ms.run/library/eclipse-temurin:8-jre
+FROM eclipse-temurin:8-jre
 
 WORKDIR /app
 
