@@ -253,7 +253,7 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length
 }
 function goDetail(row) {
-  router.push({ path: "/detail/chargingOrder", query: { id: row.id } })
+  router.push({ path: "/detail/orderDetail", query: { id: row.id } })
 }
 
 // 获取场站
