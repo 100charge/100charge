@@ -110,7 +110,7 @@
 
 |     | 地址   |用户名与密码|
 | --- | ---- |----|
-| 社区版 | http://demo-admin.100charge.cn:2080/ |admin <br> admin123|
+| 社区版 | https://demo-admin.100charge.cn:2080/ |admin <br> admin123|
 | 商业版 | TODO |TODO |
 
 # 四 开发环境
