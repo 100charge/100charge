@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.charging.domain.entity.ChargingOrder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,7 @@ public class StationChargingLimitModel {
     /**
      * 车队ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long fleetId;
     /**
      * 用户openId

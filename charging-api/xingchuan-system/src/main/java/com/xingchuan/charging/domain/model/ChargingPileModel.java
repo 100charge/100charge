@@ -1,6 +1,8 @@
 package com.xingchuan.charging.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -16,6 +18,7 @@ public class ChargingPileModel {
      * 场站Id
      */
     @ApiModelProperty(name = "场站Id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long stationId;
 
     /**

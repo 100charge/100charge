@@ -76,20 +76,24 @@
 |      | 车队管理    | ×   | √   |
 |      | 卡管理     | ×   | √   |
 |      | 白名单管理   | ×   | √   |
-| 电站运营 | 场站管理    | √   | √   |
+| 场站运营 | 场站管理    | √   | √   |
 |      | 充电桩管理   | √   | √   |
 |      | 计费策略    | √   | √   |
 | 财务管理 | 用户余额变动  | √   | √   |
 |      | 企业余额变动  | ×   | √   |
-|      | 结算单管理   | ×   | √   |
-| 营销管理 | 营销策略    | ×   | √   |
+|      | 结算单查询   | ×   | √   |
+| 发票管理 | 发票管理  | ×  | √   |
+| 营销活动 | 营销策略    | ×   | √   |
 |      | 优惠券管理   | ×   | √   |
 |      | 券使用记录   | ×   | √   |
 | 运营商  | 运营商管理   | ×   | √   |
 |      | 运营商分润管理 | ×   | √   |
 | 运维管理 | 运维报表    | ×   | √   |
 |      | 报文管理    | ×   | √   |
-| 报表   | 多维度分析   | ×   | √   |
+| 报表   | 账户充值明细   | √  | √   |
+|      |  电站失败率报表   | √  | √   |
+|      | 失败记录明细   | √   | √   |
+|      | 多维度分析    | ×   | √   |
 |      | 运营报表    | ×   | √   |
 |      | 电站数据报表  | ×   | √   |
 |      | 订单扣费明细  | ×   | √   |
@@ -99,15 +103,15 @@
 |      | 企业收退款报表 | ×   | √   |
 |      | 尖峰平谷统计  | ×   | √   |
 |      | 车辆峰谷统计  | ×   | √   |
-
+| 系统监控 | 系统监控  | √   | √   |
 
 
 # 三 演示系统
 
-|     | 地址   |
-| --- | ---- |
-| 社区版 | TODO |
-| 商业版 | TODO |
+|     | 地址   |用户名与密码|
+| --- | ---- |----|
+| 社区版 | http://demo-admin.100charge.cn:2080/ |admin <br> admin123|
+| 商业版 | TODO |TODO |
 
 # 四 开发环境
 
@@ -284,16 +288,27 @@ docker run -itd \
 ## 4. 项目配置
 
 ### 1. 后端服务配置
+#### API端口
+
+```yaml
+# charging-api/application.yml
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /
+```
 
 #### 数据库配置
 
 ```yaml
-# application-dev.yml
+# charging-api/application-dev.yml
 spring:
   datasource:
     druid:
       master:
-        url: jdbc:postgresql://服务器IP:5432/charge
+        url: jdbc:postgresql://[服务器IP]:5432/charge
         username: postgres
         password: postgres
 ```
@@ -301,7 +316,7 @@ spring:
 #### Redis配置
 
 ```yaml
-# application.yml
+# charging-api/application-dev.yml
 spring:
   redis:
     host: 服务器IP
@@ -311,16 +326,10 @@ spring:
     timeout: 10s
 ```
 
-**相关代码：**
-
-- `xingchuan-framework/config/RedisConfig.java` - Redis配置
-
-- `xingchuan-common/core/redis/RedisCache.java` - Redis工具类
-
 #### RocketMQ配置
 
 ```yaml
-# application-dev.yml
+# charging-api/application-dev.yml
 rocketmq:
   name-server: 服务器IP:9876
   topic: Charging
@@ -333,33 +342,85 @@ rocketmq:
     group: ProducerGroup1
 ```
 
-**消息主题（Topic）：**
-
-- `Charging` - 充电相关消息
-
-**消息标签（Tags）：**
-
-- `Control` - 充电桩控制指令（启动/停止充电）
-
-- `OrderBill` - 订单结算通知
-
-**生产者组：**
-
-- `ProducerGroup1` - 业务消息生产者
-
-**消费者组：**
-
-- `PlatformInvoiceGroup1` - 订单处理消费者
-
 ### 2. 运营平台配置
 
+```json
+// charging-web/vite.config.js
+    server: {
+      port: 8081,
+      host: true,
+      open: true,
+      proxy: {
+        "/dev-api": {
+          target: "http://127.0.0.1:8080/", // API接口地址
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/dev-api/, ""),
+        },
+      },
+    },
+```
 
 
 
+### 3. 小程序以及微信支付配置(可选)
 
-### 3. 小程序配置
+```yaml
+# charging-api/application-dev.yml
+# 微信小程序
+wx:
+  miniapp:
+    configs:
+      #微信小程序的appid
+      - appid: appid
+        #微信小程序的Secret
+        secret: secret
+        #微信小程序消息服务器配置的token
+        token:
+        #微信小程序消息服务器配置的EncodingAESKey
+        aesKey:
+        msgDataFormat: JSON
+        # 小程序版本
+        envVersion: "trial"
+        # 跳转地址
+        page: /pages/index/home
+        # 启动充电提示模板
+        startChargingNotificationTemplate: w
+        # 停止充电提示模板
+        stopChargingNotificationTemplate: x
+        # sendMessage 发送订阅消息 POST
+        wxSendMessageUrl: https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s
 
+# 微信支付
+pay:
+  wechat:
+    appId: 123456789
+    secret: 123456789
+    merchantId: 1715546065
+    privateKeyPath: ./apiclient_key.pem
+    merchantSerialNumber: 123456789
+    apiV3key: 123456789
+    profitSharing: false
+    expireMinute: 5
+    rechargeNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/ #这里是回调服务器地址
+    refundNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/   #这里是回调服务器地址
+    httpProxyEnabled: true
+    httpProxyHost: 127.0.0.1
+    httpProxyPort: 8213
+    readTimeoutMs: 5000
+    connectTimeoutMs: 5000
+    writeTimeoutMs: 5000
+```
 
+### 4. 本地运行
+
+本地启动api服务以及Web运营平台,使用测试账号：
+
+```
+账号：admin
+密码：admin123
+```
+
+![edf3014a-7eca-44df-a638-47d3d121bf7e](./images/edf3014a-7eca-44df-a638-47d3d121bf7e.png)
 
 # 七 版权须知
 

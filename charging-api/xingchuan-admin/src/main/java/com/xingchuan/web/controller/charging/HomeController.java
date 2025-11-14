@@ -1,10 +1,7 @@
 package com.xingchuan.web.controller.charging;
 
 import com.xingchuan.charging.domain.req.HomeBusinessTrendRequest;
-import com.xingchuan.charging.domain.resp.HomeBusinessTrendResponse;
-import com.xingchuan.charging.domain.resp.HomeChargingPileStatusResponse;
-import com.xingchuan.charging.domain.resp.HomeDayChargingDataResponse;
-import com.xingchuan.charging.domain.resp.StationDataStatisticsResponse;
+import com.xingchuan.charging.domain.resp.*;
 import com.xingchuan.charging.service.IHomeService;
 import com.xingchuan.common.constant.MessageConstants;
 import com.xingchuan.common.core.controller.BaseController;
@@ -73,4 +70,26 @@ public class HomeController extends BaseController {
         StationDataStatisticsResponse response = homeService.getStationDataStatistics(stationId);
         return success(response);
     }
+
+    /**
+     * 首页-查询场站数据
+     */
+    @ApiOperation("首页-查询场站数据")
+    @GetMapping("/getDashboardOperatorInfo")
+    public AjaxResult getDashboardOperatorInfo() {
+        DashboardOperatorInfoResponse response = homeService.getDashboardOperatorInfo();
+        return success(response);
+    }
+
+    /**
+     * 首页-场站收益数据
+     */
+    @ApiOperation("首页-场站收益数据")
+    @GetMapping("/queryOperationData")
+    public AjaxResult queryOperationData() {
+        DashboardOperationDataResponse response = homeService.queryOperationData();
+        return success(response);
+    }
+
+
 }

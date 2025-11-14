@@ -1,15 +1,17 @@
 package com.xingchuan.system.domain;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.annotation.Excel.ColumnType;
 import com.xingchuan.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 岗位表 sys_post
@@ -23,6 +25,7 @@ public class SysPost extends BaseEntity {
      * 岗位序号
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "岗位序号", cellType = ColumnType.NUMERIC)
     private Long postId;
 

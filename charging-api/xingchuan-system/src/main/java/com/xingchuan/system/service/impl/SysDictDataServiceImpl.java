@@ -1,14 +1,19 @@
 package com.xingchuan.system.service.impl;
 
-import java.util.List;
-import javax.annotation.Resource;
-
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import com.xingchuan.common.core.domain.entity.SysDictData;
 import com.xingchuan.common.utils.DictUtils;
+import com.xingchuan.system.domain.vo.DictDataByTypeResponse;
 import com.xingchuan.system.mapper.SysDictDataMapper;
 import com.xingchuan.system.service.ISysDictDataService;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 字典 业务层处理
@@ -99,5 +104,24 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
             DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
         return row;
+    }
+
+    /**
+     * 根据类型获取字典值
+     */
+    @Override
+    public List<DictDataByTypeResponse> getDictDataByType(String type) {
+        List<DictDataByTypeResponse> responseList = new ArrayList<>();
+        List<SysDictData> dictDataList = dictDataMapper.selectList(Wrappers.<SysDictData>lambdaQuery()
+                .eq(SysDictData::getDictType, type)
+                .orderByAsc(SysDictData::getDictSort));
+        if (ObjectUtils.isNotEmpty(dictDataList)) {
+            for (SysDictData data : dictDataList) {
+                DictDataByTypeResponse response = new DictDataByTypeResponse();
+                BeanUtils.copyProperties(data, response);
+                responseList.add(response);
+            }
+        }
+        return responseList;
     }
 }

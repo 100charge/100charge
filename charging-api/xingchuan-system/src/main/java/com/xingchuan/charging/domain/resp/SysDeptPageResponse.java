@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * 部门表分页返回对象
  *
- * @author xingchuan
+ * @author zhitan
  */
 @Data
 public class SysDeptPageResponse {

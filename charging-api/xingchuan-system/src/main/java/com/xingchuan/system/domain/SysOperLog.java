@@ -1,12 +1,14 @@
 package com.xingchuan.system.domain;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.annotation.Excel.ColumnType;
 import com.xingchuan.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 操作日志记录表 oper_log
@@ -20,6 +22,7 @@ public class SysOperLog extends BaseEntity {
      * 日志主键
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "操作序号", cellType = ColumnType.NUMERIC)
     private Long operId;
 
@@ -122,6 +125,7 @@ public class SysOperLog extends BaseEntity {
     /**
      * 消耗时间
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "消耗时间", suffix = "毫秒")
     private Long costTime;
 

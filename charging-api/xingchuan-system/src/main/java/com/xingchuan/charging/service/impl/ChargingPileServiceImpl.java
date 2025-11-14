@@ -24,11 +24,13 @@ import com.xingchuan.charging.mapper.ChargingStationsMapper;
 import com.xingchuan.charging.service.IChargingPileService;
 import com.xingchuan.common.constant.CacheConstants;
 import com.xingchuan.common.constant.MessageConstants;
+import com.xingchuan.common.core.domain.model.QRCodeParam;
 import com.xingchuan.common.core.page.PageDomain;
 import com.xingchuan.common.core.page.TableSupport;
 import com.xingchuan.common.core.redis.RedisCache;
 import com.xingchuan.common.exception.ServiceException;
 import com.xingchuan.common.utils.StringUtils;
+import com.xingchuan.common.utils.WxQRCodeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -488,5 +491,43 @@ public class ChargingPileServiceImpl extends ServiceImpl<ChargingPileMapper, Cha
         chargingPile.setPileStatus(pileStatus);
         baseMapper.updateById(chargingPile);
     }
+
+    /**
+     * 平台-生成充电桩二维码
+     */
+    @Override
+    public void generateQRCodeZip(String deviceNo, HttpServletResponse servletResponse) {
+        List<ChargingGuns> chargingGunList = chargingGunsMapper.selectList(Wrappers.<ChargingGuns>lambdaQuery()
+                .select(ChargingGuns::getNo).eq(ChargingGuns::getDeviceNo, deviceNo)
+        );
+        if (CollectionUtils.isEmpty(chargingGunList)) {
+            throw new RuntimeException(MessageConstants.CHARGING_GUN_NOT_EXIST);
+        }
+
+        String appQRCodeUrl = "https://wxapi.xxx.com?code=%sG%s";
+
+        List<QRCodeParam> codeParamList = new ArrayList<>(chargingGunList.size());
+
+        for (ChargingGuns chargingGuns : chargingGunList) {
+            String gunNo = chargingGuns.getNo();
+            QRCodeParam qrCodeParam = new QRCodeParam();
+
+            qrCodeParam.setContent(String.format(appQRCodeUrl, deviceNo, gunNo));
+
+            String name = deviceNo + gunNo + ".png";
+            qrCodeParam.setName(name);
+
+            codeParamList.add(qrCodeParam);
+        }
+
+        try {
+            //核心代码-生成二维码
+            WxQRCodeUtil.createZipOfQRCodes(codeParamList, servletResponse.getOutputStream());
+        } catch (Exception e) {
+            log.error("生成二维码失败", e);
+            throw new RuntimeException("二维码生成失败，请查看日志");
+        }
+    }
+
 
 }

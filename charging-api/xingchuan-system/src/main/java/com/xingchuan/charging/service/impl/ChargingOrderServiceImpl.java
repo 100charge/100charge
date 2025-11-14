@@ -96,18 +96,6 @@ public class ChargingOrderServiceImpl extends ServiceImpl<ChargingOrderMapper, C
 
         // 构造查询条件
         LambdaQueryWrapper<ChargingOrder> orderQueryWrapper = getOrderQueryWrapper(request);
-
-        // 根据用户类型查询用户openId
-        if (!request.getUserType().isEmpty()) {
-            // 获取用户openId列表
-            List<String> openIdList = getOpenIdList(request);
-
-            if (openIdList.isEmpty()) {
-                return responsePage;
-            }
-            orderQueryWrapper.in(ChargingOrder::getOpenId, openIdList);
-        }
-
         Page<ChargingOrder> chargingOrderPage = baseMapper.selectPage(pageInfo, orderQueryWrapper);
 
         if (ObjectUtils.isNotEmpty(chargingOrderPage.getRecords())) {
@@ -138,15 +126,7 @@ public class ChargingOrderServiceImpl extends ServiceImpl<ChargingOrderMapper, C
         OrderStatisticsResponse response = new OrderStatisticsResponse();
         // 构造查询条件
         LambdaQueryWrapper<ChargingOrder> orderQueryWrapper = getOrderQueryWrapper(request);
-        // 根据用户类型查询用户openId
-        if (!request.getUserType().isEmpty()) {
-            // 获取用户openId列表
-            List<String> openIdList = getOpenIdList(request);
-            if (openIdList.isEmpty()) {
-                return response;
-            }
-            orderQueryWrapper.in(ChargingOrder::getOpenId, openIdList);
-        }
+
         // 查询订单
         List<ChargingOrder> orderList = baseMapper.selectList(orderQueryWrapper);
         // 数据统计
@@ -187,16 +167,6 @@ public class ChargingOrderServiceImpl extends ServiceImpl<ChargingOrderMapper, C
         List<ChargingOrderExport> responseList = new ArrayList<>();
         // 构造查询条件
         LambdaQueryWrapper<ChargingOrder> orderQueryWrapper = getOrderQueryWrapper(request);
-        // 根据用户类型查询用户openId
-        if (!request.getUserType().isEmpty()) {
-            // 获取用户openId列表
-            List<String> openIdList = getOpenIdList(request);
-
-            if (openIdList.isEmpty()) {
-                return responseList;
-            }
-            orderQueryWrapper.in(ChargingOrder::getOpenId, openIdList);
-        }
         // 获取订单列表
         List<ChargingOrder> orderList = baseMapper.selectList(orderQueryWrapper);
 
@@ -468,6 +438,12 @@ public class ChargingOrderServiceImpl extends ServiceImpl<ChargingOrderMapper, C
      */
     private LambdaQueryWrapper<ChargingOrder> getOrderQueryWrapper(ChargingOrderPageListRequest request) {
         LambdaQueryWrapper<ChargingOrder> queryWrapper = Wrappers.<ChargingOrder>lambdaQuery()
+                .select(ChargingOrder::getId, ChargingOrder::getTradeNo, ChargingOrder::getOutTradeNo, ChargingOrder::getOrderState,
+                        ChargingOrder::getStationName, ChargingOrder::getPayTime, ChargingOrder::getPayStatus, ChargingOrder::getCouponAmount,
+                        ChargingOrder::getDeviceNo, ChargingOrder::getGunNo, ChargingOrder::getMobile, ChargingOrder::getPlateNo,
+                        ChargingOrder::getTotalAmount, ChargingOrder::getChargeFee, ChargingOrder::getServiceFee,
+                        ChargingOrder::getParkingFee, ChargingOrder::getOverTimeFee, ChargingOrder::getTotalPower,
+                        ChargingOrder::getStartTime, ChargingOrder::getEndTime)
                 .eq(ObjectUtils.isNotEmpty(request.getStationId()), ChargingOrder::getStationId, request.getStationId())
                 .like(ObjectUtils.isNotEmpty(request.getTradeNo()), ChargingOrder::getTradeNo, request.getTradeNo())
                 .like(ObjectUtils.isNotEmpty(request.getDeviceNo()), ChargingOrder::getDeviceNo, request.getDeviceNo())
@@ -487,6 +463,14 @@ public class ChargingOrderServiceImpl extends ServiceImpl<ChargingOrderMapper, C
         OrderPayStatusEnum payStatus = request.getPayStatus();
         if (payStatus != null) {
             queryWrapper.eq(ChargingOrder::getPayStatus, payStatus.getCode());
+        }
+        // 根据用户类型查询用户openId
+        if (!request.getUserType().isEmpty()) {
+            // 获取用户openId列表
+            List<String> openIdList = getOpenIdList(request);
+            if (!openIdList.isEmpty()) {
+                queryWrapper.in(ChargingOrder::getOpenId, openIdList);
+            }
         }
 
         return queryWrapper;

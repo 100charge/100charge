@@ -5,10 +5,15 @@
 <mapper namespace="com.xingchuan.charging.mapper.ChargingStationsMapper">
 
     <select id="listChargingStationsCount" resultType="java.lang.Long">
-        SELECT
-        COUNT(cs."id")
+        SELECT COUNT(DISTINCT cs."id")
         FROM charging_stations cs
+        LEFT JOIN rule_time rt ON rt.rule_id = cs.rule_id
+        LEFT JOIN rule_details rd ON rd.rule_time_id = rt."id"
+        AND rd.start_time &lt;= CURRENT_TIME
+        AND rd.end_time >= CURRENT_TIME
         <where>
+            TO_CHAR(rt.begin_time, 'MMDD') &lt;= TO_CHAR(CURRENT_DATE, 'MMDD')
+            AND TO_CHAR(rt.end_time, 'MMDD') >= TO_CHAR(CURRENT_DATE, 'MMDD')
             <if test="request.cityCode != null and request.cityCode != ''">
                 AND cs.city LIKE CONCAT(#{request.cityCode}, '%')
             </if>
@@ -46,7 +51,9 @@
             </if>
             AND cs.show_status = '1'
             AND cs.status = 1
+            AND rt.del_flag = '0'
             AND cs.del_flag = '0'
+            AND rd.del_flag = '0'
         </where>
     </select>
 

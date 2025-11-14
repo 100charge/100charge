@@ -1,15 +1,17 @@
 package com.xingchuan.common.core.domain.entity;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.constant.UserConstants;
+import com.xingchuan.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xingchuan.common.core.domain.BaseEntity;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 字典数据表 sys_dict_data
@@ -25,12 +27,14 @@ public class SysDictData extends BaseEntity {
      */
     @TableId
     @Excel(name = "字典编码", cellType = Excel.ColumnType.NUMERIC)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long dictCode;
 
     /**
      * 字典排序
      */
     @Excel(name = "字典排序", cellType = Excel.ColumnType.NUMERIC)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long dictSort;
 
     /**

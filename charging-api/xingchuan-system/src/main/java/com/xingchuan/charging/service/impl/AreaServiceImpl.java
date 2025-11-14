@@ -3,11 +3,13 @@ package com.xingchuan.charging.service.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xingchuan.charging.domain.resp.AreaListResponse;
 import com.xingchuan.charging.domain.resp.AreaOpenCitiesResponse;
 import com.xingchuan.charging.enums.AreaEnum;
 import com.xingchuan.charging.mapper.AreaMapper;
 import com.xingchuan.charging.service.IAreaService;
 import com.xingchuan.common.constant.CacheConstants;
+import com.xingchuan.common.core.domain.TreeSelect;
 import com.xingchuan.common.core.domain.entity.Area;
 import com.xingchuan.common.core.domain.model.AreaModel;
 import com.xingchuan.common.core.redis.RedisCache;
@@ -100,6 +102,104 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
         areaModelList.sort(Comparator.comparing(AreaModel::getCode));
 
         return areaModelList;
+    }
+
+    /**
+     * 获取省市区树
+     *
+     * @return 结果
+     */
+    @Override
+    public List<TreeSelect> selectAreaTreeList() {
+
+        List<AreaModel> areaList = getAreaList();
+        List<AreaModel> areaTrees = buildAreaTree(areaList);
+        return areaTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取省级下拉列表
+     */
+    @Override
+    public List<AreaListResponse> provinceList() {
+        List<AreaListResponse> responseList = new ArrayList<>();
+        List<Area> provinceList = baseMapper.selectList(Wrappers.<Area>lambdaQuery()
+                .isNull(Area::getParentId).orderByDesc(Area::getCreateTime));
+        if (ObjectUtils.isNotEmpty(provinceList)) {
+            for (Area area : provinceList) {
+                AreaListResponse response = new AreaListResponse();
+                response.setId(Long.valueOf(area.getCode()));
+                response.setName(area.getName());
+                responseList.add(response);
+            }
+        }
+        return responseList;
+    }
+
+    /**
+     * 根据省级id获取市级下拉列表
+     */
+    @Override
+    public List<AreaListResponse> getCityListByProvinceId(String provinceId) {
+        Area province = baseMapper.selectOne(Wrappers.<Area>lambdaQuery()
+                .select(Area::getId)
+                .eq(Area::getCode, provinceId).last("limit 1"));
+        if (ObjectUtils.isEmpty(province)) {
+            return Collections.emptyList();
+        }
+        List<AreaListResponse> responseList = new ArrayList<>();
+        List<Area> provinceList = baseMapper.selectList(Wrappers.<Area>lambdaQuery()
+                .eq(Area::getParentId, province.getId()).orderByDesc(Area::getCreateTime));
+        if (ObjectUtils.isNotEmpty(provinceList)) {
+            for (Area area : provinceList) {
+                AreaListResponse response = new AreaListResponse();
+                response.setId(Long.valueOf(area.getCode()));
+                response.setName(area.getName());
+                responseList.add(response);
+            }
+        }
+        return responseList;
+    }
+
+    /**
+     * 根据市级id获取区级下拉列表
+     */
+    @Override
+    public List<AreaListResponse> getDistrictListByCityId(String cityId) {
+        Area city = baseMapper.selectOne(Wrappers.<Area>lambdaQuery()
+                .select(Area::getId)
+                .eq(Area::getCode, cityId).last("limit 1"));
+        if (ObjectUtils.isEmpty(city)) {
+            return Collections.emptyList();
+        }
+        List<AreaListResponse> responseList = new ArrayList<>();
+        List<Area> provinceList = baseMapper.selectList(Wrappers.<Area>lambdaQuery()
+                .eq(Area::getParentId, city.getId()).orderByDesc(Area::getCreateTime));
+        if (ObjectUtils.isNotEmpty(provinceList)) {
+            for (Area area : provinceList) {
+                AreaListResponse response = new AreaListResponse();
+                response.setId(Long.valueOf(area.getCode()));
+                response.setName(area.getName());
+                responseList.add(response);
+            }
+        }
+        return responseList;
+    }
+
+    public List<AreaModel> buildAreaTree(List<AreaModel> areas) {
+        List<AreaModel> returnList = new ArrayList<>();
+        List<Long> tempList = areas.stream().map(AreaModel::getId).collect(Collectors.toList());
+        for (AreaModel area : areas) {
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(area.getParentId())) {
+                recursionFn(areas, area);
+                returnList.add(area);
+            }
+        }
+        if (returnList.isEmpty()) {
+            returnList = areas;
+        }
+        return returnList;
     }
 
     /**

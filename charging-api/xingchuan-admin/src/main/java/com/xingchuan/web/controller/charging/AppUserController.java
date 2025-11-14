@@ -3,15 +3,13 @@ package com.xingchuan.web.controller.charging;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xingchuan.charging.domain.excel.AppUserExportExcel;
-import com.xingchuan.charging.domain.req.AppUserDisableOrEnableRequest;
-import com.xingchuan.charging.domain.req.AppUserQueryRequest;
-import com.xingchuan.charging.domain.req.CompanyUserQueryRequest;
+import com.xingchuan.charging.domain.req.*;
 import com.xingchuan.charging.domain.resp.AppEnterpriseUserListResponse;
 import com.xingchuan.charging.domain.resp.AppUserInfoResponse;
 import com.xingchuan.charging.domain.resp.AppUserListResponse;
-import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
+import com.xingchuan.charging.domain.resp.UserCarPageResponse;
+import com.xingchuan.charging.service.IAppUserCarService;
 import com.xingchuan.charging.service.IAppUserService;
-import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.common.annotation.Log;
 import com.xingchuan.common.annotation.RepeatSubmit;
 import com.xingchuan.common.core.controller.BaseController;
@@ -44,7 +42,7 @@ public class AppUserController extends BaseController {
     @Autowired
     private IAppUserService appUserService;
     @Autowired
-    private IUserWithdrawalRequestService userWithdrawalRequestService;
+    private IAppUserCarService appUserCarService;
 
 
     /**
@@ -115,14 +113,52 @@ public class AppUserController extends BaseController {
     }
 
     /**
-     * 分页查询用户提现申请记录
+     * 查询用户车辆列表
      */
-    @GetMapping("/getWithdrawalApplicationPage")
-    @ApiOperation(value = "分页查询用户提现申请记录")
-    public TableDataInfo queryByPage() {
-        String userOpenId = SecurityUtils.getUserOpenId();
-        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPage(userOpenId);
-        return getDataTable(response);
+    @GetMapping("/userCarList")
+    @ApiOperation("查询用户车辆列表-分页")
+    public TableDataInfo userCarList(UserCarPageRequest request) {
+        Page<UserCarPageResponse> page = appUserCarService.userCarList(request);
+        return getDataTable(page);
+    }
+
+    /**
+     * 用户车辆车辆列表
+     */
+    @GetMapping("/listAppUserCar")
+    @ApiOperation("小程序管理-用户车辆车辆列表")
+    public AjaxResult listAppUserCar() {
+        return success(appUserCarService.listAppUserCar());
+    }
+
+    /**
+     * 添加车辆
+     */
+    @PostMapping("/addCar")
+    @ApiOperation("小程序管理-添加车辆")
+    @Log(title = "小程序-添加车辆", businessType = BusinessType.INSERT)
+    public AjaxResult addCar(@Validated @RequestBody AppUserCarAddRequest request) {
+        return toAjax(appUserCarService.addAppUserCar(request));
+    }
+
+    /**
+     * 修改车牌号
+     */
+    @PostMapping("/editPlateNo")
+    @ApiOperation(value = "小程序管理-修改车牌号")
+    @Log(title = "小程序-修改车牌号", businessType = BusinessType.UPDATE)
+    public AjaxResult editPlateNo(@Validated @RequestBody AppUserCarUpdateRequest request) {
+        return toAjax(appUserCarService.editPlateNo(request));
+    }
+
+    /**
+     * 删除车辆
+     */
+    @GetMapping("/deleteById")
+    @ApiOperation(value = "小程序管理-删除车辆")
+    @Log(title = "小程序-删除车牌号", businessType = BusinessType.DELETE)
+    public AjaxResult deleteById(@RequestParam(value = "carId", defaultValue = "-1") Long carId) {
+        return toAjax(appUserCarService.deleteById(carId));
     }
 
 }

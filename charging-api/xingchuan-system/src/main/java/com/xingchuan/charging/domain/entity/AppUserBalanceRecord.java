@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.charging.enums.PayChannel;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
@@ -19,6 +21,7 @@ public class AppUserBalanceRecord extends BaseEntity {
     /**
      * $column.columnComment
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -103,6 +106,7 @@ public class AppUserBalanceRecord extends BaseEntity {
      * 组织架构ID
      */
     @Excel(name = "组织架构ID")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**

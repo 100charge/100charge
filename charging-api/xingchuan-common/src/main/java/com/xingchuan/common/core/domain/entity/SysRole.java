@@ -1,16 +1,18 @@
 package com.xingchuan.common.core.domain.entity;
 
-import java.util.Set;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.xingchuan.common.annotation.Excel;
+import com.xingchuan.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.xingchuan.common.annotation.Excel;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xingchuan.common.core.domain.BaseEntity;
+import java.util.Set;
 
 /**
  * 角色表 sys_role
@@ -25,6 +27,7 @@ public class SysRole extends BaseEntity {
      * 角色ID
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "角色序号", cellType = Excel.ColumnType.NUMERIC)
     private Long roleId;
 

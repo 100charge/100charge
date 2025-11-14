@@ -16,6 +16,7 @@ import com.xingchuan.common.core.domain.AjaxResult;
 import com.xingchuan.common.core.page.TableDataInfo;
 import com.xingchuan.common.enums.BusinessType;
 import com.xingchuan.common.utils.StringUtils;
+import com.xingchuan.common.utils.WxQRCodeUtil;
 import com.xingchuan.common.utils.poi.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -150,6 +152,43 @@ public class ChargingPileController extends BaseController {
             return success();
         } else {
             return error(message);
+        }
+    }
+
+    /**
+     * 生成微信二维码
+     */
+    @RepeatSubmit
+    @GetMapping("/generateQRCodeZip")
+    @ApiOperation(value = "平台-充电桩生成二维码压缩包 ”桩号_枪号“拼接")
+    @Log(title = "平台-充电桩生成二维码压缩包", businessType = BusinessType.QRCODE)
+    public void generateQRCodeZip(@RequestParam(value = "pileNo", defaultValue = "-1") String pileNo,
+                                  HttpServletResponse servletResponse) {
+
+        chargingPileService.generateQRCodeZip(pileNo, servletResponse);
+    }
+
+    /**
+     * 生成微信二维码
+     */
+    @RepeatSubmit
+    @GetMapping("/generateQRCode")
+    @ApiOperation(value = "平台-充电桩生成二维码 ”桩号_枪号“拼接")
+    @Log(title = "平台-充电桩生成二维码", businessType = BusinessType.QRCODE)
+    public void generateQRCode(@ApiParam("桩编码") @NotNull(message = "桩编码不能为空!") @RequestParam("pileNo") String pileNo,
+                               @ApiParam("枪编码") @NotNull(message = "枪编码不能为空!") @RequestParam("gunNo") String gunNo,
+                               HttpServletResponse servletResponse) {
+        try {
+            String content = String.format("\"https://wxapi.xxx.com?code=%sG%s\"", pileNo, gunNo);
+            if (StringUtils.isBlank(content)) {
+                return;
+            }
+            content = content.trim();
+            //核心代码-生成二维码
+            WxQRCodeUtil.createCodeToOutputStream(content, servletResponse.getOutputStream());
+        } catch (Exception e) {
+            log.error("平台-生成二维码失败", e);
+            throw new RuntimeException("平台-二维码生成失败，请查看日志");
         }
     }
 
