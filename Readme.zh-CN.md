@@ -344,7 +344,7 @@ rocketmq:
 
 ### 2. 运营平台配置
 
-如何运行Web运营平台，请参考charging-README,[点击查看](./charging-web/README.md "README")
+如何运行Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
 
 ```json
 // charging-web/vite.config.js
