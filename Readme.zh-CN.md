@@ -52,10 +52,10 @@
 
 <center>
 <div style="text-align: center">
-<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/8c335577-5ed4-4ccc-b9c6-727651448753.png" title="" alt="截图1" data-align="center">
-<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/2952c319-fd86-4846-b54c-8c849ad43dd0.png" title="" alt="截图2" data-align="center">
-<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/e73f6aff-96ad-4149-b71b-4e802e379760.png" title="" alt="截图3" data-align="center">
-<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/4bfde706-226e-44ea-82ef-7a822fdc61f7.png" title="" alt="截图4" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/8c335577-5ed4-4ccc-b9c6-727651448753.png" title="" alt="首页" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/2952c319-fd86-4846-b54c-8c849ad43dd0.png" title="" alt="充电实况" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/e73f6aff-96ad-4149-b71b-4e802e379760.png" title="" alt="充电订单" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/4bfde706-226e-44ea-82ef-7a822fdc61f7.png" title="" alt="订单详情" data-align="center">
 </div>
 </center>
 
