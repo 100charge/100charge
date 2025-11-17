@@ -24,7 +24,7 @@
 -e DB_PORT=5432 \
 -e DB_NAME=charge \
 -e DB_USER=postgres \
--e DB_PASSWORD=your_password
+-e DB_PASSWORD=postgres
 ```
 
 ---
@@ -43,7 +43,7 @@
 -e REDIS_HOST=172.31.90.138 \
 -e REDIS_PORT=6379 \
 -e REDIS_DATABASE=0 \
--e REDIS_PASSWORD=your_redis_password
+-e REDIS_PASSWORD=
 ```
 
 ---
@@ -52,7 +52,7 @@
 
 | 环境变量 | 默认值 | 说明 |
 |---------|--------|------|
-| `ROCKETMQ_NAME_SERVER` | `127.0.0.1:9876` | RocketMQ NameServer地址，多个用分号分隔 |
+| `ROCKETMQ_NAME_SERVER` | `127.0.0.1:9876` | RocketMQ NameServer地址 |
 
 **示例：**
 ```bash
@@ -73,7 +73,7 @@
 **示例：**
 ```bash
 -e DRUID_USERNAME=admin \
--e DRUID_PASSWORD=secure_password
+-e DRUID_PASSWORD=123456
 ```
 
 ---
@@ -154,7 +154,7 @@ docker run -d \
   -e DB_PORT=5432 \
   -e DB_NAME=charge \
   -e DB_USER=postgres \
-  -e DB_PASSWORD=your_db_password \
+  -e DB_PASSWORD=postgres \
   \
   # Redis配置
   -e REDIS_HOST=172.31.90.138 \
@@ -167,7 +167,7 @@ docker run -d \
   \
   # Druid监控
   -e DRUID_USERNAME=admin \
-  -e DRUID_PASSWORD=secure_password \
+  -e DRUID_PASSWORD=123456 \
   \
   # 微信小程序配置
   -e WX_APPID=wx1234567890abcdef \
@@ -198,7 +198,7 @@ docker run -d \
 
 ### 方式2: 使用环境变量文件（推荐）
 
-**步骤1:** 创建 `.env.prod` 文件（参考 `docker-env-example.txt`）
+**步骤1:** 创建 `.env.prod` 文件
 
 **步骤2:** 运行容器
 ```bash
