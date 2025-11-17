@@ -495,8 +495,9 @@ pay:
 
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
+<center>
 <div style="text-align: center">
 <img  style="display: inline-block; margin: 5px;width:200px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
 <img  style="display: inline-block; margin: 5px;width:200px"  src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
-
+</center>
