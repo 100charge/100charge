@@ -491,8 +491,12 @@ pay:
 
 **QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**：766266573，入群请填写：100+姓名
 
-<img src="./images/3aec43df-6a54-4515-ad4d-9c890771ba09.png" title="" alt="3aec43df-6a54-4515-ad4d-9c890771ba09" data-align="center">
+<img src="./images/qq.png" title="" alt="3aec43df-6a54-4515-ad4d-9c890771ba09" data-align="center">
 
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
-<img src="./images/fae88e40-6921-4b36-a24b-ab1397ee86bc.png" title="" alt="fae88e40-6921-4b36-a24b-ab1397ee86bc" data-align="center">
+<div class="text-align: center">
+<img  style="display: inline-block; margin: 5px;width:250px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;width:250px"  src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
+</div>
+
