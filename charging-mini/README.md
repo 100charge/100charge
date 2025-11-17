@@ -59,7 +59,9 @@ zhitai/
 
 1. 安装 HBuilderX
 2. 导入项目
+
 2.1 uview-ui插件安装，请参考：[uview-ui](https://www.uviewui.com/components/install.html)
+
 2.2 uview-ui依赖：
 ``` shell
 // 安装sass
