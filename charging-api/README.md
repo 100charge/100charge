@@ -146,7 +146,7 @@
 
 ```bash
 docker run -d \
-  --name charging-admin \
+  --name charging-api \
   -p 8080:8080 \
   \
   # 数据库配置
@@ -193,7 +193,7 @@ docker run -d \
   -v ./uploadPath:/app/uploadPath \
   -v ./apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
   \
-  charging-admin:latest
+  charging-api:latest
 ```
 
 ### 方式2: 使用环境变量文件（推荐）
@@ -203,11 +203,11 @@ docker run -d \
 **步骤2:** 运行容器
 ```bash
 docker run -d \
-  --name charging-admin \
+  --name charging-api \
   --env-file .env.prod \
   -p 8080:8080 \
   -v ./adminLogs:/app/adminLogs \
   -v ./uploadPath:/app/uploadPath \
   -v ./apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
-  charging-admin:latest
+  charging-api:latest
 ```
