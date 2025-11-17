@@ -336,7 +336,7 @@ spring:
     # 数据库索引
     database: ${REDIS_DATABASE:0}
     # 密码
-    password: ""
+    password: ${REDIS_PASSWORD:}
     timeout: 10s
 ```
 
