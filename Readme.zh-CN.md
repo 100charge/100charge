@@ -491,7 +491,7 @@ pay:
 
 **QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**：766266573，入群请填写：100+姓名
 
-<img src="./images/qq.png" title="" style="display: inline-block; margin: 5px;width:200px" alt="qq.png" data-align="center">
+<img src="./images/qq.png" title="QQ群" style="display: inline-block; margin: 5px;width:200px" alt="QQ群" data-align="center">
 
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
