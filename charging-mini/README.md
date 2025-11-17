@@ -34,7 +34,7 @@
 ## 技术栈
 
 - **框架**: uni-app
-- **语言**: Vue.js + JavaScript + uView-ui
+- **语言**: Vue.js + JavaScript + uview-ui
 - **样式**: CSS3 + Flexbox/Grid
 - **平台**: 微信小程序、支付宝小程序、H5
 
@@ -48,6 +48,7 @@ zhitai/
 │   ├── profile/          # 个人中心
 │   └── charging/         # 充电详情
 ├── static/               # 静态资源
+│   ├── js/app.js        # 配置
 ├── pages.json           # 页面配置
 ├── manifest.json        # 应用配置
 ├── main.js              # 入口文件
@@ -58,8 +59,8 @@ zhitai/
 
 1. 安装 HBuilderX
 2. 导入项目
-2.1 UView-UI插件安装，请参考：[uview-ui](https://www.uviewui.com/components/install.html)
-2.2 UView-UI依赖：
+2.1 uview-ui插件安装，请参考：[uview-ui](https://www.uviewui.com/components/install.html)
+2.2 uview-ui依赖：
 ``` shell
 // 安装sass
 npm i sass -D

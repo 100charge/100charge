@@ -351,30 +351,7 @@ rocketmq:
   producer:
     group: ProducerGroup1
 ```
-
-### 2. 运营平台配置
-
-如何运行Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
-
-```json
-// charging-web/vite.config.js
-    server: {
-      port: 8081,
-      host: true,
-      open: true,
-      proxy: {
-        "/dev-api": {
-          target: "http://127.0.0.1:8080/", // API接口地址
-          changeOrigin: true,
-          rewrite: (p) => p.replace(/^\/dev-api/, ""),
-        },
-      },
-    },
-```
-
-
-
-### 3. 小程序以及微信支付配置(可选)
+#### 小程序以及微信支付配置(可选)
 
 ```yaml
 # charging-api/application-dev.yml
@@ -421,6 +398,40 @@ pay:
     readTimeoutMs: 5000
     connectTimeoutMs: 5000
     writeTimeoutMs: 5000
+```
+
+### 2. 运营平台配置
+
+如何运行调试Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
+
+```json
+// charging-web/vite.config.js
+    server: {
+      port: 8081,
+      host: true,
+      open: true,
+      proxy: {
+        "/dev-api": {
+          target: "http://127.0.0.1:8080/", // API接口地址
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/dev-api/, ""),
+        },
+      },
+    },
+```
+
+
+
+### 3. 微信小程序(可选)
+如何调试运行小程序，请参考[charging-mini中的README](./charging-mini/README.md "README")
+```javascript
+// statis/js/app.js
+
+var appName = "100Charge"
+var appid = "wx361b3b951a7d5f54" // 微信appid
+var api = "http://192.168.110.135:8083/"; // API接口地址
+var qqMapKey = ""  // 需要填写QQ地图的APIkey
+
 ```
 
 ### 4. 本地运行
