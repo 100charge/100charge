@@ -13,7 +13,7 @@
     >
     </u-navbar>
     <!-- gif 背景 -->
-    <image class="bg-gif" src="/static/img/chongdiannew.gif" mode="widthFix"></image>
+    <image class="bg-gif" src="https://demofile.zhitancloud.com/demo-file/2025/11/14/chongdiannew_20251114155417A009.gif" mode="widthFix"></image>
 
     <!-- 上半部分：时间信息 -->
     <view class="time-section" v-if="socketData.status == 'CHARGING'">
