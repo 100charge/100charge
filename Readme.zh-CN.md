@@ -351,6 +351,7 @@ rocketmq:
   producer:
     group: ProducerGroup1
 ```
+
 #### 小程序以及微信支付配置(可选)
 
 ```yaml
@@ -423,7 +424,9 @@ pay:
 
 
 ### 3. 微信小程序(可选)
+
 如何调试运行小程序，请参考[charging-mini中的README](./charging-mini/README.md "README")
+
 ```javascript
 // statis/js/app.js
 
@@ -522,3 +525,5 @@ var qqMapKey = ""  // 需要填写QQ地图的APIkey
 <img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
 </center>
+
+更多信息，请访问我们的WiKi:[Wiki - Gitee.com](https://gitee.com/ustcyc/100charge/wikis)
