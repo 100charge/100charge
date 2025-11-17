@@ -11,5 +11,9 @@
     "echarts-liquidfill": "^2.0.6",
     "js-md5": "^0.8.3",
     "uview-ui": "^2.0.36"
+  },
+  "devDependencies": {
+    "sass": "^1.94.0",
+    "sass-loader": "^16.0.6"
   }
 }
