@@ -297,7 +297,7 @@ docker run -itd \
 ## 4. 项目配置
 
 ### 1. 后端服务配置
-
+详细配置，请参考[charging-api中的README](./charging-api/README.md "README")
 #### API端口
 
 ```yaml
