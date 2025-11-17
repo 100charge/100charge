@@ -50,6 +50,15 @@
 
 ### 3.1 社区版
 
+<center>
+<div style="text-align: center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/8c335577-5ed4-4ccc-b9c6-727651448753.png" title="" alt="截图1" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/2952c319-fd86-4846-b54c-8c849ad43dd0.png" title="" alt="截图2" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/e73f6aff-96ad-4149-b71b-4e802e379760.png" title="" alt="截图3" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/4bfde706-226e-44ea-82ef-7a822fdc61f7.png" title="" alt="截图4" data-align="center">
+</div>
+</center>
+
 ### 3.2 商业版
 
 # 二 版本对比
@@ -82,7 +91,7 @@
 | 财务管理 | 用户余额变动  | √   | √   |
 |      | 企业余额变动  | ×   | √   |
 |      | 结算单查询   | ×   | √   |
-| 发票管理 | 发票管理  | ×  | √   |
+| 发票管理 | 发票管理    | ×   | √   |
 | 营销活动 | 营销策略    | ×   | √   |
 |      | 优惠券管理   | ×   | √   |
 |      | 券使用记录   | ×   | √   |
@@ -90,10 +99,10 @@
 |      | 运营商分润管理 | ×   | √   |
 | 运维管理 | 运维报表    | ×   | √   |
 |      | 报文管理    | ×   | √   |
-| 报表   | 账户充值明细   | √  | √   |
-|      |  电站失败率报表   | √  | √   |
-|      | 失败记录明细   | √   | √   |
-|      | 多维度分析    | ×   | √   |
+| 报表   | 账户充值明细  | √   | √   |
+|      | 电站失败率报表 | √   | √   |
+|      | 失败记录明细  | √   | √   |
+|      | 多维度分析   | ×   | √   |
 |      | 运营报表    | ×   | √   |
 |      | 电站数据报表  | ×   | √   |
 |      | 订单扣费明细  | ×   | √   |
@@ -103,16 +112,15 @@
 |      | 企业收退款报表 | ×   | √   |
 |      | 尖峰平谷统计  | ×   | √   |
 |      | 车辆峰谷统计  | ×   | √   |
-| 系统监控 | 系统监控  | √   | √   |
-
+| 系统监控 | 系统监控    | √   | √   |
 
 # 三 演示系统
 
-|     | 地址   |用户名与密码|
-| --- | ---- |----|
-| 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |  |
-| 社区版 | https://demo-admin.100charge.cn:2080/ |admin <br> admin123|
-| 商业版 | TODO |TODO |
+|     | 地址                                                                                          | 用户名与密码              |
+| --- | ------------------------------------------------------------------------------------------- | ------------------- |
+| 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
+| 社区版 | https://demo-admin.100charge.cn:2080/                                                       | admin <br> admin123 |
+| 商业版 | TODO                                                                                        | TODO                |
 
 # 四 开发环境
 
@@ -289,6 +297,7 @@ docker run -itd \
 ## 4. 项目配置
 
 ### 1. 后端服务配置
+
 #### API端口
 
 ```yaml
