@@ -313,25 +313,29 @@ server:
 #### 数据库配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 spring:
   datasource:
     druid:
       master:
-        url: jdbc:postgresql://[服务器IP]:5432/charge
-        username: postgres
-        password: postgres
+        url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:charge}
+        username: ${DB_USER:postgres}
+        password: ${DB_PASSWORD:postgres}
 ```
 
 #### Redis配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 spring:
   redis:
-    host: 服务器IP
-    port: 6379
-    database: 0
+    # 地址
+    host: ${REDIS_HOST:localhost}
+    # 端口,默认为6379
+    port: ${REDIS_PORT:6379}
+    # 数据库索引
+    database: ${REDIS_DATABASE:0}
+    # 密码
     password: ""
     timeout: 10s
 ```
@@ -339,9 +343,9 @@ spring:
 #### RocketMQ配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 rocketmq:
-  name-server: 服务器IP:9876
+  name-server:  ${ROCKETMQ_NAME_SERVER:127.0.0.1:9876}
   topic: Charging
   tags:
     control: Control
@@ -355,50 +359,50 @@ rocketmq:
 #### 小程序以及微信支付配置(可选)
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 # 微信小程序
 wx:
   miniapp:
     configs:
       #微信小程序的appid
-      - appid: appid
+      - appid: ${WX_APPID:appid}
         #微信小程序的Secret
-        secret: secret
+        secret: ${WX_SECRET:secret}
         #微信小程序消息服务器配置的token
-        token:
+        token: ${WX_TOKEN:}
         #微信小程序消息服务器配置的EncodingAESKey
-        aesKey:
+        aesKey: ${WX_AES_KEY:}
         msgDataFormat: JSON
         # 小程序版本
-        envVersion: "trial"
+        envVersion: ${WX_ENV_VERSION:trial}
         # 跳转地址
-        page: /pages/index/home
+        page: ${WX_PAGE:/pages/index/home}
         # 启动充电提示模板
-        startChargingNotificationTemplate: w
+        startChargingNotificationTemplate: ${WX_START_TEMPLATE:w}
         # 停止充电提示模板
-        stopChargingNotificationTemplate: x
+        stopChargingNotificationTemplate: ${WX_STOP_TEMPLATE:x}
         # sendMessage 发送订阅消息 POST
-        wxSendMessageUrl: https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s
+        wxSendMessageUrl: ${WX_SEND_MESSAGE_URL:https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s}
 
 # 微信支付
 pay:
   wechat:
-    appId: 123456789
-    secret: 123456789
-    merchantId: 1715546065
-    privateKeyPath: ./apiclient_key.pem
-    merchantSerialNumber: 123456789
-    apiV3key: 123456789
-    profitSharing: false
-    expireMinute: 5
-    rechargeNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/ #这里是回调服务器地址
-    refundNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/   #这里是回调服务器地址
-    httpProxyEnabled: true
-    httpProxyHost: 127.0.0.1
-    httpProxyPort: 8213
-    readTimeoutMs: 5000
-    connectTimeoutMs: 5000
-    writeTimeoutMs: 5000
+    appId: ${PAY_WECHAT_APPID:123456789}
+    secret: ${PAY_WECHAT_SECRET:123456789}
+    merchantId: ${PAY_WECHAT_MERCHANT_ID:1715546065}
+    privateKeyPath: ${PAY_WECHAT_PRIVATE_KEY_PATH:./apiclient_key.pem}
+    merchantSerialNumber: ${PAY_WECHAT_SERIAL_NUMBER:123456789}
+    apiV3key: ${PAY_WECHAT_API_V3_KEY:123456789}
+    profitSharing: ${PAY_WECHAT_PROFIT_SHARING:false}
+    expireMinute: ${PAY_WECHAT_EXPIRE_MINUTE:5}
+    rechargeNotifyUrl: ${PAY_WECHAT_RECHARGE_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
+    refundNotifyUrl: ${PAY_WECHAT_REFUND_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
+    httpProxyEnabled: ${PAY_WECHAT_PROXY_ENABLED:false}
+    httpProxyHost: ${PAY_WECHAT_PROXY_HOST:127.0.0.1}
+    httpProxyPort: ${PAY_WECHAT_PROXY_PORT:8213}
+    readTimeoutMs: ${PAY_WECHAT_READ_TIMEOUT:5000}
+    connectTimeoutMs: ${PAY_WECHAT_CONNECT_TIMEOUT:5000}
+    writeTimeoutMs: ${PAY_WECHAT_WRITE_TIMEOUT:5000}
 ```
 
 ### 2. 运营平台配置
