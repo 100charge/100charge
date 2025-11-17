@@ -110,7 +110,7 @@
 
 |     | 地址   |用户名与密码|
 | --- | ---- |----|
-| 社区版 | http://demo-admin.100charge.cn:2080/ |admin <br> admin123|
+| 社区版 | https://demo-admin.100charge.cn:2080/ |admin <br> admin123|
 | 商业版 | TODO |TODO |
 
 # 四 开发环境
@@ -344,6 +344,8 @@ rocketmq:
 
 ### 2. 运营平台配置
 
+如何运行Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
+
 ```json
 // charging-web/vite.config.js
     server: {
@@ -489,8 +491,13 @@ pay:
 
 **QQ群**，如果您只是技术学习与咨询等，请加入我们的**QQ群**：766266573，入群请填写：100+姓名
 
-<img src="./images/3aec43df-6a54-4515-ad4d-9c890771ba09.png" title="" alt="3aec43df-6a54-4515-ad4d-9c890771ba09" data-align="center">
+<img src="./images/qq.png" title="QQ群" style="display: inline-block; margin: 5px;width:200px" alt="QQ群" data-align="center">
 
 **微信扫码**，如果您要想咨询我们的商业授权，以及培训等事宜，请优先加微信，请备注：100+姓名
 
-<img src="./images/fae88e40-6921-4b36-a24b-ab1397ee86bc.png" title="" alt="fae88e40-6921-4b36-a24b-ab1397ee86bc" data-align="center">
+<center>
+<div style="text-align: center">
+<img  style="display: inline-block; margin: 5px;" width="250px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
+</div>
+</center>

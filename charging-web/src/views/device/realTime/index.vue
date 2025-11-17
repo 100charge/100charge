@@ -445,6 +445,11 @@ function goChargingOrderDetail(row) {
       border: 1px solid #ececec;
       position: relative;
     }
+    @media (max-width: 1920px) {
+      .list-card {
+        width: 360px;
+      }
+    }
     .card-status-tag {
       position: absolute;
       top: 0;
@@ -480,7 +485,7 @@ function goChargingOrderDetail(row) {
     .card-gun-basic {
       // width: 280px;
       height: 170px;
-      padding-left: 24px;
+      padding-left: 16px;
       box-sizing: border-box;
       display: flex;
       align-items: center;
@@ -518,7 +523,7 @@ function goChargingOrderDetail(row) {
 
       .card-gun-icon {
         width: 98px;
-        margin-right: 30px;
+        margin-right: 20px;
         p {
           width: 98px;
           height: 98px;
@@ -554,6 +559,16 @@ function goChargingOrderDetail(row) {
           background: #999;
           background-image: url("@/assets/images/realtime/chaqiang.png");
           background-size: cover;
+        }
+      }
+      @media (max-width: 1920px) {
+        .card-gun-icon {
+          width: 70px;
+          p {
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+          }
         }
       }
     }
