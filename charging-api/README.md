@@ -12,7 +12,7 @@
 
 | 环境变量 | 默认值 | 说明 |
 |---------|--------|------|
-| `DB_HOST` | `127.0.0.1` | PostgreSQL数据库主机地址 |
+| `DB_HOST` | `172.24.139.41` | PostgreSQL数据库主机地址 |
 | `DB_PORT` | `5432` | PostgreSQL数据库端口 |
 | `DB_NAME` | `charge` | 数据库名称 |
 | `DB_USER` | `postgres` | 数据库用户名 |
@@ -20,7 +20,7 @@
 
 **示例：**
 ```bash
--e DB_HOST=172.31.90.138 \
+-e DB_HOST=172.24.139.41 \
 -e DB_PORT=5432 \
 -e DB_NAME=charge \
 -e DB_USER=postgres \
@@ -33,14 +33,14 @@
 
 | 环境变量 | 默认值 | 说明 |
 |---------|--------|------|
-| `REDIS_HOST` | `localhost` | Redis服务器地址 |
+| `REDIS_HOST` | `172.24.139.41` | Redis服务器地址 |
 | `REDIS_PORT` | `6379` | Redis服务器端口 |
 | `REDIS_DATABASE` | `0` | Redis数据库索引(0-15) |
 | `REDIS_PASSWORD` | _(空)_ | Redis密码，留空表示无密码 |
 
 **示例：**
 ```bash
--e REDIS_HOST=172.31.90.138 \
+-e REDIS_HOST=172.24.139.41 \
 -e REDIS_PORT=6379 \
 -e REDIS_DATABASE=0 \
 -e REDIS_PASSWORD=
@@ -52,11 +52,11 @@
 
 | 环境变量 | 默认值 | 说明 |
 |---------|--------|------|
-| `ROCKETMQ_NAME_SERVER` | `127.0.0.1:9876` | RocketMQ NameServer地址 |
+| `ROCKETMQ_NAME_SERVER` | `172.24.139.41:9876` | RocketMQ NameServer地址 |
 
 **示例：**
 ```bash
--e ROCKETMQ_NAME_SERVER=172.31.90.138:9876
+-e ROCKETMQ_NAME_SERVER=172.24.139.41:9876
 ```
 
 ---
@@ -153,20 +153,20 @@ docker run -d \
   -e JAVA_OPTS="-Xms512m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=200" \
   \
   # 数据库配置
-  -e DB_HOST=172.31.90.138 \
+  -e DB_HOST=172.24.139.41 \
   -e DB_PORT=5432 \
   -e DB_NAME=charge \
   -e DB_USER=postgres \
   -e DB_PASSWORD=postgres \
   \
   # Redis配置
-  -e REDIS_HOST=172.31.90.138 \
+  -e REDIS_HOST=172.24.139.41 \
   -e REDIS_PORT=6379 \
   -e REDIS_DATABASE=0 \
   -e REDIS_PASSWORD= \
   \
   # RocketMQ配置
-  -e ROCKETMQ_NAME_SERVER=172.31.90.138:9876 \
+  -e ROCKETMQ_NAME_SERVER=172.24.139.41:9876 \
   \
   # Druid监控
   -e DRUID_USERNAME=admin \
