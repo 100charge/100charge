@@ -289,10 +289,9 @@ docker run -itd \
 ```
 
 ## 3. 数据库初始化
+执行SQL脚本
 
-- `charging-api/sql/postgresql/step1-basic.sql` - 基础表结构
-
-- `charging-api/sql/postgresql/step2-setKey.sql` - 主键和索引
+- `charging-api/sql/postgresql/db.sql` - 表结构以及初始化数据
 
 ## 4. 项目配置
 
