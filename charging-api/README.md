@@ -196,7 +196,7 @@ docker run -d \
   -v ./uploadPath:/app/uploadPath \
   -v ./apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
   \
-  100charge/charge-api:latest
+  100charge/charging-api:latest
 ```
 
 ### 方式2: 使用环境变量文件（推荐）
@@ -212,5 +212,5 @@ docker run -d \
   -v ./adminLogs:/app/adminLogs \
   -v ./uploadPath:/app/uploadPath \
   -v ./apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
-  100charge/charge-api:latest
+  100charge/charging-api:latest
 ```
