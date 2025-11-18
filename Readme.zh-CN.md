@@ -194,7 +194,11 @@
 
 ```mermaid
 flowchart TB
-    APP[充电桩管理系统<br/>Spring Boot 应用]
+    WEB[Web 云平台<br/>Vue3 + Vite]
+    MINI[微信小程序<br/>uni-app]
+    
+    WEB --> APP[充电桩管理系统<br/>Spring Boot 应用]
+    MINI --> APP
 
     APP --> PG[(PostgreSQL 14+<br/>业务数据存储)]
     APP --> REDIS[(Redis 6.2+<br/>缓存/会话)]
@@ -206,6 +210,8 @@ flowchart TB
     MQ -.-> MQMSG[消息队列<br/>充电指令<br/>订单通知]
     WECHAT -.-> PAY[支付退款<br/>余额充值]
 
+    style WEB fill:#409EFF,stroke:#1976D2,stroke-width:3px,color:#fff
+    style MINI fill:#07C160,stroke:#059748,stroke-width:3px,color:#fff
     style APP fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style PG fill:#336791,stroke:#1a4d6d,stroke-width:2px,color:#fff
     style REDIS fill:#DC382D,stroke:#a72822,stroke-width:2px,color:#fff
