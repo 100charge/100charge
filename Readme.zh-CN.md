@@ -188,15 +188,13 @@
 
 ```
 
-# 六 安装部署
-
-## 1. 依赖组件
+## 2. 依赖组件
 
 ```mermaid
 flowchart TB
     WEB[Web 云平台<br/>Vue3 + Vite]
     MINI[微信小程序<br/>uni-app]
-    
+
     WEB --> APP[充电桩管理系统<br/>Spring Boot 应用]
     MINI --> APP
 
@@ -224,11 +222,9 @@ flowchart TB
     style PAY fill:#C8E6C9,stroke:#388E3C,stroke-width:1px
 ```
 
+# 六 安装部署
 
-
-
-
-## 2. 快速部署
+## 1. 快速部署
 
 项目提供简易部署命令，可供您快速部署，学习并使用。**请勿该部署方式应用于生产环境**，请按照以下顺序进行执行部署
 
@@ -294,15 +290,18 @@ docker run -itd \
  xuchengen/rocketmq:latest
 ```
 
-## 3. 数据库初始化
+### 4. 数据库初始化
+
 执行SQL脚本
 
 - `charging-api/sql/postgresql/db.sql` - 表结构以及初始化数据
 
-## 4. 项目配置
+## 2. 项目配置
 
 ### 1. 后端服务配置
+
 详细配置，请参考[charging-api中的README](./charging-api/README.md "README")
+
 #### API端口
 
 ```yaml
