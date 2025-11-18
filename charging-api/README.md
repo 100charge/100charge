@@ -68,7 +68,7 @@
 | `DRUID_USERNAME` | `admin` | Druid监控页面登录用户名 |
 | `DRUID_PASSWORD` | `123456` | Druid监控页面登录密码 |
 
-**访问地址：** `http://your-host:8080/druid/`
+**访问地址：** `http://your-host:port/druid/`
 
 **示例：**
 ```bash
@@ -149,6 +149,9 @@ docker run -d \
   --name charging-api \
   -p 8080:8080 \
   \
+    # JVM参数（如需自定义内存、GC等）
+  -e JAVA_OPTS="-Xms512m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=200" \
+  \
   # 数据库配置
   -e DB_HOST=172.31.90.138 \
   -e DB_PORT=5432 \
@@ -198,13 +201,13 @@ docker run -d \
 
 ### 方式2: 使用环境变量文件（推荐）
 
-**步骤1:** 创建 `.env.prod` 文件
+**步骤1:** 创建 `.docker.env` 文件（参考 `.docker.env`）
 
 **步骤2:** 运行容器
 ```bash
 docker run -d \
   --name charging-api \
-  --env-file .env.prod \
+  --env-file .docker.env \
   -p 8080:8080 \
   -v ./adminLogs:/app/adminLogs \
   -v ./uploadPath:/app/uploadPath \
