@@ -1,5 +1,5 @@
 <p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/LOGO.png'  height="100" width="231"></img></p>
-<p align="center" style="margin: 30px 0 30px; font-weight: bold;font-size: larger;">100Charge基于若依的充电运营平台</h1>
+<p align="center" style="margin: 30px 0 30px; font-weight: bold;font-size: larger;">100Charge开源充电运营平台</h1>
 <p align="center">基于SpringBoot和若依框架开发</p>
 
 <p align="center">
@@ -50,6 +50,15 @@
 
 ### 3.1 社区版
 
+<center>
+<div style="text-align: center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/8c335577-5ed4-4ccc-b9c6-727651448753.png" title="" alt="首页" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/充电实况.png" title="" alt="充电实况" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="45%" src="./images/e73f6aff-96ad-4149-b71b-4e802e379760.png" title="" alt="充电订单" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="45%" src="./images/4bfde706-226e-44ea-82ef-7a822fdc61f7.png" title="" alt="订单详情" data-align="center">
+</div>
+</center>
+
 ### 3.2 商业版
 
 # 二 版本对比
@@ -82,7 +91,7 @@
 | 财务管理 | 用户余额变动  | √   | √   |
 |      | 企业余额变动  | ×   | √   |
 |      | 结算单查询   | ×   | √   |
-| 发票管理 | 发票管理  | ×  | √   |
+| 发票管理 | 发票管理    | ×   | √   |
 | 营销活动 | 营销策略    | ×   | √   |
 |      | 优惠券管理   | ×   | √   |
 |      | 券使用记录   | ×   | √   |
@@ -90,10 +99,10 @@
 |      | 运营商分润管理 | ×   | √   |
 | 运维管理 | 运维报表    | ×   | √   |
 |      | 报文管理    | ×   | √   |
-| 报表   | 账户充值明细   | √  | √   |
-|      |  电站失败率报表   | √  | √   |
-|      | 失败记录明细   | √   | √   |
-|      | 多维度分析    | ×   | √   |
+| 报表   | 账户充值明细  | √   | √   |
+|      | 电站失败率报表 | √   | √   |
+|      | 失败记录明细  | √   | √   |
+|      | 多维度分析   | ×   | √   |
 |      | 运营报表    | ×   | √   |
 |      | 电站数据报表  | ×   | √   |
 |      | 订单扣费明细  | ×   | √   |
@@ -103,15 +112,15 @@
 |      | 企业收退款报表 | ×   | √   |
 |      | 尖峰平谷统计  | ×   | √   |
 |      | 车辆峰谷统计  | ×   | √   |
-| 系统监控 | 系统监控  | √   | √   |
-
+| 系统监控 | 系统监控    | √   | √   |
 
 # 三 演示系统
 
-|     | 地址   |用户名与密码|
-| --- | ---- |----|
-| 社区版 | https://demo-admin.100charge.cn:2080/ |admin <br> admin123|
-| 商业版 | TODO |TODO |
+|     | 地址                                                                                          | 用户名与密码              |
+| --- | ------------------------------------------------------------------------------------------- | ------------------- |
+| 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
+| 社区版 | https://demo-admin.100charge.cn:2080/                                                       | admin <br> admin123 |
+| 商业版 | TODO                                                                                        | TODO                |
 
 # 四 开发环境
 
@@ -179,13 +188,15 @@
 
 ```
 
-# 六 安装部署
-
-## 1. 依赖组件
+## 2. 依赖组件
 
 ```mermaid
 flowchart TB
-    APP[充电桩管理系统<br/>Spring Boot 应用]
+    WEB[Web 云平台<br/>Vue3 + Vite]
+    MINI[微信小程序<br/>uni-app]
+
+    WEB --> APP[充电桩管理系统<br/>Spring Boot 应用]
+    MINI --> APP
 
     APP --> PG[(PostgreSQL 14+<br/>业务数据存储)]
     APP --> REDIS[(Redis 6.2+<br/>缓存/会话)]
@@ -197,6 +208,8 @@ flowchart TB
     MQ -.-> MQMSG[消息队列<br/>充电指令<br/>订单通知]
     WECHAT -.-> PAY[支付退款<br/>余额充值]
 
+    style WEB fill:#409EFF,stroke:#1976D2,stroke-width:3px,color:#fff
+    style MINI fill:#07C160,stroke:#059748,stroke-width:3px,color:#fff
     style APP fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style PG fill:#336791,stroke:#1a4d6d,stroke-width:2px,color:#fff
     style REDIS fill:#DC382D,stroke:#a72822,stroke-width:2px,color:#fff
@@ -209,11 +222,9 @@ flowchart TB
     style PAY fill:#C8E6C9,stroke:#388E3C,stroke-width:1px
 ```
 
+# 六 安装部署
 
-
-
-
-## 2. 快速部署
+## 1. 快速部署
 
 项目提供简易部署命令，可供您快速部署，学习并使用。**请勿该部署方式应用于生产环境**，请按照以下顺序进行执行部署
 
@@ -279,15 +290,18 @@ docker run -itd \
  xuchengen/rocketmq:latest
 ```
 
-## 3. 数据库初始化
+### 4. 数据库初始化
 
-- `charging-api/sql/postgresql/step1-basic.sql` - 基础表结构
+执行SQL脚本
 
-- `charging-api/sql/postgresql/step2-setKey.sql` - 主键和索引
+- `charging-api/sql/postgresql/db.sql` - 表结构以及初始化数据
 
-## 4. 项目配置
+## 2. 项目配置
 
 ### 1. 后端服务配置
+
+详细配置，请参考[charging-api中的README](./charging-api/README.md "README")
+
 #### API端口
 
 ```yaml
@@ -303,35 +317,39 @@ server:
 #### 数据库配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 spring:
   datasource:
     druid:
       master:
-        url: jdbc:postgresql://[服务器IP]:5432/charge
-        username: postgres
-        password: postgres
+        url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:charge}
+        username: ${DB_USER:postgres}
+        password: ${DB_PASSWORD:postgres}
 ```
 
 #### Redis配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 spring:
   redis:
-    host: 服务器IP
-    port: 6379
-    database: 0
-    password: ""
+    # 地址
+    host: ${REDIS_HOST:localhost}
+    # 端口,默认为6379
+    port: ${REDIS_PORT:6379}
+    # 数据库索引
+    database: ${REDIS_DATABASE:0}
+    # 密码
+    password: ${REDIS_PASSWORD:}
     timeout: 10s
 ```
 
 #### RocketMQ配置
 
 ```yaml
-# charging-api/application-dev.yml
+# charging-api/application.yml
 rocketmq:
-  name-server: 服务器IP:9876
+  name-server:  ${ROCKETMQ_NAME_SERVER:127.0.0.1:9876}
   topic: Charging
   tags:
     control: Control
@@ -342,9 +360,58 @@ rocketmq:
     group: ProducerGroup1
 ```
 
+#### 小程序以及微信支付配置(可选)
+
+```yaml
+# charging-api/application.yml
+# 微信小程序
+wx:
+  miniapp:
+    configs:
+      #微信小程序的appid
+      - appid: ${WX_APPID:appid}
+        #微信小程序的Secret
+        secret: ${WX_SECRET:secret}
+        #微信小程序消息服务器配置的token
+        token: ${WX_TOKEN:}
+        #微信小程序消息服务器配置的EncodingAESKey
+        aesKey: ${WX_AES_KEY:}
+        msgDataFormat: JSON
+        # 小程序版本
+        envVersion: ${WX_ENV_VERSION:trial}
+        # 跳转地址
+        page: ${WX_PAGE:/pages/index/home}
+        # 启动充电提示模板
+        startChargingNotificationTemplate: ${WX_START_TEMPLATE:w}
+        # 停止充电提示模板
+        stopChargingNotificationTemplate: ${WX_STOP_TEMPLATE:x}
+        # sendMessage 发送订阅消息 POST
+        wxSendMessageUrl: ${WX_SEND_MESSAGE_URL:https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s}
+
+# 微信支付
+pay:
+  wechat:
+    appId: ${PAY_WECHAT_APPID:123456789}
+    secret: ${PAY_WECHAT_SECRET:123456789}
+    merchantId: ${PAY_WECHAT_MERCHANT_ID:1715546065}
+    privateKeyPath: ${PAY_WECHAT_PRIVATE_KEY_PATH:./apiclient_key.pem}
+    merchantSerialNumber: ${PAY_WECHAT_SERIAL_NUMBER:123456789}
+    apiV3key: ${PAY_WECHAT_API_V3_KEY:123456789}
+    profitSharing: ${PAY_WECHAT_PROFIT_SHARING:false}
+    expireMinute: ${PAY_WECHAT_EXPIRE_MINUTE:5}
+    rechargeNotifyUrl: ${PAY_WECHAT_RECHARGE_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
+    refundNotifyUrl: ${PAY_WECHAT_REFUND_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
+    httpProxyEnabled: ${PAY_WECHAT_PROXY_ENABLED:false}
+    httpProxyHost: ${PAY_WECHAT_PROXY_HOST:127.0.0.1}
+    httpProxyPort: ${PAY_WECHAT_PROXY_PORT:8213}
+    readTimeoutMs: ${PAY_WECHAT_READ_TIMEOUT:5000}
+    connectTimeoutMs: ${PAY_WECHAT_CONNECT_TIMEOUT:5000}
+    writeTimeoutMs: ${PAY_WECHAT_WRITE_TIMEOUT:5000}
+```
+
 ### 2. 运营平台配置
 
-如何运行Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
+如何运行调试Web运营平台，请参考[charging-web中的README](./charging-web/README.md "README")
 
 ```json
 // charging-web/vite.config.js
@@ -364,53 +431,18 @@ rocketmq:
 
 
 
-### 3. 小程序以及微信支付配置(可选)
+### 3. 微信小程序(可选)
 
-```yaml
-# charging-api/application-dev.yml
-# 微信小程序
-wx:
-  miniapp:
-    configs:
-      #微信小程序的appid
-      - appid: appid
-        #微信小程序的Secret
-        secret: secret
-        #微信小程序消息服务器配置的token
-        token:
-        #微信小程序消息服务器配置的EncodingAESKey
-        aesKey:
-        msgDataFormat: JSON
-        # 小程序版本
-        envVersion: "trial"
-        # 跳转地址
-        page: /pages/index/home
-        # 启动充电提示模板
-        startChargingNotificationTemplate: w
-        # 停止充电提示模板
-        stopChargingNotificationTemplate: x
-        # sendMessage 发送订阅消息 POST
-        wxSendMessageUrl: https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s
+如何调试运行小程序，请参考[charging-mini中的README](./charging-mini/README.md "README")
 
-# 微信支付
-pay:
-  wechat:
-    appId: 123456789
-    secret: 123456789
-    merchantId: 1715546065
-    privateKeyPath: ./apiclient_key.pem
-    merchantSerialNumber: 123456789
-    apiV3key: 123456789
-    profitSharing: false
-    expireMinute: 5
-    rechargeNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/ #这里是回调服务器地址
-    refundNotifyUrl: https://您的服务器IP/prod-api/payNotify/recharge/wechat/   #这里是回调服务器地址
-    httpProxyEnabled: true
-    httpProxyHost: 127.0.0.1
-    httpProxyPort: 8213
-    readTimeoutMs: 5000
-    connectTimeoutMs: 5000
-    writeTimeoutMs: 5000
+```javascript
+// statis/js/app.js
+
+var appName = "100Charge"
+var appid = "wx361b3b951a7d5f54" // 微信appid
+var api = "http://192.168.110.135:8083/"; // API接口地址
+var qqMapKey = ""  // 需要填写QQ地图的APIkey
+
 ```
 
 ### 4. 本地运行
@@ -501,3 +533,5 @@ pay:
 <img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
 </center>
+
+更多信息，请访问我们的WiKi:[Wiki - Gitee.com](https://gitee.com/ustcyc/100charge/wikis)
