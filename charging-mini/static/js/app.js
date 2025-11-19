@@ -3,7 +3,7 @@ var imgUrl =
 // 100Charge
 var appName = "100Charge"
 var appid = "wx361b3b951a7d5f54" // 微信appid
-var api = "http://192.168.110.135:8083/"; // API接口地址
+var api = "http://172.24.139.41:8080/"; // API接口地址
 var qqMapKey = "5E2BZ-ZDS3L-3JEPJ-MYBKS-ZCMHS-EEF7A" // 地图Api key
 
 
