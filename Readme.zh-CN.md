@@ -1,5 +1,5 @@
 <p align="center"><img src='https://gitee.com/ustcyc/100charge/raw/master/images/LOGO.png'  height="100" width="231"></img></p>
-<p align="center" style="margin: 30px 0 30px; font-weight: bold;font-size: larger;">100Charge开源充电运营平台</h1>
+<p align="center" style="margin: 30px 0 30px; font-weight: bold;font-size: larger;">100Charge基于若依的开源充电运营平台</h1>
 <p align="center">基于SpringBoot和若依框架开发</p>
 
 <p align="center">
