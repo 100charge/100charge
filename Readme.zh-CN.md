@@ -266,8 +266,6 @@ docker run -d \
 ## 3. RocketMQ
 
 ```bash
-# 创建网络
-docker network create charging-net
 # 拉取镜像
 docker pull docker.1ms.run/xuchengen/rocketmq
 docker tag docker.1ms.run/xuchengen/rocketmq xuchengen/rocketmq:latest
@@ -327,27 +325,10 @@ docker run -d \
   -e DRUID_USERNAME=admin \
   -e DRUID_PASSWORD=123456 \
   \
-  -e WX_APPID=wx1234567890abcdef \
-  -e WX_SECRET=your_wechat_secret \
-  -e WX_ENV_VERSION=release \
-  -e WX_PAGE=/pages/index/home \
-  -e WX_START_TEMPLATE=start_template_id \
-  -e WX_STOP_TEMPLATE=stop_template_id \
-  \
-  -e PAY_WECHAT_APPID=wx1234567890abcdef \
-  -e PAY_WECHAT_SECRET=your_pay_secret \
-  -e PAY_WECHAT_MERCHANT_ID=1234567890 \
-  -e PAY_WECHAT_PRIVATE_KEY_PATH=/app/certs/apiclient_key.pem \
-  -e PAY_WECHAT_SERIAL_NUMBER=ABCDEF1234567890 \
-  -e PAY_WECHAT_API_V3_KEY=your_32_character_apiv3_key \
-  -e PAY_WECHAT_RECHARGE_NOTIFY_URL=https://yourdomain.com/prod-api/payNotify/recharge/wechat/ \
-  -e PAY_WECHAT_REFUND_NOTIFY_URL=https://yourdomain.com/prod-api/payNotify/refund/wechat/ \
-  -e PAY_WECHAT_PROXY_ENABLED=false \
-  \
   -v /adminLogs:/app/adminLogs \
   -v /uploadPath:/app/uploadPath \
   -v /apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
-  \
+  --restart=always \
   100charge/charging-api:latest
 ```
 
@@ -371,6 +352,7 @@ docker run -d \
   -e APP_TITLE=充电桩管理系统 \
   -e APP_ENV=production \
   -e APP_SYSTEM=行川 \
+  --restart=always \
   100charge/charging-web:latest
 ```
 
