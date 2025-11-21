@@ -417,9 +417,11 @@ export default {
       }
     },
     getBanner() {
-      // getBannerList({}).then((res) => {
-      //   this.swiperList = res.data || []
-      // })
+      getBannerList({}).then((res) => {
+        if (res.data && res.data.length > 0) {
+          this.swiperList = res.data || []
+        }
+      })
     },
     bindCityChange(e) {
       let index = e.detail.value
