@@ -275,16 +275,14 @@ docker tag docker.1ms.run/xuchengen/rocketmq xuchengen/rocketmq:latest
 # 启动容器
 docker run -itd \
  --name=rocketmq \
- --hostname rocketmq \
  --restart=always \
- -p 8080:8080 \
  -p 9876:9876 \
  -p 10909:10909 \
  -p 10911:10911 \
  -p 10912:10912 \
  -v /etc/localtime:/etc/localtime \
  -v /var/run/docker.sock:/var/run/docker.sock \
- --net=host \
+
  xuchengen/rocketmq:latest
 ```
 
