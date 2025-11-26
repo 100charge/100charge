@@ -2,13 +2,8 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" label-width="68px">
       <el-form-item label="场站名称" prop="dictName">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入场站名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.name" placeholder="请输入场站名称" clearable style="width: 240px"
+          @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -39,12 +34,8 @@
       <el-table-column label="计费策略" align="center" prop="ruleName" width="220" />
       <el-table-column label="是否展示" align="center" prop="showStatus">
         <template #default="scope">
-          <el-switch
-            v-model="scope.row.showStatus"
-            active-value="1"
-            inactive-value="0"
-            @change="handleStatusChange(scope.row)"
-          />
+          <el-switch v-model="scope.row.showStatus" active-value="1" inactive-value="0"
+            @change="handleStatusChange(scope.row)" />
         </template>
       </el-table-column>
 
@@ -52,25 +43,14 @@
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button
-            v-if="!scope.row.operateStation"
-            link
-            type="success"
-            icon="Download"
-            @click="handleDownload(scope.row)"
-            >下载二维码</el-button
-          >
+          <el-button v-if="!scope.row.operateStation" link type="success" icon="Download"
+            @click="handleDownload(scope.row)">下载二维码</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 新建场站/修改对话框 -->
     <el-drawer :title="title" v-model="open" size="900px" append-to-body :close-on-click-modal="false">
@@ -97,10 +77,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <div
-            style="border-top: 1px solid #eaeaea; width: 100%; padding: 12px 0; font-weight: 600; font-size: 16px"
-            class="global-color"
-          >
+          <div style="border-top: 1px solid #eaeaea; width: 100%; padding: 12px 0; font-weight: 600; font-size: 16px"
+            class="global-color">
             场站基础信息
           </div>
           <el-col :span="12">
@@ -112,29 +90,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="最大功率" prop="maxPower">
-              <el-input v-model="form.maxPower" placeholder="请输入" type="number"
-                ><template #append>kW</template></el-input
-              >
+              <el-input v-model="form.maxPower" placeholder="请输入" type="number"><template
+                  #append>kW</template></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="营业时间" prop="perationBeginTime">
-              <el-time-select
-                v-model="form.perationBeginTime"
-                style="width: 150px"
-                start="00:00"
-                end="23:59"
-                placeholder="开始时间"
-              />
+              <el-time-select v-model="form.perationBeginTime" style="width: 150px" start="00:00" end="23:59"
+                placeholder="开始时间" />
               <div style="padding-left: 15px"></div>
 
-              <el-time-select
-                v-model="form.perationEndTime"
-                style="width: 150px"
-                start="00:00"
-                end="23:59"
-                placeholder="截止时间"
-              />
+              <el-time-select v-model="form.perationEndTime" style="width: 150px" start="00:00" end="23:59"
+                placeholder="截止时间" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -191,23 +158,14 @@
             <!-- 3星 4星 5星 -->
             <el-form-item label="场站星级" prop="starLabel">
               <el-radio-group v-model="form.starLabel">
-                <el-radio
-                  v-for="item in station_starlabel"
-                  :label="item.value"
-                  :value="item.value"
-                  :key="item.value + 'starLabel'"
-                  >{{ item.label }}</el-radio
-                >
+                <el-radio v-for="item in station_starlabel" :label="item.value" :value="item.value"
+                  :key="item.value + 'starLabel'">{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="停车费描述" prop="parkingFeeTip">
-              <el-input
-                type="textarea"
-                v-model="form.parkingFeeTip"
-                placeholder="请输入停车费描述。如：超出2小时，每小时2元。"
-              />
+              <el-input type="textarea" v-model="form.parkingFeeTip" placeholder="请输入停车费描述。如：超出2小时，每小时2元。" />
             </el-form-item>
           </el-col>
 
@@ -229,10 +187,8 @@
             </el-form-item>
           </el-col>
 
-          <div
-            style="border-top: 1px solid #eaeaea; width: 100%; padding: 12px 0; font-weight: 600; font-size: 16px"
-            class="global-color"
-          >
+          <div style="border-top: 1px solid #eaeaea; width: 100%; padding: 12px 0; font-weight: 600; font-size: 16px"
+            class="global-color">
             场站地址信息
           </div>
           <el-col :span="8">
@@ -263,23 +219,20 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="经度" prop="lng">
-              <el-input-number
-                :precision="4"
-                v-model="form.lng"
-                placeholder="请输入经度，范围-180～180"
-                style="width: 100%"
-              />
+              <el-input-number :precision="4" v-model="form.lng" placeholder="请输入经度，范围-180～180" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="纬度" prop="lat">
-              <el-input-number
-                :precision="4"
-                v-model="form.lat"
-                placeholder="请输入纬度，范围-90～90"
-                style="width: 100%"
-              />
+              <el-input-number :precision="4" v-model="form.lat" placeholder="请输入纬度，范围-90～90" style="width: 100%" />
             </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="腾讯坐标拾取">
+          <el-link underline href="https://lbs.qq.com/getPoint/" target="_blank">打开</el-link>
+            </el-form-item>
+
           </el-col>
         </el-row>
       </el-form>
@@ -427,11 +380,11 @@ function getList() {
 
     stationsList.value = response.rows
       ? response.rows.map((item) => {
-          return {
-            ...item,
-            showStatus: item.showStatus?.toString() || undefined,
-          }
-        })
+        return {
+          ...item,
+          showStatus: item.showStatus?.toString() || undefined,
+        }
+      })
       : []
     total.value = response.total
     loading.value = false
@@ -541,9 +494,9 @@ function handleUpdate(row) {
       tenantId: response.data.tenantId?.toString() || undefined,
       stationImageList: response.data.stationImageList?.length
         ? response.data.stationImageList.reduce((pro, cur, index) => {
-            pro = pro + cur + (index + 1 == response.data.stationImageList.length ? "" : ",")
-            return pro
-          }, "")
+          pro = pro + cur + (index + 1 == response.data.stationImageList.length ? "" : ",")
+          return pro
+        }, "")
         : "",
     }
     response.data.province && getCityListByProvinceIdApi()
@@ -588,7 +541,7 @@ function handleDelete(row) {
       getList()
       proxy.$modal.msgSuccess("删除成功")
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 /** 多选框选中数据 */

@@ -30,7 +30,7 @@ export default defineConfig(({ mode, command }) => {
       open: true,
       proxy: {
         "/dev-api": {
-          target: "http://172.24.139.41:8080/", // 接口地址
+          target: "http://localhost:8080/", // 接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
         },
