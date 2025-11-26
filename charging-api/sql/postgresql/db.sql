@@ -2641,6 +2641,7 @@ COMMENT ON COLUMN "tenant_company_info"."id_card_back_image" IS '身份证反面
 COMMENT ON COLUMN "tenant_company_info"."withdrawal_agreement_no" IS '账户提现协议编号';
 COMMENT ON COLUMN "tenant_company_info"."rcv_acct_name" IS '收款银行账户名称';
 COMMENT ON TABLE "tenant_company_info" IS '运营商企业信息表';
+
 BEGIN;
 LOCK TABLE "public"."app_user" IN SHARE MODE;
 DELETE FROM "public"."app_user";
@@ -2726,6 +2727,13 @@ LOCK TABLE "public"."charging_stations" IN SHARE MODE;
 DELETE FROM "public"."charging_stations";
 INSERT INTO "public"."charging_stations" ("id","name","province","city","region","address","lat","lng","tenant_id","rule_id","peration_begin_time","peration_end_time","plug_charge","max_power","star_label","service_label","facility_label","parking_fee_label","parking_fee_tip","recommend","show_status","status","company_license_image","company_name","dept_id","del_flag","create_by","create_time","update_by","update_time","remark","allin_pay_terminal_no","area_flag","operator_id","operator_station_id","station_tel","equipment_owner_id","construction","gate_brand_id","barrier_gate_station_no","parking_discount_time","charging_limit_amount") VALUES (1979066203336921089, '演示站', '370000', '370200', '370212', '青岛市', 36.108110, 120.468030, 1979064454060494850, 1979064652019060737, '00:00:00', '00:00:00', 1, 121, 3, NULL, NULL, NULL, NULL, 1, 1, 1, NULL, NULL, 1979064454521868290, '0', 'admin', '2025-10-17 14:05:26.805', NULL, '2025-10-17 14:16:09.587', NULL, NULL, NULL, 'MAD3X1K2X', NULL, NULL, NULL, 2, NULL, NULL, NULL, 5.00);
 COMMIT;
+
+BEGIN;
+LOCK TABLE "public"."sys_dept" IN SHARE MODE;
+DELETE FROM "public"."sys_dept";
+INSERT INTO "public"."sys_dept" VALUES (1, 0, '0', '充电桩科技', 0, '行川', '', '', '0', '0', 'admin', '2024-05-27 10:15:32', 'admin', '2024-05-27 11:09:29');
+COMMIT;
+
 BEGIN;
 LOCK TABLE "public"."company_balance_record" IN SHARE MODE;
 DELETE FROM "public"."company_balance_record";
