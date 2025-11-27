@@ -33,6 +33,12 @@ export default defineConfig(({ mode, command }) => {
           target: "http://localhost:8080/", // 接口地址
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log('proxyURL', proxyURL);
+            req.headers['x-req-proxyURL'] = proxyURL; // 设置未生效
+            res.setHeader('x-req-proxyURL', proxyURL); // 设置响应头可以看到
+          },
         },
       },
     },
