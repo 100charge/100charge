@@ -288,9 +288,10 @@ docker run -itd \
 
 ## 4. 数据库初始化
 
-执行SQL脚本
+执行SQL脚本,请按照顺序依次执行。
 
-- `charging-api/sql/postgresql/db.sql` - 表结构以及初始化数据
+- `charging-api/sql/postgresql/db1.sql` - 表结构以及初始化数据
+- `charging-api/sql/postgresql/db2.sql` - 重置主键序列
 
 ## 5. API服务
 
