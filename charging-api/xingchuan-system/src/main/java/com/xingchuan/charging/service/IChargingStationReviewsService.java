@@ -5,6 +5,9 @@ import com.xingchuan.charging.domain.entity.ChargingStationReviews;
 import com.xingchuan.charging.domain.req.EvaluationRequest;
 import com.xingchuan.charging.domain.resp.EvaluationListResponse;
 import com.xingchuan.charging.domain.resp.UserEvaluationResponse;
+import com.xingchuan.charging.domain.req.ChargingStationEvaluationPageRequest;
+import com.xingchuan.charging.domain.resp.ChargingStationEvaluationPageResponse;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 
@@ -29,4 +32,8 @@ public interface IChargingStationReviewsService extends IService<ChargingStation
      * 根据订单查看评价
      */
     List<UserEvaluationResponse> getEvaluationByOrder(Long stationId, Long orderId);
+    /**
+     * 评价分页
+     */
+    Page<ChargingStationEvaluationPageResponse> getEvaluationPageList(ChargingStationEvaluationPageRequest request);
 }
