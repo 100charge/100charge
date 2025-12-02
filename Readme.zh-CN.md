@@ -445,3 +445,6 @@ docker run -d \
 </center>
 
 更多信息，请访问我们的WiKi:[Wiki - Gitee.com](https://gitee.com/ustcyc/100charge/wikis)
+
+想投资一个充电站？不知道什么时候回本？关注我们的公众号，试一试我们的投资分析计算器
+<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat_mp.png" title="" alt="wechat.jpg" data-align="center">
