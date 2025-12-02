@@ -9,6 +9,7 @@ import com.xingchuan.charging.domain.req.BannerUpdateRequest;
 import com.xingchuan.charging.domain.resp.BannerListResponse;
 import com.xingchuan.charging.domain.resp.NoticeDetailResponse;
 import com.xingchuan.charging.service.IBannerService;
+import com.xingchuan.common.annotation.Anonymous;
 import com.xingchuan.common.annotation.Log;
 import com.xingchuan.common.annotation.RepeatSubmit;
 import com.xingchuan.common.core.controller.BaseController;
@@ -42,6 +43,7 @@ public class BannerController extends BaseController {
      * 分页获取banner列表
      */
     @GetMapping(value = "/getBannerList")
+    @Anonymous
     @ApiOperation("分页获取banner列表")
     public TableDataInfo getBannerList(BannerPageRequest request) {
         Page<BannerListResponse> responsePage = bannerService.selectPageList(request.getName(), request.getOpen());
