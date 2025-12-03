@@ -261,6 +261,9 @@ export default {
     },
 
     getPendingOrder() {
+      if (!uni.getStorageSync("token")) {
+        return
+      }
       getPendingPaymentOrder({}).then((res) => {
         if (res && res.code === 200 && res.data.id) {
           if (res.data.orderState == 1) {

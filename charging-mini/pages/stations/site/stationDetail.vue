@@ -130,13 +130,13 @@
             <uni-icons type="right" size="14" color="#999"></uni-icons>
           </view>
         </view>
-        <view class="parking-all-section">
+        <view class="parking-all-section" v-if="stationDetail.parkingFeeTip">
           <view class="parking-header">
             <image src="/static/img/bluep.png" class="parking-icon"></image>
             <text class="parking-title">停车参考价</text>
           </view>
           <view class="parking-info">
-            <text class="parking-text">{{ stationDetail.parkingFeeTip }}</text>
+            <text class="parking-text">{{ stationDetail.parkingFeeTip || "" }}</text>
           </view>
         </view>
       </view>
@@ -146,7 +146,7 @@
         <view class="section-title">营业信息</view>
         <view class="business-item">
           <text class="business-label">服务提供</text>
-          <text class="business-value">{{ stationDetail.companyName }}</text>
+          <text class="business-value">{{ stationDetail.companyName || "" }}</text>
           <view class="business-right" @click="licenseHandle">
             <text class="detail-text">详情</text>
             <uni-icons type="right" size="14" color="#999"></uni-icons>
@@ -373,7 +373,6 @@ page {
 
   border-radius: 16rpx;
   overflow: hidden;
-  margin-top: 0rpx;
 }
 
 /* 背景图片 */
