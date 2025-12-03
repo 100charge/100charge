@@ -566,6 +566,7 @@ export default {
 
     .switch-display-type {
       width: 124rpx;
+
       .switch-display-item {
         display: flex;
         justify-content: flex-start;
@@ -592,11 +593,13 @@ export default {
     align-items: center;
     height: 60rpx;
     flex: 1;
+
     .linear-bg {
       width: 100%;
       padding: 2rpx;
       border-radius: 36rpx;
     }
+
     .white-bg-view {
       text-align: center;
       font-weight: 400;
@@ -611,6 +614,7 @@ export default {
       align-items: center;
       padding-left: 14rpx;
     }
+
     .switch-city-pick-view {
       width: 110rpx;
       height: 60rpx;
@@ -622,6 +626,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
     }
+
     .line-shu {
       background-color: rgba(0, 0, 0, 0.08);
       width: 2rpx;
@@ -637,6 +642,7 @@ export default {
   position: relative;
   /* #ifdef MP-ALIPAY */
   margin-top: 68rpx;
+
   /* #endif */
   .home-swiper {
     padding-top: 20rpx;
@@ -676,6 +682,7 @@ export default {
 ::v-deep .u-popup__content {
   background-color: transparent !important;
 }
+
 ::v-deep .u-search__content {
   padding: 0 10rpx !important;
 }
@@ -683,12 +690,14 @@ export default {
 .coupon-popup-content {
   width: 602rpx;
   border-radius: 32rpx !important;
+
   .content {
     background: #fff0e3;
     border-radius: 32rpx !important;
     position: relative;
     padding: 50rpx;
     padding-bottom: 140rpx;
+
     .coupon-list {
       width: 100%;
       background: linear-gradient(270deg, #ff5d10 0%, #ffa95d 100%);
@@ -696,6 +705,7 @@ export default {
       color: #774a24;
       padding: 30rpx 24rpx;
       margin-top: 32rpx;
+
       .coupon-item {
         margin-bottom: 18rpx;
         background-size: 100% 100%;
@@ -704,17 +714,20 @@ export default {
         display: flex;
         justify-items: flex-start;
         align-items: center;
+
         .left {
           width: 150rpx;
           text-align: center;
           font-size: 54rpx;
           font-weight: 600;
           color: #eb6130;
+
           text {
             font-size: 26rpx;
             font-weight: 400;
           }
         }
+
         .right {
           flex: 1;
           padding-left: 32rpx;
@@ -724,11 +737,13 @@ export default {
       }
     }
   }
+
   .popup-title {
     image {
       height: 38rpx;
     }
   }
+
   .popup-footer {
     position: absolute;
     left: 0;
@@ -740,6 +755,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
     .active-btn {
       width: 350rpx;
       height: 94rpx;
@@ -752,11 +768,13 @@ export default {
       align-items: center;
       flex-direction: column;
       font-size: 30rpx;
+
       text {
         font-size: 18rpx;
       }
     }
   }
+
   .close-image {
     text-align: center;
     display: flex;

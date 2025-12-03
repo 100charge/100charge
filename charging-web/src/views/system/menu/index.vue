@@ -2,13 +2,8 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
       <el-form-item label="菜单名称" prop="menuName">
-        <el-input
-          v-model="queryParams.menuName"
-          placeholder="请输入菜单名称"
-          clearable
-          style="width: 200px"
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable style="width: 200px"
+          @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable style="width: 200px">
@@ -31,14 +26,8 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table
-      v-if="refreshTable"
-      v-loading="loading"
-      :data="menuList"
-      row-key="menuId"
-      :default-expand-all="isExpandAll"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
+    <el-table v-if="refreshTable" v-loading="loading" :data="menuList" row-key="menuId"
+      :default-expand-all="isExpandAll" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template #default="scope">
@@ -60,20 +49,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"
-            >修改</el-button
-          >
-          <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"
-            >新增</el-button
-          >
-          <el-button
-            link
-            type="primary"
-            icon="Delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
-            >删除</el-button
-          >
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:menu:edit']">修改</el-button>
+          <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)"
+            v-hasPermi="['system:menu:add']">新增</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['system:menu:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,14 +65,9 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
-              <el-tree-select
-                v-model="form.parentId"
-                :data="menuOptions"
-                :props="{ value: 'menuId', label: 'menuName', children: 'children' }"
-                value-key="menuId"
-                placeholder="选择上级菜单"
-                check-strictly
-              />
+              <el-tree-select v-model="form.parentId" :data="menuOptions"
+                :props="{ value: 'menuId', label: 'menuName', children: 'children' }" value-key="menuId"
+                placeholder="选择上级菜单" check-strictly />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -109,13 +85,11 @@
                 <template #reference>
                   <el-input v-model="form.icon" placeholder="点击选择图标" @blur="showSelectIcon" readonly>
                     <template #prefix>
-                      <svg-icon
-                        v-if="form.icon"
-                        :icon-class="form.icon"
-                        class="el-input__icon"
-                        style="height: 32px; width: 16px"
-                      />
-                      <el-icon v-else style="height: 32px; width: 16px"><search /></el-icon>
+                      <svg-icon v-if="form.icon" :icon-class="form.icon" class="el-input__icon"
+                        style="height: 32px; width: 16px" />
+                      <el-icon v-else style="height: 32px; width: 16px">
+                        <search />
+                      </el-icon>
                     </template>
                   </el-input>
                 </template>
@@ -138,8 +112,7 @@
               <template #label>
                 <span>
                   <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                    <el-icon><question-filled /></el-icon> </el-tooltip
-                  >是否外链
+                    <el-icon><question-filled /></el-icon> </el-tooltip>是否外链
                 </span>
               </template>
               <el-radio-group v-model="form.isFrame">
@@ -152,10 +125,7 @@
             <el-form-item prop="path">
               <template #label>
                 <span>
-                  <el-tooltip
-                    content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头"
-                    placement="top"
-                  >
+                  <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
                     <el-icon><question-filled /></el-icon>
                   </el-tooltip>
                   路由地址
@@ -182,10 +152,7 @@
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <template #label>
                 <span>
-                  <el-tooltip
-                    content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)"
-                    placement="top"
-                  >
+                  <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)" placement="top">
                     <el-icon><question-filled /></el-icon>
                   </el-tooltip>
                   权限字符
@@ -210,10 +177,7 @@
             <el-form-item>
               <template #label>
                 <span>
-                  <el-tooltip
-                    content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致"
-                    placement="top"
-                  >
+                  <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
                     <el-icon><question-filled /></el-icon>
                   </el-tooltip>
                   是否缓存
@@ -308,6 +272,8 @@ function getList() {
   loading.value = true
   listMenu(queryParams.value).then((response) => {
     menuList.value = proxy.handleTree(response.data, "menuId")
+
+    console.log(menuList.value)
     loading.value = false
   })
 }
@@ -401,13 +367,19 @@ function submitForm() {
         updateMenu(params).then((response) => {
           proxy.$modal.msgSuccess("修改成功")
           open.value = false
-          getList()
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          //getList()
         })
       } else {
         addMenu(params).then((response) => {
           proxy.$modal.msgSuccess("新增成功")
           open.value = false
-          getList()
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          //getList()
         })
       }
     }
@@ -424,7 +396,7 @@ function handleDelete(row) {
       getList()
       proxy.$modal.msgSuccess("删除成功")
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 getList()

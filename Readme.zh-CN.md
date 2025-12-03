@@ -59,7 +59,7 @@
 </div>
 </center>
 
-### 3.2 商业版
+### 3.2 标准版
 
 # 二 版本对比
 
@@ -69,13 +69,13 @@
 
     如果您想快速推进业务落地，社区版是适合的选择，它包含的四项核心功能足以满足您的需求。社区版包含了稳定可靠的充电桩管理，计费策略，订单管理。助力您快速低成本开启充电场站运营。
 
-## 2.商业版
+## 2.标准版
 
-    如果你要想要更精细化的运营与管理，商业版将是您的最佳选择。在**社区版**的基础上，额外提供了企业级的高阶运营功能，比如多维度的数据分析，营销工具等。并且提供官方技术保障与支持，满足复杂的商业场景。
+    如果你要想要更精细化的运营与管理，标准版将是您的最佳选择。在**社区版**的基础上，额外提供了企业级的高阶运营功能，比如多维度的数据分析，营销工具等。并且提供官方技术保障与支持，满足复杂的商业场景。
 
 ## 3.功能对比
 
-| 父模块  | 子模块     | 社区版 | 商业版 |
+| 父模块  | 子模块     | 社区版 | 标准版 |
 | ---- | ------- | --- | --- |
 | 首页   | 首页      | √   | √   |
 | 订单管理 | 订单管理    | √   | √   |
@@ -121,8 +121,8 @@
 |     | 地址                                                                                          | 用户名与密码              |
 | --- | ------------------------------------------------------------------------------------------- | ------------------- |
 | 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
-| 社区版 | https://demo-admin.100charge.cn:2080/                                                       | admin <br> admin123 |
-| 商业版 | TODO                                                                                        | TODO                |
+| 社区版 | https://demo-admin.100charge.cn/                                                       | admin <br> admin123 |
+| 标准版 | TODO                                                                                        | TODO                |
 
 # 四 开发环境
 
@@ -275,24 +275,23 @@ docker tag docker.1ms.run/xuchengen/rocketmq xuchengen/rocketmq:latest
 # 启动容器
 docker run -itd \
  --name=rocketmq \
- --hostname rocketmq \
  --restart=always \
- -p 8080:8080 \
  -p 9876:9876 \
  -p 10909:10909 \
  -p 10911:10911 \
  -p 10912:10912 \
  -v /etc/localtime:/etc/localtime \
  -v /var/run/docker.sock:/var/run/docker.sock \
- --net=host \
+
  xuchengen/rocketmq:latest
 ```
 
 ## 4. 数据库初始化
 
-执行SQL脚本
+执行SQL脚本,请按照顺序依次执行。
 
-- `charging-api/sql/postgresql/db.sql` - 表结构以及初始化数据
+- `charging-api/sql/postgresql/db1.sql` - 表结构以及初始化数据
+- `charging-api/sql/postgresql/db2.sql` - 重置主键序列
 
 ## 5. API服务
 
@@ -446,3 +445,7 @@ docker run -d \
 </center>
 
 更多信息，请访问我们的WiKi:[Wiki - Gitee.com](https://gitee.com/ustcyc/100charge/wikis)
+
+想投资一个充电站？不知道什么时候回本？关注我们的公众号，试一试我们的投资分析计算器
+
+<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat_mp.png" title="" alt="wechat.jpg" data-align="center">
