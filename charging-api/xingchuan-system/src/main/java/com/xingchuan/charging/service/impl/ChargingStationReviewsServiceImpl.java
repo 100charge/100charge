@@ -178,8 +178,12 @@ public class ChargingStationReviewsServiceImpl extends ServiceImpl<ChargingStati
         Page<ChargingStationReviews> reviewsPage = baseMapper.selectPage(
                 PageUtils.getPageInfo(),
                 Wrappers.<ChargingStationReviews>lambdaQuery()
+
                         .eq(ObjectUtils.isNotEmpty(request.getStationId()) && request.getStationId() != 0,
                                 ChargingStationReviews::getChargingStationId, request.getStationId())
+                        .ge(ObjectUtils.isNotEmpty(request.getStartTime()), ChargingStationReviews::getCreateTime, request.getStartTime())
+                        .le(ObjectUtils.isNotEmpty(request.getEndTime()), ChargingStationReviews::getCreateTime, request.getEndTime())
+                        .eq(ObjectUtils.isNotEmpty(request.getTradeNo()), ChargingStationReviews::getOrderId, request.getTradeNo())
                         .orderByDesc(ChargingStationReviews::getId));
 
         List<ChargingStationReviews> reviewsList = reviewsPage.getRecords();

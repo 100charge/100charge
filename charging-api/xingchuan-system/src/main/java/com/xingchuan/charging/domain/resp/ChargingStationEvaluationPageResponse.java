@@ -1,5 +1,9 @@
 package com.xingchuan.charging.domain.resp;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,4 +32,9 @@ public class ChargingStationEvaluationPageResponse {
 
     @ApiModelProperty(value = "评价标签_字符")
     private String ratingString;
+
+
+    @ApiModelProperty(value = "评价时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 }

@@ -16,6 +16,16 @@ export function getStationsList(params) {
     params,
   })
 }
+
+// 场站管理-评价分页
+export function getStationsReviewsList(params) {
+  return request({
+    url: "/stationEvaluation/list",
+    method: "get",
+    params,
+  })
+}
+
 // 场站管理-查询详情
 export function getStationsDetail(id) {
   return request({

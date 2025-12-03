@@ -5,7 +5,6 @@ import com.xingchuan.charging.domain.resp.ChargingStationEvaluationPageResponse;
 import com.xingchuan.charging.domain.resp.EvaluationListResponse;
 import com.xingchuan.charging.domain.resp.UserEvaluationResponse;
 import com.xingchuan.charging.service.IChargingStationReviewsService;
-import com.xingchuan.common.annotation.Anonymous;
 import com.xingchuan.common.annotation.Log;
 import com.xingchuan.common.core.controller.BaseController;
 import com.xingchuan.common.core.domain.AjaxResult;
