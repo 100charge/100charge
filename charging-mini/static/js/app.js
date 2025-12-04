@@ -1,5 +1,3 @@
-var imgUrl =
-  "https://charging-hz-oss-bucket.oss-cn-hangzhou.aliyuncs.com/static/";
 // 100Charge
 var appName = "100Charge"
 var appid = "wx361b3b951a7d5f54" // 微信appid
@@ -27,7 +25,6 @@ function toDecimal2(x) {
 }
 export default {
   api,
-  imgUrl,
   appid,
   toDecimal2,
 };
