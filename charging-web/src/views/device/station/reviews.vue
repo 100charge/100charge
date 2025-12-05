@@ -45,11 +45,6 @@ import {
   getStationsReviewsList,
 } from "@/api/device/station"
 
-import { getRuleList, getProvinceList, getCityListByProvinceId, getDistrictListByCityId } from "@/api/common/common"
-import ImageUpload from "@/components/ImageUpload"
-import { blobValidate } from "@/utils/ruoyi"
-import download from "@/plugins/download.js"
-
 const { proxy } = getCurrentInstance()
 
 const route = useRoute()
