@@ -45,11 +45,9 @@
       <u-loadmore :status="loadStatus" v-if="list && list.length > 0" />
     </view>
     <!-- 空状态 -->
-    <view class="nodata" v-if="list && list.length === 0">
-      <image src="/static/images/index/empty.png" mode="scaleToFill"></image>
-      <view class="nodata-text">
-        <span>暂无订单</span>
-      </view>
+    <view v-if="list && list.length === 0" class="empty-wrapper">
+      <image src="/static/images/index/empty.png" mode="aspectFit"></image>
+      <view class="empty-text">暂无订单</view>
     </view>
   </view>
 </template>
@@ -165,11 +163,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-image {
-  width: auto;
-  height: auto;
-}
-
 .main {
   background: #f4f7f8;
   width: 100vw;
@@ -380,7 +373,7 @@ image {
   image {
     display: block;
     margin: 0 auto 40rpx;
-    height: 279rpx;
+    height: 400rpx;
     width: 480rpx;
   }
 
