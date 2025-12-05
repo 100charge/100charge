@@ -2,7 +2,36 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xingchuan.charging.mapper.AppUserBalanceRecordMapper">
+<mapper namespace="com.zhitan.charging.mapper.AppUserBalanceRecordMapper">
 
-
+    <select id="accountRechargeList"
+            resultType="com.xingchuan.charging.domain.response.AccountRechargeDetailResponse">
+        SELECT
+            aur.trade_no AS tradeNo,
+            aur.open_id AS openId,
+            au.phone_number AS phone,
+            au.type AS userSource,
+            aur.amount AS orderAmount,
+            aur.create_time AS operateTime
+        FROM app_user_balance_record aur
+        LEFT JOIN app_user au ON aur.open_id = au.open_id
+        <where>
+            aur.type = #{type}
+            <if test="request.userSource != null">
+                AND au.type = #{request.userSource}
+            </if>
+            <if test="request.mobile != null and request.mobile != ''">
+                AND au.phone_number like concat('%', #{request.mobile}, '%')
+            </if>
+            <if test="request.tradeNo != null and request.tradeNo != ''">
+                AND aur.trade_no like concat('%', #{request.tradeNo}, '%')
+            </if>
+            <if test="request.startTime != null">
+                AND aur.create_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND aur.create_time &lt;= #{request.endTime}
+            </if>
+        </where>
+    </select>
 </mapper>
