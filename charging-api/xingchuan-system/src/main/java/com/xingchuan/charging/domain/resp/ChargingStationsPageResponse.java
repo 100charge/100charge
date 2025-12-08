@@ -1,7 +1,12 @@
 package com.xingchuan.charging.domain.resp;
 
+import java.math.BigDecimal;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.xingchuan.common.annotation.Excel;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -74,4 +79,48 @@ public class ChargingStationsPageResponse {
      * 是否互联互通场站
      */
     private boolean operateStation;
+
+    /**
+     * 场站位置（非数据库字段，仅用于API返回）
+     */
+    @ApiModelProperty("场站位置")
+    private String location;
+
+    /**
+     * 纬度
+     */
+    @ApiModelProperty("纬度")
+    private BigDecimal lat;
+
+    /**
+     * 经度
+     */
+    @ApiModelProperty("经度")
+    private BigDecimal lng;
+
+    /**
+     * 省
+     */
+    @ApiModelProperty("省")
+    private String province;
+
+    /**
+     * 市
+     */
+    @ApiModelProperty("市")
+    private String city;
+
+    /**
+     * 区
+     */
+    @ApiModelProperty("区")
+    private String region;
+    /**
+     * 场站详细地址
+     */
+    @ApiModelProperty("地址")
+    private String address;
+
+    @ApiModelProperty("经纬度坐标")
+    private String coord;
 }
