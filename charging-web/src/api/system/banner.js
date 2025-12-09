@@ -4,7 +4,7 @@ export default {
   // 查询参数列表
   page(query) {
     return request({
-      url: "/banner/getBannerList",
+      url: "/banner/getBannerPage",
       method: "get",
       params: query,
     })
