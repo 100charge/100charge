@@ -19,6 +19,8 @@ public class ChargingPilePageListRequest {
     @ApiModelProperty(value = "场站名称")
     private String stationName;
 
+    @ApiModelProperty(value = "场站ID")
+    private Long stationId;
     /**
      * 充电桩设备号
      */
