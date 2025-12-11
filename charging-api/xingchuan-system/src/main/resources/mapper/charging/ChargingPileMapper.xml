@@ -45,6 +45,9 @@
             <if test="request.pileStatus != null ">
                 AND cp.pile_status = #{request.pileStatus}
             </if>
+            <if test="request.stationId != null">
+            AND station_id = #{request.stationId}
+            </if>
             AND cp.del_flag = '0'
         </where>
         ORDER BY cp.device_no ASC

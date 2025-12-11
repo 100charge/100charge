@@ -48,7 +48,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMapper, ChargingStations> implements IChargingStationsService {
+public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMapper, ChargingStations>
+        implements IChargingStationsService {
 
     @Resource
     private RedisCache redisCache;
@@ -86,32 +87,43 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
     public Page<ChargingStationsPageResponse> selectChargingStationsList(ChargingStationsPageRequest request) {
         Page<ChargingStationsPageResponse> responsePage = new Page<>();
 
-        Page<ChargingStations> chargingStationsPage = baseMapper.selectPage(PageUtils.getPageInfo(), Wrappers.<ChargingStations>lambdaQuery()
-                .select(ChargingStations::getId,
-                        ChargingStations::getName,
-                        ChargingStations::getPlugCharge,
-                        ChargingStations::getStarLabel,
-                        ChargingStations::getServiceLabel,
-                        ChargingStations::getFacilityLabel,
-                        ChargingStations::getShowStatus,
-                        ChargingStations::getTenantId,
-                        ChargingStations::getOperatorStationId,
-                        ChargingStations::getRuleId)
-                .like(ObjectUtils.isNotEmpty(request.getName()), ChargingStations::getName, request.getName())
-                .eq(ObjectUtils.isNotEmpty(request.getTenantId()), ChargingStations::getTenantId, request.getTenantId())
-                .orderByDesc(ChargingStations::getCreateTime)
-        );
+        Page<ChargingStations> chargingStationsPage = baseMapper.selectPage(PageUtils.getPageInfo(),
+                Wrappers.<ChargingStations>lambdaQuery()
+                        .select(ChargingStations::getId,
+                                ChargingStations::getProvince,
+                                ChargingStations::getCity,
+                                ChargingStations::getAddress,
+                                ChargingStations::getLat,
+                                ChargingStations::getLng,
+                                ChargingStations::getName,
+                                ChargingStations::getPlugCharge,
+                                ChargingStations::getStarLabel,
+                                ChargingStations::getServiceLabel,
+                                ChargingStations::getFacilityLabel,
+                                ChargingStations::getShowStatus,
+                                ChargingStations::getTenantId,
+                                ChargingStations::getOperatorStationId,
+                                ChargingStations::getRuleId)
+                        .like(ObjectUtils.isNotEmpty(request.getName()), ChargingStations::getName, request.getName())
+                        .eq(ObjectUtils.isNotEmpty(request.getTenantId()), ChargingStations::getTenantId,
+                                request.getTenantId())
+                        .orderByDesc(ChargingStations::getCreateTime));
         if (chargingStationsPage.getTotal() <= 0) {
             return responsePage;
         }
         List<ChargingStations> chargingStationsList = chargingStationsPage.getRecords();
+
+        // 获取省市区信息
+        List<AreaModel> areaModels = areaService.getAreaList();
+
         // 查询计费规则id
-        Set<Long> ruleIds = chargingStationsList.stream().map(ChargingStations::getRuleId).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<Long> ruleIds = chargingStationsList.stream().map(ChargingStations::getRuleId).filter(Objects::nonNull)
+                .collect(Collectors.toSet());
         // 查询计费规则名称
         Map<Long, String> ruleMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(ruleIds)) {
             ruleMap = rulesMapper.selectList(Wrappers.<Rules>lambdaQuery()
-                            .select(Rules::getId, Rules::getName).in(Rules::getId, ruleIds)).stream()
+                    .select(Rules::getId, Rules::getName).in(Rules::getId, ruleIds)).stream()
                     .collect(Collectors.toMap(Rules::getId, Rules::getName));
         }
         responsePage.setTotal(chargingStationsPage.getTotal());
@@ -120,7 +132,11 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             ChargingStationsPageResponse response = new ChargingStationsPageResponse();
             BeanUtils.copyBeanProp(response, item);
 
-            //是否互联互通
+            areaModels.stream().filter(area -> area.getCode().equals(item.getCity())).findFirst()
+                    .ifPresent(area -> response.setLocation(area.getFullName()));
+
+            response.setCoord(response.getLng() + "," + response.getLat());
+            // 是否互联互通
             response.setOperateStation(ObjectUtils.isNotEmpty(item.getOperatorStationId()));
 
             String ruleName = finalRuleMap.get(item.getRuleId());
@@ -154,8 +170,9 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
                 .select(ChargingStationAnnex::getId,
                         ChargingStationAnnex::getType,
                         ChargingStationAnnex::getImage)
-                .eq(ChargingStationAnnex::getStationId, id)
-        ).stream().collect(Collectors.groupingBy(ChargingStationAnnex::getType, Collectors.mapping(ChargingStationAnnex::getImage, Collectors.toList())));
+                .eq(ChargingStationAnnex::getStationId, id)).stream()
+                .collect(Collectors.groupingBy(ChargingStationAnnex::getType,
+                        Collectors.mapping(ChargingStationAnnex::getImage, Collectors.toList())));
 
         if (ObjectUtils.isNotEmpty(annexMap)) {
             // logo
@@ -165,7 +182,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             }
             // 场站图片
             response.setStationImageList(annexMap.get(StationAnnexEnum.STATION_IMAGE.getCode()));
-            //建设场所
+            // 建设场所
             response.setConstruction(chargingStations.getConstruction());
             // 营业执照
             List<String> licenseImages = annexMap.get(StationAnnexEnum.BUSINESS_LICENSE.getCode());
@@ -258,7 +275,8 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
         }
         // 附件
         baseMapper.delete(Wrappers.<ChargingStations>lambdaUpdate().eq(ChargingStations::getId, id));
-        stationAnnexMapper.delete(Wrappers.<ChargingStationAnnex>lambdaUpdate().eq(ChargingStationAnnex::getStationId, id));
+        stationAnnexMapper
+                .delete(Wrappers.<ChargingStationAnnex>lambdaUpdate().eq(ChargingStationAnnex::getStationId, id));
     }
 
     /**
@@ -291,7 +309,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             for (ChargingStations stations : stationsList) {
                 StationsResponse response = new StationsResponse();
                 BeanUtils.copyProperties(stations, response);
-                //是否互联互通
+                // 是否互联互通
                 response.setOperateStation(ObjectUtils.isNotEmpty(stations.getOperatorStationId()));
                 responseList.add(response);
             }
@@ -314,7 +332,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             for (ChargingStations stations : stationsList) {
                 StationsResponse response = new StationsResponse();
                 BeanUtils.copyProperties(stations, response);
-                //是否互联互通
+                // 是否互联互通
                 response.setOperateStation(ObjectUtils.isNotEmpty(stations.getOperatorStationId()));
                 responseList.add(response);
             }
@@ -342,8 +360,10 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             return responsePage;
         }
         // 获取各个站的充电枪信息
-        List<Long> chargingStationIds = responseList.stream().map(StationsPageResponse::getId).collect(Collectors.toList());
-        Map<Long, List<ChargingPileModel>> chargingPileMap = baseMapper.listStationDeviceByStationIds(chargingStationIds).stream()
+        List<Long> chargingStationIds = responseList.stream().map(StationsPageResponse::getId)
+                .collect(Collectors.toList());
+        Map<Long, List<ChargingPileModel>> chargingPileMap = baseMapper
+                .listStationDeviceByStationIds(chargingStationIds).stream()
                 .collect(Collectors.groupingBy(ChargingPileModel::getStationId));
         for (StationsPageResponse record : responseList) {
             List<ChargingPileModel> chargingPileModelList = chargingPileMap.get(record.getId());
@@ -354,10 +374,12 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             if (CollectionUtils.isNotEmpty(chargingPileModelList)) {
                 for (ChargingPileModel chargingPileModel : chargingPileModelList) {
                     // 获取redis中枪的状态
-                    String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(), chargingPileModel.getGunsNo());
+                    String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(),
+                            chargingPileModel.getGunsNo());
                     String cacheObject = redisCache.getCacheObject(redisKey);
                     if (ObjectUtils.isNotEmpty(cacheObject)) {
-                        ChargingRealtimeData orderProcessLog = JSON.parseObject(cacheObject, ChargingRealtimeData.class);
+                        ChargingRealtimeData orderProcessLog = JSON.parseObject(cacheObject,
+                                ChargingRealtimeData.class);
                         ChargeGunsEnum processLogStatus = orderProcessLog.getStatus();
                         if (processLogStatus.equals(ChargeGunsEnum.ONLINE)) {
                             if (Objects.equals(chargingPileModel.getPileType(), ChargePileEnum.DC.getCode())) {
@@ -401,8 +423,10 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             return Collections.emptyList();
         }
         // 获取各个站的充电枪信息
-        List<Long> chargingStationIds = responseList.stream().map(StationsPageResponse::getId).collect(Collectors.toList());
-        Map<Long, List<ChargingPileModel>> chargingPileMap = baseMapper.listStationDeviceByStationIds(chargingStationIds).stream()
+        List<Long> chargingStationIds = responseList.stream().map(StationsPageResponse::getId)
+                .collect(Collectors.toList());
+        Map<Long, List<ChargingPileModel>> chargingPileMap = baseMapper
+                .listStationDeviceByStationIds(chargingStationIds).stream()
                 .collect(Collectors.groupingBy(ChargingPileModel::getStationId));
         for (StationsPageResponse record : responseList) {
             List<ChargingPileModel> chargingPileModelList = chargingPileMap.get(record.getId());
@@ -414,10 +438,12 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             if (CollectionUtils.isNotEmpty(chargingPileModelList)) {
                 for (ChargingPileModel chargingPileModel : chargingPileModelList) {
                     // 获取redis中枪的状态
-                    String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(), chargingPileModel.getGunsNo());
+                    String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(),
+                            chargingPileModel.getGunsNo());
                     String cacheObject = redisCache.getCacheObject(redisKey);
                     if (ObjectUtils.isNotEmpty(cacheObject)) {
-                        ChargingRealtimeData orderProcessLog = JSON.parseObject(cacheObject, ChargingRealtimeData.class);
+                        ChargingRealtimeData orderProcessLog = JSON.parseObject(cacheObject,
+                                ChargingRealtimeData.class);
                         ChargeGunsEnum processLogStatus = orderProcessLog.getStatus();
                         if (processLogStatus.equals(ChargeGunsEnum.ONLINE)) {
                             if (Objects.equals(chargingPileModel.getPileType(), ChargePileEnum.DC.getCode())) {
@@ -471,7 +497,8 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
         if (CollectionUtils.isNotEmpty(pileModelList)) {
             for (ChargingPileModel chargingPileModel : pileModelList) {
                 // 获取redis中枪的状态
-                String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(), chargingPileModel.getGunsNo());
+                String redisKey = String.format(CacheConstants.DEVICE_STATUS_KEY, chargingPileModel.getDeviceNo(),
+                        chargingPileModel.getGunsNo());
                 String cacheObject = redisCache.getCacheObject(redisKey);
                 if (ObjectUtils.isNotEmpty(cacheObject)) {
                     ChargingRealtimeData orderProcessLog = JSON.parseObject(cacheObject, ChargingRealtimeData.class);
@@ -503,14 +530,16 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             RuleDetails ruleDetail = ruleTimeMapper.getCurrentPeriodCostByRuleId(ruleId, new Date());
             if (ObjectUtils.isNotEmpty(ruleDetail)) {
                 response.setChargeFee(ruleDetail.getChargeFee().add(ruleDetail.getServiceFee()));
-                response.setCurrentTime(sdf.format(ruleDetail.getStartTime()) + "-" + sdf.format(ruleDetail.getEndTime()));
+                response.setCurrentTime(
+                        sdf.format(ruleDetail.getStartTime()) + "-" + sdf.format(ruleDetail.getEndTime()));
             }
         }
         // 查询附件信息
         Map<Integer, List<String>> annexMap = stationAnnexMapper.selectList(Wrappers.<ChargingStationAnnex>lambdaQuery()
                 .select(ChargingStationAnnex::getId, ChargingStationAnnex::getType, ChargingStationAnnex::getImage)
-                .eq(ChargingStationAnnex::getStationId, id)
-        ).stream().collect(Collectors.groupingBy(ChargingStationAnnex::getType, Collectors.mapping(ChargingStationAnnex::getImage, Collectors.toList())));
+                .eq(ChargingStationAnnex::getStationId, id)).stream()
+                .collect(Collectors.groupingBy(ChargingStationAnnex::getType,
+                        Collectors.mapping(ChargingStationAnnex::getImage, Collectors.toList())));
 
         if (ObjectUtils.isNotEmpty(annexMap)) {
             // logo
@@ -556,12 +585,13 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             response.setTotalAmount(details.getChargeFee().add(details.getServiceFee()));
             response.setType(RuleTypeEnum.getDescByCode(details.getType()));
 
-            //设置时间格式为 HH:mm:ss
+            // 设置时间格式为 HH:mm:ss
             SimpleDateFormat sdf = getSimpleDateFormat();
             String format = sdf.format(new Date());
             try {
                 Date currTime = sdf.parse(format);
-                if (currTime.equals(details.getStartTime()) || (details.getStartTime().before(currTime) && details.getEndTime().after(currTime))) {
+                if (currTime.equals(details.getStartTime())
+                        || (details.getStartTime().before(currTime) && details.getEndTime().after(currTime))) {
                     response.setCurrentTimePeriod(true);
                 }
             } catch (ParseException e) {
@@ -641,7 +671,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
         }
         ReadyChargingResponse response;
 
-        //查询桩信息
+        // 查询桩信息
         if (StringUtils.isNotEmpty(deviceNo)) {
             response = baseMapper.getChargePreparationInfo(deviceNo, gunsNo);
         } else {
@@ -657,12 +687,12 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
         // 查询是否存在充电中的订单
         ChargingOrder chargingOrder = chargingOrderMapper.selectOne(Wrappers.<ChargingOrder>lambdaQuery()
                 .select(ChargingOrder::getTradeNo)
-                .in(ChargingOrder::getOrderState, OrderStatusEnum.NO_START.getCode(), OrderStatusEnum.CHARGING.getCode())
+                .in(ChargingOrder::getOrderState, OrderStatusEnum.NO_START.getCode(),
+                        OrderStatusEnum.CHARGING.getCode())
                 .eq(ChargingOrder::getOpenId, SecurityUtils.getUserOpenId())
                 .eq(ChargingOrder::getStationId, stationId)
                 .eq(ChargingOrder::getDeviceNo, deviceNo).eq(ChargingOrder::getGunNo, gunsNo)
-                .last("LIMIT 1")
-        );
+                .last("LIMIT 1"));
         if (ObjectUtils.isNotEmpty(chargingOrder)) {
             response.setTradeNo(chargingOrder.getTradeNo());
         }
@@ -688,7 +718,8 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             RuleDetails ruleDetails = ruleTimeMapper.getCurrentPeriodCostByRuleId(response.getRuleId(), new Date());
             if (ObjectUtils.isNotEmpty(ruleDetails)) {
                 response.setChargeFee(ruleDetails.getChargeFee().add(ruleDetails.getServiceFee()));
-                response.setCurrentTime(sdf.format(ruleDetails.getStartTime()) + "-" + sdf.format(ruleDetails.getEndTime()));
+                response.setCurrentTime(
+                        sdf.format(ruleDetails.getStartTime()) + "-" + sdf.format(ruleDetails.getEndTime()));
             }
         }
         return response;
@@ -713,8 +744,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
         String appQRCodeUrl = "https://wxapi.xxx.com?code=%sG%s";
         for (ChargingPile pile : chargingPileList) {
             List<ChargingGuns> chargingGunList = gunsMapper.selectList(Wrappers.<ChargingGuns>lambdaQuery()
-                    .select(ChargingGuns::getNo).eq(ChargingGuns::getDeviceNo, pile.getDeviceNo())
-            );
+                    .select(ChargingGuns::getNo).eq(ChargingGuns::getDeviceNo, pile.getDeviceNo()));
             if (CollectionUtils.isNotEmpty(chargingGunList)) {
                 for (ChargingGuns chargingGuns : chargingGunList) {
                     String gunNo = chargingGuns.getNo();
@@ -730,7 +760,7 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             }
         }
         try {
-            //核心代码-生成二维码
+            // 核心代码-生成二维码
             if (CollectionUtils.isEmpty(codeParamList)) {
                 throw new ServiceException(MessageConstants.CHARGING_GUN_NOT_EXIST);
             }
@@ -748,27 +778,31 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
      */
     private void checkChargingStations(ChargingStationsAddRequest request) {
         // 场站名称不能重复
-        if (baseMapper.exists(Wrappers.<ChargingStations>lambdaQuery().eq(ChargingStations::getName, request.getName()))) {
+        if (baseMapper
+                .exists(Wrappers.<ChargingStations>lambdaQuery().eq(ChargingStations::getName, request.getName()))) {
             throw new RuntimeException(MessageConstants.CHARGING_STATIONS_EXIST);
         }
         // 省市区是否准确
         List<AreaModel> areaList = areaService.getAreaList();
         // 校验省市区
         // 省
-        Optional<AreaModel> provinceAny = areaList.stream().filter(item -> request.getProvince().equals(item.getCode())).findAny();
+        Optional<AreaModel> provinceAny = areaList.stream().filter(item -> request.getProvince().equals(item.getCode()))
+                .findAny();
         if (!provinceAny.isPresent()) {
             throw new RuntimeException(MessageConstants.AREA_ERROR);
         }
         AreaModel province = provinceAny.get();
 
         // 市
-        Optional<AreaModel> cityAny = areaList.stream().filter(item -> request.getCity().equals(item.getCode())).findAny();
+        Optional<AreaModel> cityAny = areaList.stream().filter(item -> request.getCity().equals(item.getCode()))
+                .findAny();
         if (!cityAny.isPresent()) {
             throw new RuntimeException(MessageConstants.AREA_ERROR);
         }
         AreaModel city = cityAny.get();
         // 区
-        Optional<AreaModel> regionAny = areaList.stream().filter(item -> request.getRegion().equals(item.getCode())).findAny();
+        Optional<AreaModel> regionAny = areaList.stream().filter(item -> request.getRegion().equals(item.getCode()))
+                .findAny();
 
         if (!regionAny.isPresent()) {
             throw new RuntimeException(MessageConstants.AREA_ERROR);
@@ -786,7 +820,8 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
             throw new RuntimeException(MessageConstants.RULE_NOT_EXIST);
         }
         // 判断时间
-        if (ObjectUtils.isNotEmpty(request.getPerationBeginTime()) && ObjectUtils.isNotEmpty(request.getPerationEndTime())) {
+        if (ObjectUtils.isNotEmpty(request.getPerationBeginTime())
+                && ObjectUtils.isNotEmpty(request.getPerationEndTime())) {
             if (request.getPerationBeginTime().after(request.getPerationEndTime())) {
                 throw new RuntimeException(MessageConstants.START_TIME_CANNOT_BE_LATER_THAN_END_TIME);
             }
@@ -817,23 +852,26 @@ public class ChargingStationsServiceImpl extends ServiceImpl<ChargingStationsMap
     private void saveStationAnnex(ChargingStationsAddRequest request, Long deptId) {
         Long stationId = request.getId();
         // 删除旧附件
-        stationAnnexMapper.delete(Wrappers.<ChargingStationAnnex>lambdaQuery().eq(ChargingStationAnnex::getStationId, stationId));
+        stationAnnexMapper
+                .delete(Wrappers.<ChargingStationAnnex>lambdaQuery().eq(ChargingStationAnnex::getStationId, stationId));
         // logo
         if (StringUtils.isNotBlank(request.getLogoImage())) {
-            stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.LOGO.getCode(), request.getLogoImage(), deptId));
+            stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.LOGO.getCode(),
+                    request.getLogoImage(), deptId));
         }
         // 营业执照
         if (StringUtils.isNotBlank(request.getLicenseImage())) {
-            stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.BUSINESS_LICENSE.getCode(), request.getLicenseImage(), deptId));
+            stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.BUSINESS_LICENSE.getCode(),
+                    request.getLicenseImage(), deptId));
         }
         // 场站
         if (CollectionUtils.isNotEmpty(request.getStationImageList())) {
             // 新增附件
             for (String imageUrl : request.getStationImageList()) {
-                stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.STATION_IMAGE.getCode(), imageUrl, deptId));
+                stationAnnexMapper.insert(new ChargingStationAnnex(stationId, StationAnnexEnum.STATION_IMAGE.getCode(),
+                        imageUrl, deptId));
             }
         }
     }
-
 
 }

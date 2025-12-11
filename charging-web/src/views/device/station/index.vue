@@ -15,6 +15,8 @@
     <el-table v-loading="loading" :data="stationsList" @selection-change="handleSelectionChange" border stripe>
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="场站名称" align="center" prop="name" width="220" />
+      <el-table-column label="省市" align="center" prop="location" />
+      <el-table-column label="坐标" align="center" prop="coord" />
       <el-table-column label="设施标签" align="center" prop="facilityLabel">
         <template #default="scope">
           {{ getFacilityLabel(scope.row.facilityLabel) }}
@@ -230,7 +232,7 @@
 
           <el-col :span="24">
             <el-form-item label="腾讯坐标拾取">
-          <el-link underline href="https://lbs.qq.com/getPoint/" target="_blank">打开</el-link>
+              <el-link underline href="https://lbs.qq.com/getPoint/" target="_blank">打开</el-link>
             </el-form-item>
 
           </el-col>

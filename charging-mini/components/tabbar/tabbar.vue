@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view id="tabbar-container" class="tabbar-container" :class="isIpx ? 'IpxBot' : ''">
+    <view id="tabbar-container" class="tabbar-container" :class="isIpx ? 'IpxBot' : 'noIpxBot'">
       <view
         class="tabbar-item"
         v-for="(item, index) in tabList"
@@ -19,7 +19,9 @@
             <image :src="item.selectIcon"> </image>
           </view>
         </view>
-        <view class="item-bottom" :class="[tabId == item.id ? 'item-active' : '']">
+        <view class="item-bottom" :class="[tabId == item.id ? 'item-active' : '']"
+					:style="!isIpx && item.centerItem ? 'bottom:32rpx;' : ''"
+				>
           <text>{{ item.text }}</text>
         </view>
       </view>
@@ -107,6 +109,10 @@ export default {
   methods: {
     // tab 切换
     changeItem(item) {
+			if (this.tabId == item.id) {
+				return
+			}
+			console.log(item)
       if (item.centerItem) {
         // if (!uni.getStorageSync("token")) {
         //   uni.showModal({
@@ -258,7 +264,7 @@ view {
 
 .tabbar-container .tabbar-item .item-bottom {
   font-size: 22rpx;
-  width: 100%;
+  // width: 100%;
 }
 
 .tabbar-container .center-item .item-bottom {
@@ -269,6 +275,9 @@ view {
 /* 适配iPhone X */
 .IpxBot {
   padding-bottom: 40rpx !important;
+}
+.noIpxBot {
+	padding-bottom: 30rpx !important;
 }
 
 .infobox {

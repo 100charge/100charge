@@ -45,7 +45,16 @@ public class BannerController extends BaseController {
     @GetMapping(value = "/getBannerList")
     @Anonymous
     @ApiOperation("分页获取banner列表")
-    public TableDataInfo getBannerList(BannerPageRequest request) {
+    public AjaxResult getBannerList(BannerPageRequest request) {
+        Page<BannerListResponse> responsePage = bannerService.selectPageList(request.getName(), request.getOpen());
+        TableDataInfo table=getDataTable(responsePage);
+        return success(table.getRows());
+    }
+
+    @GetMapping(value = "/getBannerPage")
+    @Anonymous
+    @ApiOperation("分页获取banner列表")
+    public TableDataInfo getBannerPage(BannerPageRequest request) {
         Page<BannerListResponse> responsePage = bannerService.selectPageList(request.getName(), request.getOpen());
         return getDataTable(responsePage);
     }

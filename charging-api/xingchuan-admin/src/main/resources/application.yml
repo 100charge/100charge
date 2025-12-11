@@ -223,9 +223,9 @@ rocketmq:
 
 # 充电枪配置
 gun-starting-number:
-  teld:
+  teld: 181
 gun-max-number:
-  teld:
+  teld: 251
 
 # WeChat 微信小程序配置
 wx:

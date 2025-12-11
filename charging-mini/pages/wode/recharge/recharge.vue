@@ -183,6 +183,11 @@ export default {
         })
         return
       }
+      uni.showToast({
+        title: "功能暂未开放",
+        icon: "none",
+      })
+      return
       this.rechargewx()
     },
   },
