@@ -23,6 +23,10 @@ RUN npm run build
 # ========================================
 FROM nginx:1.25-alpine
 
+LABEL maintainer="charging-web" \
+      description="充电桩管理系统前端" \
+      version="3.8.7"
+
 # 1. 从构建阶段复制静态文件
 COPY --from=builder /build/dist /usr/share/nginx/html
 
