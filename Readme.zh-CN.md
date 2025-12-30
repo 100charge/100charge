@@ -283,7 +283,6 @@ docker run -itd \
  -p 10912:10912 \
  -v /etc/localtime:/etc/localtime \
  -v /var/run/docker.sock:/var/run/docker.sock \
-
  xuchengen/rocketmq:latest
 ```
 
@@ -353,7 +352,7 @@ docker run -d \
   -e BACKEND_URL=http://API服务IP:端口 \
   -e APP_TITLE=充电桩管理系统 \
   -e APP_ENV=production \
-  -e APP_SYSTEM=行川 \
+  -e APP_SYSTEM=山东行川新能源科技有限公司 \
   --restart=always \
   100charge/charging-web:latest
 ```
