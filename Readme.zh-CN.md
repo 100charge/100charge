@@ -238,7 +238,7 @@ docker tag docker.1ms.run/library/postgres:14-alpine postgres:14-alpine
 
 # 启动容器
 docker run -d \
-  --name charging-postgres \
+  --name postgres \
   --restart always \
   -p 5432:5432 \
   -e POSTGRES_DB=charge \
@@ -246,8 +246,6 @@ docker run -d \
   -e POSTGRES_PASSWORD=postgres \
   -e TZ=Asia/Shanghai \
   postgres:14-alpine
-
-
 ```
 
 ## 2. Redis
@@ -259,7 +257,7 @@ docker tag docker.1ms.run/library/redis:6.2.21 redis:6.2.21
 
 # 启动容器
 docker run -d \
-  --name charging-redis \
+  --name redis \
   --restart always \
   -p 6379:6379 \
   redis:6.2.21 \
