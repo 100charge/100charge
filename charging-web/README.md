@@ -1,4 +1,4 @@
-# zhitan-web
+# charding-web
 
 ## 1. 环境要求
 
@@ -9,7 +9,7 @@
 
 ## 2. 安装依赖
 
-请在 **zhitan-web** 目录中执行：
+请在 **charding-web** 目录中执行：
 
 ### 2.1 安装 Yarn（如已安装可跳过）
 
@@ -64,10 +64,10 @@ VITE_API_BASE_URL=/prod-api
 
 ## 6. Docker 构建（可选）
 
-本项目已支持容器化构建以及部署，在 `zhitan-web` 目录执行：
+本项目已支持容器化构建以及部署，在 `charding-web` 目录执行：
 
 ```bash
-docker build -t zhitan-web .
+docker build -t charding-web .
 ```
 
 ## 7. 常见问题
