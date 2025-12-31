@@ -23,7 +23,7 @@ RUN npm run build
 # ========================================
 FROM nginx:1.25-alpine
 
-LABEL maintainer="charging-system" \
+LABEL maintainer="charging-web" \
       description="充电桩管理系统前端" \
       version="3.8.7"
 
@@ -45,7 +45,7 @@ ENV API_BASE_URL=/prod-api \
     BACKEND_URL=http://localhost:8080 \
     APP_TITLE=充电桩管理系统 \
     APP_ENV=production \
-    APP_SYSTEM=行川
+    APP_SYSTEM=山东行川新能源科技有限公司
 
 # 6. 启动脚本
 ENTRYPOINT ["/docker-entrypoint.sh"]
