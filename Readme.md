@@ -238,16 +238,15 @@ docker tag docker.1ms.run/library/postgres:14-alpine postgres:14-alpine
 
 # 启动容器
 docker run -d \
-  --name charging-postgres \
+  --name postgres \
   --restart always \
   -p 5432:5432 \
+  -v /var/lib/postgresql/data:/var/lib/postgresql/data \
   -e POSTGRES_DB=charge \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
   -e TZ=Asia/Shanghai \
   postgres:14-alpine
-
-
 ```
 
 ## 2. Redis
@@ -259,7 +258,7 @@ docker tag docker.1ms.run/library/redis:6.2.21 redis:6.2.21
 
 # 启动容器
 docker run -d \
-  --name charging-redis \
+  --name redis \
   --restart always \
   -p 6379:6379 \
   redis:6.2.21 \
@@ -283,7 +282,6 @@ docker run -itd \
  -p 10912:10912 \
  -v /etc/localtime:/etc/localtime \
  -v /var/run/docker.sock:/var/run/docker.sock \
-
  xuchengen/rocketmq:latest
 ```
 
@@ -353,7 +351,7 @@ docker run -d \
   -e BACKEND_URL=http://API服务IP:端口 \
   -e APP_TITLE=充电桩管理系统 \
   -e APP_ENV=production \
-  -e APP_SYSTEM=行川 \
+  -e APP_SYSTEM=山东行川新能源科技有限公司 \
   --restart=always \
   100charge/charging-web:latest
 ```
@@ -441,7 +439,7 @@ docker run -d \
 <center>
 <div style="text-align: center">
 <img  style="display: inline-block; margin: 5px;" width="250px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
-
+<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
 </center>
 
