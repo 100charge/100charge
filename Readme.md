@@ -241,6 +241,7 @@ docker run -d \
   --name postgres \
   --restart always \
   -p 5432:5432 \
+  -v /var/lib/postgresql/data:/var/lib/postgresql/data \
   -e POSTGRES_DB=charge \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
