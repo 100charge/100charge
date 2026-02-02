@@ -158,7 +158,7 @@ token:
   header: Authorization
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyzxingchuancloud
-  # 令牌有效期（默认30分钟）
+  # 令牌有效期（默认2400000分钟）
   expireTime: 2400000
 
 mybatis-plus:
