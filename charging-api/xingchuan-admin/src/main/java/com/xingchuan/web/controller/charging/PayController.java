@@ -55,10 +55,10 @@ public class PayController extends BaseController {
      * @return 结果
      */
     @RepeatSubmit(interval = 30000)
-    @PostMapping("/withdrawal")
+    @GetMapping("/withdrawal")
     @ApiOperation(value = "用户提现")
     @Log(title = "小程序-用户提现", businessType = BusinessType.INSERT)
-    public AjaxResult userWithdrawal(@RequestBody RefundRequest refundRequest) {
+    public AjaxResult userWithdrawal(RefundRequest refundRequest) {
         payService.refund(refundRequest);
         return AjaxResult.success();
     }

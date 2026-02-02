@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 支付接口
+ * 支付回调接口
  */
 @Slf4j
 @RestController
@@ -40,6 +40,7 @@ public class PayNotifyController extends BaseController {
      * 微信充值订单结果通知
      */
     @PostMapping("/recharge/wechat")
+    
     @Log(title = "微信充值订单结果通知", businessType = BusinessType.PAYMENT, operatorType = OperatorType.OTHER)
     public ResponseEntity<?> wechatRechargeNotify(HttpServletRequest request) throws IOException {
         lock.lock();

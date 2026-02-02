@@ -15,10 +15,10 @@ base:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 9080
   servlet:
     # 应用的访问路径
-    context-path: /
+    context-path: /prod-api
     # undertow 配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
@@ -159,7 +159,7 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyzxingchuancloud
   # 令牌有效期（默认30分钟）
-  expireTime: 30
+  expireTime: 2400000
 
 mybatis-plus:
   #  configuration:
@@ -249,15 +249,18 @@ pay:
     secret: ${PAY_WECHAT_SECRET:123456789}
     merchantId: ${PAY_WECHAT_MERCHANT_ID:1715546065}
     privateKeyPath: ${PAY_WECHAT_PRIVATE_KEY_PATH:./apiclient_key.pem}
+    publicKeyPath: ${PAY_WECHAT_PUBLIC_KEY_PATH:./pub_key.pem}
+    publicKeyId: ${PAY_WECHAT_PUBLIC_KEY_ID:123456789}
     merchantSerialNumber: ${PAY_WECHAT_SERIAL_NUMBER:123456789}
-    apiV3key: ${PAY_WECHAT_API_V3_KEY:123456789}
+    apiV3Key: ${PAY_WECHAT_API_V3_KEY:123456789}
     profitSharing: ${PAY_WECHAT_PROFIT_SHARING:false}
     expireMinute: ${PAY_WECHAT_EXPIRE_MINUTE:5}
-    rechargeNotifyUrl: ${PAY_WECHAT_RECHARGE_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
-    refundNotifyUrl: ${PAY_WECHAT_REFUND_NOTIFY_URL:https://wxapi.example.com/prod-api/payNotify/recharge/wechat/}
+    rechargeNotifyUrl: ${PAY_WECHAT_RECHARGE_NOTIFY_URL:https://xx.xx.xx/prod-api/payNotify/recharge/wechat}
+    refundNotifyUrl: ${PAY_WECHAT_REFUND_NOTIFY_URL:https://xx.xx.xx/prod-api/payNotify/refund/wechat}
     httpProxyEnabled: ${PAY_WECHAT_PROXY_ENABLED:false}
     httpProxyHost: ${PAY_WECHAT_PROXY_HOST:127.0.0.1}
     httpProxyPort: ${PAY_WECHAT_PROXY_PORT:8213}
     readTimeoutMs: ${PAY_WECHAT_READ_TIMEOUT:5000}
     connectTimeoutMs: ${PAY_WECHAT_CONNECT_TIMEOUT:5000}
     writeTimeoutMs: ${PAY_WECHAT_WRITE_TIMEOUT:5000}
+    platformCertMode: ${PAY_WECHAT_PLATFORM_CERT_MODE:false}

@@ -1,5 +1,7 @@
 package com.xingchuan.charging.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
  * 支付的api log类
  */
 @Data
+@TableName("pay_api_log")
 public class PayApiLog {
     /**
      * 主键
@@ -22,6 +25,7 @@ public class PayApiLog {
     /**
      * 描述
      */
+    @TableField("\"desc\"")
     private String desc;
     /**
      * 请求的msg
