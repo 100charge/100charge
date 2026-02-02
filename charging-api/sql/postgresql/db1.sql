@@ -119,6 +119,8 @@ DROP TABLE IF EXISTS "public"."sys_user";
 DROP TABLE IF EXISTS "public"."sys_user_post";
 DROP TABLE IF EXISTS "public"."sys_user_role";
 DROP TABLE IF EXISTS "public"."tenant_company_info";
+DROP TABLE IF EXISTS "public"."user_withdrawal_request";
+
 CREATE SEQUENCE "app_user_balance_id_seq" 
 INCREMENT 1
 MINVALUE  1
@@ -2717,7 +2719,55 @@ CREATE INDEX "idx_pay_api_log_success" ON "public"."pay_api_log" USING btree (
 -- ----------------------------
 ALTER TABLE "public"."pay_api_log" ADD CONSTRAINT "pay_api_log_pkey" PRIMARY KEY ("id");
 
+CREATE TABLE user_withdrawal_request (
+    id BIGSERIAL PRIMARY KEY,
+    open_id VARCHAR(255),
+    trade_no VARCHAR(255),
+    type INTEGER,
+    amount NUMERIC(20, 2),
+    processing_amount NUMERIC(20, 2),
+    refund_amount NUMERIC(20, 2),
+    status INTEGER,
+    refund_status INTEGER,
+    approve_by VARCHAR(255),
+    approve_time TIMESTAMP,
+    dept_id BIGINT,
+    del_flag VARCHAR(1) DEFAULT '0',
+    create_by VARCHAR(255),
+    create_time TIMESTAMP,
+    update_by VARCHAR(255),
+    update_time TIMESTAMP,
+    remark TEXT
+);
 
+-- 为相关字段添加索引以提高查询性能
+CREATE INDEX idx_user_withdrawal_open_id ON user_withdrawal_request(open_id);
+CREATE INDEX idx_user_withdrawal_trade_no ON user_withdrawal_request(trade_no);
+CREATE INDEX idx_user_withdrawal_status ON user_withdrawal_request(status);
+CREATE INDEX idx_user_withdrawal_refund_status ON user_withdrawal_request(refund_status);
+CREATE INDEX idx_user_withdrawal_create_time ON user_withdrawal_request(create_time);
+CREATE INDEX idx_user_withdrawal_dept_id ON user_withdrawal_request(dept_id);
+
+-- 添加注释（可选）
+COMMENT ON TABLE user_withdrawal_request IS '用户提现审核表';
+COMMENT ON COLUMN user_withdrawal_request.id IS '主键ID';
+COMMENT ON COLUMN user_withdrawal_request.open_id IS '用户openId';
+COMMENT ON COLUMN user_withdrawal_request.trade_no IS '订单编号';
+COMMENT ON COLUMN user_withdrawal_request.type IS '操作类型（0：小程序用户;1：运营商）';
+COMMENT ON COLUMN user_withdrawal_request.amount IS '金额';
+COMMENT ON COLUMN user_withdrawal_request.processing_amount IS '处理中金额';
+COMMENT ON COLUMN user_withdrawal_request.refund_amount IS '已退款金额';
+COMMENT ON COLUMN user_withdrawal_request.status IS '审核状态（0：待审核,1：审核通过,2：审核驳回）';
+COMMENT ON COLUMN user_withdrawal_request.refund_status IS '退款状态（0：待退款,1：退款中,2：退款完成）';
+COMMENT ON COLUMN user_withdrawal_request.approve_by IS '审核人';
+COMMENT ON COLUMN user_withdrawal_request.approve_time IS '审核时间';
+COMMENT ON COLUMN user_withdrawal_request.dept_id IS '组织架构ID';
+COMMENT ON COLUMN user_withdrawal_request.del_flag IS '删除标志（0代表存在 2代表删除）';
+COMMENT ON COLUMN user_withdrawal_request.create_by IS '创建者';
+COMMENT ON COLUMN user_withdrawal_request.create_time IS '创建时间';
+COMMENT ON COLUMN user_withdrawal_request.update_by IS '更新者';
+COMMENT ON COLUMN user_withdrawal_request.update_time IS '更新时间';
+COMMENT ON COLUMN user_withdrawal_request.remark IS '备注';
 
 BEGIN;
 LOCK TABLE "public"."app_user" IN SHARE MODE;
