@@ -557,7 +557,7 @@ CREATE TABLE "app_user_balance_record" (
 ;
 ALTER TABLE "app_user_balance_record" OWNER TO "postgres";
 COMMENT ON COLUMN "app_user_balance_record"."open_id" IS '用户openId';
-COMMENT ON COLUMN "app_user_balance_record"."type" IS '操作类型（0：微信充值;1：支付宝充值;2：消费;3：提现,4：订单退款,5:企业余额分配）';
+COMMENT ON COLUMN "app_user_balance_record"."type" IS '操作类型（0：微信充值;1：消费;2：提现;3：订单退款,4:企业余额分配）';
 COMMENT ON COLUMN "app_user_balance_record"."station_name" IS '场站名称';
 COMMENT ON COLUMN "app_user_balance_record"."trade_no" IS '订单编号';
 COMMENT ON COLUMN "app_user_balance_record"."amount" IS '金额';
