@@ -103,7 +103,10 @@ public class WeChatPayConfig {
         if (platformCertMode) {
             return getRSAAutoCertificateConfigBuilder().build();
         }
-        return getRSAAutoBuilder().build();
+        RSAPublicKeyConfig.Builder builder = getRSAAutoBuilder();
+
+        com.wechat.pay.java.core.Config config = builder.build();
+        return config;
     }
 
     @Bean
@@ -112,7 +115,8 @@ public class WeChatPayConfig {
         if (platformCertMode) {
             return getRSAAutoCertificateConfigBuilder().build();
         }
-        return getRSAAutoBuilder().build();
+        RSAPublicKeyConfig.Builder builder = getRSAAutoBuilder();
+        return builder.build();
     }
 
     /**

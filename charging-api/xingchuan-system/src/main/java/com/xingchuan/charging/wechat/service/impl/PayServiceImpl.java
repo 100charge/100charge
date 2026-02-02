@@ -129,7 +129,10 @@ public class PayServiceImpl implements IPayService {
         PrepayWithRequestPaymentResponse response = null;
         try {
             JsapiServiceExtension jsapiService = createJsapiService();
+            
+
             PrepayRequest prepayRequest = createPrepayRequest(request);
+
             response = jsapiService.prepayWithRequestPayment(prepayRequest);
             WechatPayResponse payResponse = new WechatPayResponse();
             payResponse.setTimeStamp(response.getTimeStamp());
@@ -155,6 +158,7 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public void refund(RefundRequest request) {
+
         String openId = SecurityUtils.getUserOpenId();
         BigDecimal userBalance = checkBeforeRefund(openId, request.getAmount());
         // 获取用户可退款充值订单
@@ -286,6 +290,7 @@ public class PayServiceImpl implements IPayService {
             // 设置商户配置，并使用 httpClientBuilder 设置 HttpClient 所需的网络配置
             return new JsapiServiceExtension.Builder().httpClient(httpClient).config(config.getPayConfig()).build();
         }
+
         return new JsapiServiceExtension.Builder().config(config.getPayConfig()).build();
     }
 
@@ -297,6 +302,12 @@ public class PayServiceImpl implements IPayService {
      */
     private PrepayRequest createPrepayRequest(UnifiedPayRequest payRequest) {
         PrepayRequest request = new PrepayRequest();
+
+         SceneInfo sceneInfo = new SceneInfo();
+         sceneInfo.setPayerClientIp("111.34.209.135"); // 传入真实用户IP
+         request.setSceneInfo(sceneInfo); // 关联到支付请求
+
+        
         // 必填APP信息
         request.setAppid(config.getAppId());
         request.setMchid(config.getMerchantId());

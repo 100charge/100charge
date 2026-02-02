@@ -547,7 +547,10 @@ CREATE TABLE "app_user_balance_record" (
   "allocated_amount" numeric(12,2) NOT NULL DEFAULT 0,
   "remaining_amount" numeric(12,2) NOT NULL DEFAULT 0,
   "fee" numeric(12,2) NOT NULL DEFAULT 0,
-  "status" int2 NOT NULL DEFAULT 1
+  "status" int2 NOT NULL DEFAULT 1,
+  "pay_channel" text COLLATE "pg_catalog"."default",
+  "out_request_no" text COLLATE "pg_catalog"."default",
+  "pay_trade_no" text COLLATE "pg_catalog"."default"
 )
 ;
 ALTER TABLE "app_user_balance_record" OWNER TO "postgres";
@@ -571,6 +574,9 @@ COMMENT ON COLUMN "app_user_balance_record"."allocated_amount" IS '已分账金�
 COMMENT ON COLUMN "app_user_balance_record"."remaining_amount" IS '剩余可分账金额';
 COMMENT ON COLUMN "app_user_balance_record"."fee" IS '手续费';
 COMMENT ON COLUMN "app_user_balance_record"."status" IS '订单状态（-1:失效，0:处理中，1:已完成）';
+COMMENT ON COLUMN "app_user_balance_record"."pay_channel" IS '支付渠道';
+COMMENT ON COLUMN "app_user_balance_record"."out_request_no" IS '退款请求号';
+COMMENT ON COLUMN "app_user_balance_record"."pay_trade_no" IS '支付订单号';
 COMMENT ON TABLE "app_user_balance_record" IS '用户余额变动记录表';
 CREATE TABLE "app_user_car" (
   "id" int8 NOT NULL,
@@ -2642,6 +2648,76 @@ COMMENT ON COLUMN "tenant_company_info"."id_card_back_image" IS '身份证反面
 COMMENT ON COLUMN "tenant_company_info"."withdrawal_agreement_no" IS '账户提现协议编号';
 COMMENT ON COLUMN "tenant_company_info"."rcv_acct_name" IS '收款银行账户名称';
 COMMENT ON TABLE "tenant_company_info" IS '运营商企业信息表';
+
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : Neo.pgsql
+ Source Server Type    : PostgreSQL
+ Source Server Version : 140020 (140020)
+ Source Host           : 192.168.0.40:5432
+ Source Catalog        : charge
+ Source Schema         : public
+
+ Target Server Type    : PostgreSQL
+ Target Server Version : 140020 (140020)
+ File Encoding         : 65001
+
+ Date: 02/02/2026 14:16:37
+*/
+
+
+-- ----------------------------
+-- Table structure for pay_api_log
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."pay_api_log";
+CREATE TABLE "public"."pay_api_log" (
+  "id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "api_address" varchar(500) COLLATE "pg_catalog"."default",
+  "desc" varchar(200) COLLATE "pg_catalog"."default",
+  "request" text COLLATE "pg_catalog"."default",
+  "response" text COLLATE "pg_catalog"."default",
+  "success" bool DEFAULT false,
+  "call_direction" varchar(50) COLLATE "pg_catalog"."default",
+  "pay_api_source" varchar(50) COLLATE "pg_catalog"."default",
+  "error_msg" text COLLATE "pg_catalog"."default",
+  "create_time" timestamp(6) DEFAULT CURRENT_TIMESTAMP
+)
+;
+COMMENT ON COLUMN "public"."pay_api_log"."id" IS '主键';
+COMMENT ON COLUMN "public"."pay_api_log"."api_address" IS '请求/回调地址';
+COMMENT ON COLUMN "public"."pay_api_log"."desc" IS '描述';
+COMMENT ON COLUMN "public"."pay_api_log"."request" IS '请求内容';
+COMMENT ON COLUMN "public"."pay_api_log"."response" IS '返回内容';
+COMMENT ON COLUMN "public"."pay_api_log"."success" IS '是否成功';
+COMMENT ON COLUMN "public"."pay_api_log"."call_direction" IS '调用方向：-1未知，0我方调用对方，1对方调用我方';
+COMMENT ON COLUMN "public"."pay_api_log"."pay_api_source" IS '支付来源：0通联，1支付宝，2微信支付';
+COMMENT ON COLUMN "public"."pay_api_log"."error_msg" IS '错误日志';
+COMMENT ON COLUMN "public"."pay_api_log"."create_time" IS '创建时间';
+COMMENT ON TABLE "public"."pay_api_log" IS '支付API调用日志表';
+
+-- ----------------------------
+-- Indexes structure for table pay_api_log
+-- ----------------------------
+CREATE INDEX "idx_pay_api_log_call_direction" ON "public"."pay_api_log" USING btree (
+  "call_direction" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+);
+CREATE INDEX "idx_pay_api_log_create_time" ON "public"."pay_api_log" USING btree (
+  "create_time" "pg_catalog"."timestamp_ops" ASC NULLS LAST
+);
+CREATE INDEX "idx_pay_api_log_pay_api_source" ON "public"."pay_api_log" USING btree (
+  "pay_api_source" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+);
+CREATE INDEX "idx_pay_api_log_success" ON "public"."pay_api_log" USING btree (
+  "success" "pg_catalog"."bool_ops" ASC NULLS LAST
+);
+
+-- ----------------------------
+-- Primary Key structure for table pay_api_log
+-- ----------------------------
+ALTER TABLE "public"."pay_api_log" ADD CONSTRAINT "pay_api_log_pkey" PRIMARY KEY ("id");
+
+
 
 BEGIN;
 LOCK TABLE "public"."app_user" IN SHARE MODE;

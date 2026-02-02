@@ -28,4 +28,9 @@ public class RefundRequest {
      */
     @ApiModelProperty("支付来源")
     private PaySource paySource;
+
+    /**
+     * 时间戳
+     */
+    private Long timestamp;
 }

@@ -35,7 +35,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @Slf4j
 @Service
 public class PayNotifyServiceImpl implements IPayNotifyService {
@@ -47,14 +46,13 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
 
     @Autowired
     public PayNotifyServiceImpl(WeChatPayConfig config, IPayLogService logService,
-                                AppUserBalanceMapper balanceMapper,
-                                AppUserBalanceRecordMapper balanceRecordMapper) {
+            AppUserBalanceMapper balanceMapper,
+            AppUserBalanceRecordMapper balanceRecordMapper) {
         this.config = config;
         this.logService = logService;
         this.appUserBalanceMapper = balanceMapper;
         this.balanceRecordMapper = balanceRecordMapper;
     }
-
 
     /**
      * 处理微信充值回调
@@ -68,7 +66,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> handleWechatRechargeNotify(String serial, String signature, String timestamp,
-                                                        String nonce, String body) {
+            String nonce, String body) {
         // 构建请求
         WechatNotifyRequest notifyRequest = buildWechatNotifyRequest(serial, signature, timestamp, nonce, body);
         Map<String, Object> errorMap = new HashMap<>();
@@ -121,7 +119,8 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
      * @param body      请求主体中会包含JSON格式的通知参数
      */
     @Override
-    public ResponseEntity<?> handleWechatRefundNotify(String serial, String signature, String timestamp, String nonce, String body) {
+    public ResponseEntity<?> handleWechatRefundNotify(String serial, String signature, String timestamp, String nonce,
+            String body) {
         // 构建请求
         WechatNotifyRequest notifyRequest = buildWechatNotifyRequest(serial, signature, timestamp, nonce, body);
         Map<String, Object> errorMap = new HashMap<>();
@@ -170,7 +169,8 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
                     // TODO: 发起异常退款，目前需要手动处理
                     // 常规退款需要恢复余额
                     BigDecimal refundAmount = AmountUtil.convertY2CNY(refundNotification.getAmount().getRefund());
-                    handlerRefundErrorNotification(refundNotification.getOutTradeNo(), refundNotification.getTransactionId(),
+                    handlerRefundErrorNotification(refundNotification.getOutTradeNo(),
+                            refundNotification.getTransactionId(),
                             refundAmount);
                     break;
                 case PROCESSING:
@@ -193,7 +193,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
      * @param body      请求主体中会包含JSON格式的通知参数
      */
     private WechatNotifyRequest buildWechatNotifyRequest(String serial, String signature,
-                                                         String timestamp, String nonce, String body) {
+            String timestamp, String nonce, String body) {
         WechatNotifyRequest notifyRequest = new WechatNotifyRequest();
         notifyRequest.setSerial(serial);
         notifyRequest.setSignature(signature);
@@ -202,7 +202,6 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
         notifyRequest.setBody(body);
         return notifyRequest;
     }
-
 
     /**
      * 检查处理支付回调
@@ -213,16 +212,27 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
      * @param payState    支付状态
      */
     private void handlerRechargeNotify(String outTradeNo, String tradeNo, Integer totalAmount, PayState payState) {
-        // 已经处理成功的不需要重新处理
-        AppUserBalanceRecord record = balanceRecordMapper.selectOne(Wrappers.<AppUserBalanceRecord>lambdaQuery()
-                .eq(AppUserBalanceRecord::getTradeNo, tradeNo)
-                .ne(AppUserBalanceRecord::getStatus, BalanceRecordStatusEnum.SUCCESS.getCode()));
-        BigDecimal rechargeAmount = AmountUtil.convertY2CNY(totalAmount.longValue());
+        AppUserBalanceRecord record = null;
+        try {
+             record = balanceRecordMapper.selectOne(Wrappers.<AppUserBalanceRecord>lambdaQuery()
+                    .eq(AppUserBalanceRecord::getTradeNo, tradeNo));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
         if (null == record) {
             String remark = "微信支付回调,系统充值记录不存在";
             log.error(remark);
             return;
         }
+
+        if (record.getStatus() == BalanceRecordStatusEnum.SUCCESS.getCode()) {
+            String remark = "微信支付回调,系统充值记录已处理成功,无需重复处理";
+            log.error(remark);
+            return;
+        }
+
+        BigDecimal rechargeAmount = AmountUtil.convertY2CNY(totalAmount.longValue());
         record.setOutTradeNo(outTradeNo);
         if (rechargeAmount.compareTo(record.getAmount()) != 0) {
             String err = String.format("微信支付回调,系统充值记录金额:[%b]与实际不一致:[%b]", record.getAmount(), rechargeAmount);
@@ -260,8 +270,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
     private void insertUserBalance(BigDecimal amount, String openId) {
         // 增加余额
         AppUserBalance userBalance = appUserBalanceMapper.selectOne(Wrappers.<AppUserBalance>lambdaQuery()
-                .select(AppUserBalance::getId, AppUserBalance::getBalance).eq(AppUserBalance::getOpenId, openId)
-        );
+                .select(AppUserBalance::getId, AppUserBalance::getBalance).eq(AppUserBalance::getOpenId, openId));
         if (ObjectUtils.isEmpty(userBalance)) {
             log.error("用户余额记录不存在,执行插入");
             userBalance = buildAppUserBalance(amount, openId);
@@ -269,8 +278,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
         } else {
             BigDecimal balance = userBalance.getBalance().add(amount);
             appUserBalanceMapper.update(new AppUserBalance(), Wrappers.<AppUserBalance>lambdaUpdate()
-                    .set(AppUserBalance::getBalance, balance).eq(AppUserBalance::getId, userBalance.getId())
-            );
+                    .set(AppUserBalance::getBalance, balance).eq(AppUserBalance::getId, userBalance.getId()));
         }
     }
 
@@ -292,8 +300,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
             AppUserBalanceRecord payRecord = balanceRecordMapper.selectOne(
                     Wrappers.<AppUserBalanceRecord>lambdaQuery()
                             .eq(AppUserBalanceRecord::getOpenId, record.getOpenId())
-                            .eq(AppUserBalanceRecord::getTradeNo, record.getPayTradeNo())
-            );
+                            .eq(AppUserBalanceRecord::getTradeNo, record.getPayTradeNo()));
             if (ObjectUtils.isEmpty(payRecord)) {
                 log.error("找不到用户openId:{}对应的充值订单:{},无法恢复可退款金额:{}", record.getOpenId(), record.getPayTradeNo(), amount);
             } else {
@@ -332,8 +339,8 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
      * @param errMap   错误信息Map
      */
     private void createAndSaveEsPayApiLog(String address, String desc, Object request,
-                                          Object response, boolean success,
-                                          Map<String, Object> errMap) {
+            Object response, boolean success,
+            Map<String, Object> errMap) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String requestStr = objectMapper.writeValueAsString(request);
@@ -371,6 +378,5 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
         }
         return PayState.ERROR;
     }
-
 
 }
