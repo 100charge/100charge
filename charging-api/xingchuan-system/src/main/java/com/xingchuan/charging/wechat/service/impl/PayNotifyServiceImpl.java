@@ -10,6 +10,7 @@ import com.wechat.pay.java.service.refund.model.RefundNotification;
 import com.xingchuan.charging.domain.entity.AppUserBalance;
 import com.xingchuan.charging.domain.entity.AppUserBalanceRecord;
 import com.xingchuan.charging.domain.entity.PayApiLog;
+import com.xingchuan.charging.enums.AppUserBalanceRecordEnum;
 import com.xingchuan.charging.enums.BalanceRecordStatusEnum;
 import com.xingchuan.charging.enums.CallDirectionEnum;
 import com.xingchuan.charging.enums.PayApiSourceEnum;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -161,12 +163,18 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
             switch (refundNotification.getRefundStatus()) {
                 case SUCCESS:
                     log.debug("退款成功");
+                    handlerRefundSuccessNotification(refundNotification.getOutRefundNo());
                     break;
                 case CLOSED:
                     log.debug("退款关闭,进行恢复余额或者预付费退款操作");
+                    // 常规退款需要恢复余额
+                    BigDecimal closedRefundAmount = AmountUtil.convertY2CNY(refundNotification.getAmount().getRefund());
+                    handlerRefundErrorNotification(refundNotification.getOutTradeNo(),
+                            refundNotification.getTransactionId(),
+                            closedRefundAmount);
+                    break;
                 case ABNORMAL:
                     log.debug("退款异常,需要手动处理或者发起异常退款流程");
-                    // TODO: 发起异常退款，目前需要手动处理
                     // 常规退款需要恢复余额
                     BigDecimal refundAmount = AmountUtil.convertY2CNY(refundNotification.getAmount().getRefund());
                     handlerRefundErrorNotification(refundNotification.getOutTradeNo(),
@@ -178,9 +186,11 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
                     break;
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            // 即使处理失败也返回200，避免微信重复回调
+            log.error("处理微信退款回调异常，但仍返回成功以停止重试: {}", e.getMessage(), e);
         }
-        return ResponseEntity.ok().build();
+        // 返回200状态码，告诉微信已成功接收通知
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
@@ -214,8 +224,10 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
     private void handlerRechargeNotify(String outTradeNo, String tradeNo, Integer totalAmount, PayState payState) {
         AppUserBalanceRecord record = null;
         try {
-             record = balanceRecordMapper.selectOne(Wrappers.<AppUserBalanceRecord>lambdaQuery()
-                    .eq(AppUserBalanceRecord::getTradeNo, tradeNo));
+            record = balanceRecordMapper.selectOne(Wrappers.<AppUserBalanceRecord>lambdaQuery()
+                    .eq(AppUserBalanceRecord::getTradeNo, tradeNo)
+                    .eq(AppUserBalanceRecord::getType, AppUserBalanceRecordEnum.RECHARGE.getCode()));
+
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -279,6 +291,33 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
             BigDecimal balance = userBalance.getBalance().add(amount);
             appUserBalanceMapper.update(new AppUserBalance(), Wrappers.<AppUserBalance>lambdaUpdate()
                     .set(AppUserBalance::getBalance, balance).eq(AppUserBalance::getId, userBalance.getId()));
+        }
+    }
+
+    /**
+     * 处理退款成功通知
+     *
+     * @param tradeNo    商户订单号
+     * @param outTradeNo 三方订单号
+     * @param amount     退款金额
+     */
+    private void handlerRefundSuccessNotification(String tradeNo) {
+        AppUserBalanceRecord record = balanceRecordMapper.selectOne(Wrappers.<AppUserBalanceRecord>lambdaQuery()
+                .eq(AppUserBalanceRecord::getTradeNo, tradeNo));
+        if (record != null) {
+            if (record.getStatus() == BalanceRecordStatusEnum.SUCCESS.getCode()) {
+                log.error("用户退款订单已处理成功,无需重复处理,订单号:{}", tradeNo);
+                return;
+            }
+
+            if (record.getStatus() == BalanceRecordStatusEnum.PROCESSING.getCode()) {
+                record.setStatus(BalanceRecordStatusEnum.SUCCESS.getCode());
+                // 设置当前时间
+                record.setUpdateTime(new Date());
+                balanceRecordMapper.updateById(record);
+            }
+        } else {
+            log.error("用户退款订单不存在,无法恢复金额,订单号:{}}", tradeNo);
         }
     }
 
@@ -375,6 +414,21 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
                 return PayState.NOT_PAY;
             case CLOSED:
                 return PayState.CLOSED;
+            case USERPAYING:
+                // 用户支付中,需等待支付结果
+                // 通常不做处理或记录日志
+                break;
+            case PAYERROR:
+                // 支付失败处理逻辑
+                break;
+
+            case ACCEPT:
+                // 已接收,等待扣款(组合支付场景)
+                break;
+
+            case REVOKED:
+                // 已撤销(刷卡支付场景)
+                break;
         }
         return PayState.ERROR;
     }

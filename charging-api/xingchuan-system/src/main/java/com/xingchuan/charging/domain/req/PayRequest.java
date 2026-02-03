@@ -3,7 +3,6 @@ package com.xingchuan.charging.domain.req;
 import com.xingchuan.charging.enums.PaySource;
 import com.xingchuan.charging.enums.Payment;
 
-import io.swagger.annotations.ApiKeyAuthDefinition;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

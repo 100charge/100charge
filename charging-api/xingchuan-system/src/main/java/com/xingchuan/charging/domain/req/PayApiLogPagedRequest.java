@@ -3,7 +3,6 @@ package com.xingchuan.charging.domain.req;
 import com.xingchuan.charging.enums.CallDirectionEnum;
 import com.xingchuan.charging.enums.PayApiSourceEnum;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

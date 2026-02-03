@@ -73,10 +73,9 @@ public class PayServiceImpl implements IPayService {
     private final AppUserBalanceMapper userBalanceMapper;
     private final AppUserBalanceRecordMapper userBalanceRecordMapper;
 
-
     public PayServiceImpl(ISysConfigService sysConfigService, AppUserBalanceMapper userBalanceMapper,
-                          AppUserBalanceRecordMapper userBalanceRecordMapper, WeChatPayConfig config, IPayLogService logService,
-                          IChargingOrderService orderService) {
+            AppUserBalanceRecordMapper userBalanceRecordMapper, WeChatPayConfig config, IPayLogService logService,
+            IChargingOrderService orderService) {
         this.sysConfigService = sysConfigService;
         this.userBalanceMapper = userBalanceMapper;
         this.userBalanceRecordMapper = userBalanceRecordMapper;
@@ -129,7 +128,6 @@ public class PayServiceImpl implements IPayService {
         PrepayWithRequestPaymentResponse response = null;
         try {
             JsapiServiceExtension jsapiService = createJsapiService();
-            
 
             PrepayRequest prepayRequest = createPrepayRequest(request);
 
@@ -169,14 +167,12 @@ public class PayServiceImpl implements IPayService {
                         .eq(AppUserBalanceRecord::getType, AppUserBalanceRecordEnum.RECHARGE.getCode())
                         .gt(AppUserBalanceRecord::getRefundableAmount, BigDecimal.ZERO)
                         .gt(AppUserBalanceRecord::getRemainingAmount, BigDecimal.ZERO)
-                        .orderByAsc(AppUserBalanceRecord::getRefundableAmount)
-        );
+                        .orderByAsc(AppUserBalanceRecord::getRefundableAmount));
         List<UnifiedRefundRequest> refundRequests = createUnifiedRefundRequest(request, rechargeRecords, openId);
         // 暂扣金额，审核失败时需要恢复
         userBalanceMapper.update(Wrappers.<AppUserBalance>lambdaUpdate()
                 .set(AppUserBalance::getBalance, userBalance.subtract(request.getAmount()))
-                .eq(AppUserBalance::getOpenId, openId)
-        );
+                .eq(AppUserBalance::getOpenId, openId));
         for (UnifiedRefundRequest refundRequest : refundRequests) {
 
             Map<String, Object> errorMap = new HashMap<>();
@@ -185,9 +181,13 @@ public class PayServiceImpl implements IPayService {
                 RefundService refundService = createRefundService();
                 CreateRequest createRequest = createRefundRequest(refundRequest);
                 response = refundService.create(createRequest);
+
                 WechatPayRefundResponse wechatPayRefundResponse = new WechatPayRefundResponse();
                 wechatPayRefundResponse.setTradeNo(response.getOutRefundNo());
                 wechatPayRefundResponse.setOutRefundNo(response.getRefundId());
+
+                createRefundRecord(openId, refundRequest.getAmount(), refundRequest.getRefundNo(),
+                    wechatPayRefundResponse.getOutRefundNo(), refundRequest.getOutRequestNo(), refundRequest.getTradeNo(), refundRequest.getPayment());
 
                 createAndSaveEsPayApiLog(WechatRequestMethod.REFUNDS.getMethod(),
                         WechatRequestMethod.REFUNDS.getDescription(),
@@ -213,13 +213,15 @@ public class PayServiceImpl implements IPayService {
     private void checkBeforeRecharge(BigDecimal amount) {
         // 查询并判断最低充值金额
         String minimumRechargeAmountStr = sysConfigService.selectConfigByKey(MIN_RECHARGE_AMOUNT);
-        BigDecimal minimumRechargeAmount = StringUtils.isEmpty(minimumRechargeAmountStr) ? BigDecimal.ZERO : new BigDecimal(minimumRechargeAmountStr);
+        BigDecimal minimumRechargeAmount = StringUtils.isEmpty(minimumRechargeAmountStr) ? BigDecimal.ZERO
+                : new BigDecimal(minimumRechargeAmountStr);
         if (amount.compareTo(minimumRechargeAmount) < 0) {
             throw new ServiceException(MessageConstants.RECHARGE_AMOUNT_LESS_THAN_MINIMUM + minimumRechargeAmount);
         }
         // 查询并判断最大充值金额
         String maxRechargeAmountStr = sysConfigService.selectConfigByKey(MAX_RECHARGE_AMOUNT);
-        BigDecimal maxRechargeAmount = StringUtils.isEmpty(maxRechargeAmountStr) ? BigDecimal.ZERO : new BigDecimal(maxRechargeAmountStr);
+        BigDecimal maxRechargeAmount = StringUtils.isEmpty(maxRechargeAmountStr) ? BigDecimal.ZERO
+                : new BigDecimal(maxRechargeAmountStr);
         if (amount.compareTo(maxRechargeAmount) > 0) {
             throw new ServiceException(MessageConstants.RECHARGE_AMOUNT_MORE_THAN_MAXIMUM + maxRechargeAmount);
         }
@@ -248,45 +250,24 @@ public class PayServiceImpl implements IPayService {
         balanceRecord.setRefundableAmount(amount);
         balanceRecord.setType(AppUserBalanceRecordEnum.RECHARGE.getCode());
         balanceRecord.setStatus(BalanceRecordStatusEnum.PROCESSING.getCode());
-        balanceRecord.setPayChannel(getPayChannelByPayment(payment));
+        balanceRecord.setPayment(payment);
         userBalanceRecordMapper.insert(balanceRecord);
     }
 
-    /**
-     * 支付渠道
-     */
-    private PayChannel getPayChannelByPayment(Payment payment) {
-        switch (payment) {
-            case WECHAT_PAY:
-                return PayChannel.WECHAT_PAY;
-            case ALI_PAY:
-                return PayChannel.ALI_PAY;
-            case ALLIN_PAY:
-                return PayChannel.ALLIN_PAY;
-            case UNION_PAY:
-                return PayChannel.UNION_PAY;
-            case YEE_PAY:
-                return PayChannel.YEE_PAY;
-            case UNKNOWN:
-            default:
-                return PayChannel.UNKNOWN;
-        }
-    }
 
     /**
      * 创建jsapi的service
      */
     private JsapiServiceExtension createJsapiService() {
         if (config.isHttpProxyEnabled()) {
-            HttpClient httpClient =
-                    new DefaultHttpClientBuilder()
-                            .config(config.getPayConfig())
-                            .readTimeoutMs(config.getReadTimeoutMs())
-                            .connectTimeoutMs(config.getConnectTimeoutMs())
-                            .writeTimeoutMs(config.getWriteTimeoutMs())
-                            .proxy(new Proxy(Proxy.Type.HTTP,
-                                    new InetSocketAddress(config.getHttpProxyHost(), config.getHttpProxyPort())))
-                            .build();
+            HttpClient httpClient = new DefaultHttpClientBuilder()
+                    .config(config.getPayConfig())
+                    .readTimeoutMs(config.getReadTimeoutMs())
+                    .connectTimeoutMs(config.getConnectTimeoutMs())
+                    .writeTimeoutMs(config.getWriteTimeoutMs())
+                    .proxy(new Proxy(Proxy.Type.HTTP,
+                            new InetSocketAddress(config.getHttpProxyHost(), config.getHttpProxyPort())))
+                    .build();
             // 设置商户配置，并使用 httpClientBuilder 设置 HttpClient 所需的网络配置
             return new JsapiServiceExtension.Builder().httpClient(httpClient).config(config.getPayConfig()).build();
         }
@@ -303,11 +284,10 @@ public class PayServiceImpl implements IPayService {
     private PrepayRequest createPrepayRequest(UnifiedPayRequest payRequest) {
         PrepayRequest request = new PrepayRequest();
 
-         SceneInfo sceneInfo = new SceneInfo();
-         sceneInfo.setPayerClientIp("111.34.209.135"); // 传入真实用户IP
-         request.setSceneInfo(sceneInfo); // 关联到支付请求
+        SceneInfo sceneInfo = new SceneInfo();
+        sceneInfo.setPayerClientIp("111.34.209.135"); // 传入真实用户IP
+        request.setSceneInfo(sceneInfo); // 关联到支付请求
 
-        
         // 必填APP信息
         request.setAppid(config.getAppId());
         request.setMchid(config.getMerchantId());
@@ -348,8 +328,8 @@ public class PayServiceImpl implements IPayService {
      * @param errMap        错误信息Map
      */
     private void createAndSaveEsPayApiLog(String address, String desc, Object request,
-                                          Object response, boolean success, CallDirectionEnum callDirection,
-                                          Map<String, Object> errMap) {
+            Object response, boolean success, CallDirectionEnum callDirection,
+            Map<String, Object> errMap) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String requestStr = objectMapper.writeValueAsString(request);
@@ -404,8 +384,8 @@ public class PayServiceImpl implements IPayService {
      * @param openId          用户open id
      */
     private List<UnifiedRefundRequest> createUnifiedRefundRequest(RefundRequest request,
-                                                                  List<AppUserBalanceRecord> rechargeRecords,
-                                                                  String openId) {
+            List<AppUserBalanceRecord> rechargeRecords,
+            String openId) {
         List<UnifiedRefundRequest> refundList = new ArrayList<>();
         BigDecimal refundAmount = request.getAmount();
         for (AppUserBalanceRecord rechargeRecord : rechargeRecords) {
@@ -415,7 +395,7 @@ public class PayServiceImpl implements IPayService {
             // 生成退款单号
             String tradeNo = OrderNoUtils.generateWithdrawalOrderNo();
             UnifiedRefundRequest refundRequest = new UnifiedRefundRequest();
-            refundRequest.setPayment(request.getPayment());
+            refundRequest.setPayment(rechargeRecord.getPayment());
             refundRequest.setSource(request.getPaySource());
             refundRequest.setRefundNo(tradeNo);
             refundRequest.setRefundReason("提现退款");
@@ -462,9 +442,10 @@ public class PayServiceImpl implements IPayService {
      * @param outRequestNo 退款请求号，针对部分退款时需要
      */
     private void createRefundRecord(String openId, BigDecimal amount, String tradeNo, String outTradeNo,
-                                    String outRequestNo, String payTradeNo) {
+            String outRequestNo, String payTradeNo,Payment payment) {
         // 创建退款记录
         AppUserBalanceRecord balanceRecord = new AppUserBalanceRecord();
+        balanceRecord.setPayment(payment);
         balanceRecord.setAmount(amount);
         balanceRecord.setOutTradeNo(outTradeNo);
         balanceRecord.setOpenId(openId);
@@ -472,7 +453,14 @@ public class PayServiceImpl implements IPayService {
         balanceRecord.setType(AppUserBalanceRecordEnum.WITHDRAW.getCode());
         balanceRecord.setOutRequestNo(outRequestNo);
         balanceRecord.setPayTradeNo(payTradeNo);
-        userBalanceRecordMapper.insert(balanceRecord);
+        balanceRecord.setStatus( BalanceRecordStatusEnum.PROCESSING.getCode());
+
+        try {
+                 userBalanceRecordMapper.insert(balanceRecord);
+        } catch (Exception e) {
+           log.error("创建退款记录失败:{}", e.getMessage(), e);
+        }
+   
     }
 
     /**
@@ -480,15 +468,14 @@ public class PayServiceImpl implements IPayService {
      */
     private RefundService createRefundService() {
         if (config.isHttpProxyEnabled()) {
-            HttpClient httpClient =
-                    new DefaultHttpClientBuilder()
-                            .config(config.getPayConfig())
-                            .readTimeoutMs(config.getReadTimeoutMs())
-                            .connectTimeoutMs(config.getConnectTimeoutMs())
-                            .writeTimeoutMs(config.getWriteTimeoutMs())
-                            .proxy(new Proxy(Proxy.Type.HTTP,
-                                    new InetSocketAddress(config.getHttpProxyHost(), config.getHttpProxyPort())))
-                            .build();
+            HttpClient httpClient = new DefaultHttpClientBuilder()
+                    .config(config.getPayConfig())
+                    .readTimeoutMs(config.getReadTimeoutMs())
+                    .connectTimeoutMs(config.getConnectTimeoutMs())
+                    .writeTimeoutMs(config.getWriteTimeoutMs())
+                    .proxy(new Proxy(Proxy.Type.HTTP,
+                            new InetSocketAddress(config.getHttpProxyHost(), config.getHttpProxyPort())))
+                    .build();
             // 设置商户配置，并使用 httpClientBuilder 设置 HttpClient 所需的网络配置
             // 退款的不需要再执行.config
             return new RefundService.Builder().httpClient(httpClient).build();
@@ -522,6 +509,5 @@ public class PayServiceImpl implements IPayService {
         refundRequest.setAmount(amountReq);
         return refundRequest;
     }
-
 
 }

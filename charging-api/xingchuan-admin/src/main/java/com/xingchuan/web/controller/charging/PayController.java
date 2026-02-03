@@ -30,7 +30,8 @@ public class PayController extends BaseController {
     private final IUserWithdrawalRequestService userWithdrawalRequestService;
 
     @Autowired
-    public PayController(IPayService payService, IUserWithdrawalRequestService userWithdrawalRequestService) {
+    public PayController(IPayService payService, 
+            IUserWithdrawalRequestService userWithdrawalRequestService) {
         this.payService = payService;
         this.userWithdrawalRequestService = userWithdrawalRequestService;
     }
@@ -70,7 +71,7 @@ public class PayController extends BaseController {
     @ApiOperation(value = "分页查询用户提现申请记录")
     public TableDataInfo queryByPage() {
         String userOpenId = SecurityUtils.getUserOpenId();
-        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPage(userOpenId);
+        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPageMini(userOpenId);
         return getDataTable(response);
     }
 }

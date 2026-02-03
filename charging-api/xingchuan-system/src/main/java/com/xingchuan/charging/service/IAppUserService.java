@@ -10,11 +10,11 @@ import com.xingchuan.charging.domain.resp.AppEnterpriseUserListResponse;
 import com.xingchuan.charging.domain.resp.AppUserBalanceResponse;
 import com.xingchuan.charging.domain.resp.AppUserInfoResponse;
 import com.xingchuan.charging.domain.resp.AppUserListResponse;
+import com.xingchuan.charging.enums.AppUserBalanceRecordEnum;
 import com.xingchuan.common.core.domain.entity.AppUser;
 
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * 微信-用户Service接口
@@ -59,9 +59,11 @@ public interface IAppUserService extends IService<AppUser> {
      *
      * @param queryDate  查询事件
      * @param userOpenId openId
+     * @param recordEnum 记录类型
      * @return 结果
      */
-    AppUserBalanceResponse getUserBalance(Date queryDate, String userOpenId);
+    AppUserBalanceResponse getUserBalance(Date queryDate, String userOpenId, AppUserBalanceRecordEnum recordEnum);
+
 
     /**
      * 查询openId是否存在
@@ -85,6 +87,5 @@ public interface IAppUserService extends IService<AppUser> {
      * @return 结果
      */
     AppUser getInfoByOpenId(String openid);
-
 
 }

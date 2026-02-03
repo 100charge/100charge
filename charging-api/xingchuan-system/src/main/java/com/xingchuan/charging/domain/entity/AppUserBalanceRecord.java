@@ -2,7 +2,7 @@ package com.xingchuan.charging.domain.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.xingchuan.charging.enums.PayChannel;
+import com.xingchuan.charging.enums.Payment;
 import com.xingchuan.common.annotation.Excel;
 import com.xingchuan.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -97,9 +97,9 @@ public class AppUserBalanceRecord extends BaseEntity {
     private BigDecimal remainingAmount;
 
     /**
-     * 订单状态（-1:失效，0:处理中，1:已完成）
+     * 订单状态（-1:失效，0:处理中，1:已完成,2:失败）
      */
-    @Excel(name = "订单状态（-1:失效，0:处理中，1:已完成）")
+    @Excel(name = "订单状态（-1:失效，0:处理中，1:已完成,2:失败）")
     private Integer status;
 
     /**
@@ -122,7 +122,7 @@ public class AppUserBalanceRecord extends BaseEntity {
      * UNION_PAY
      * YEE_PAY
      */
-    private PayChannel payChannel;
+    private Payment payment;
     /**
      * 退款请求号，针对部分退款时需要
      */

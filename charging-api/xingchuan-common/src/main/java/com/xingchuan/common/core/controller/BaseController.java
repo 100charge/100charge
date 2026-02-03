@@ -52,7 +52,7 @@ public class BaseController {
             fromIndex = (pageNum - 1) * pageSize;
             toIndex = count;
         }
-        List pageList = list.subList(fromIndex, toIndex);
+        List<?> pageList = list.subList(fromIndex, toIndex);
         return pageList;
     }
 
