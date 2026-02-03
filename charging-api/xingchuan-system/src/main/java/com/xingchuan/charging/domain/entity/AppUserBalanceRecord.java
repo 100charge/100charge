@@ -97,9 +97,9 @@ public class AppUserBalanceRecord extends BaseEntity {
     private BigDecimal remainingAmount;
 
     /**
-     * 订单状态（-1:失效，0:处理中，1:已完成）
+     * 订单状态（-1:失效，0:处理中，1:已完成,2:失败）
      */
-    @Excel(name = "订单状态（-1:失效，0:处理中，1:已完成）")
+    @Excel(name = "订单状态（-1:失效，0:处理中，1:已完成,2:失败）")
     private Integer status;
 
     /**
