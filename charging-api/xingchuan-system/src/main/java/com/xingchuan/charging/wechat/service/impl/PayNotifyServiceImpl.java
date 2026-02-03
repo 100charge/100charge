@@ -312,7 +312,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
 
             if (record.getStatus() == BalanceRecordStatusEnum.PROCESSING.getCode()) {
                 record.setStatus(BalanceRecordStatusEnum.SUCCESS.getCode());
-                //设置当前时间
+                // 设置当前时间
                 record.setUpdateTime(new Date());
                 balanceRecordMapper.updateById(record);
             }
@@ -414,6 +414,21 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
                 return PayState.NOT_PAY;
             case CLOSED:
                 return PayState.CLOSED;
+            case USERPAYING:
+                // 用户支付中,需等待支付结果
+                // 通常不做处理或记录日志
+                break;
+            case PAYERROR:
+                // 支付失败处理逻辑
+                break;
+
+            case ACCEPT:
+                // 已接收,等待扣款(组合支付场景)
+                break;
+
+            case REVOKED:
+                // 已撤销(刷卡支付场景)
+                break;
         }
         return PayState.ERROR;
     }
