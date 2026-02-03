@@ -29,23 +29,4 @@ public enum Payment {
         }
         return UNKNOWN;
     }
-
-    public static PayChannel toChannel(Payment payment) {
-        switch (payment) {
-            case WECHAT_PAY:
-                return PayChannel.WECHAT_PAY;
-            case ALI_PAY:
-                return PayChannel.ALI_PAY;
-            case ALLIN_PAY:
-                return PayChannel.ALLIN_PAY;
-            case UNION_PAY:
-                return PayChannel.UNION_PAY;
-            case YEE_PAY:
-                return PayChannel.YEE_PAY;
-            default:
-                return PayChannel.UNKNOWN;
-        }
-
-
-    }
 }

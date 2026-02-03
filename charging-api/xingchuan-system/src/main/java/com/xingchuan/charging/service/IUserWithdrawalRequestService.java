@@ -12,4 +12,9 @@ public interface IUserWithdrawalRequestService {
      * 分页查询
      */
     Page<UserWithdrawalListResponse> queryByPage(String openId);
+
+    /**
+     * 小程序分页查询
+     */
+    Page<UserWithdrawalListResponse> queryByPageMini(String openId);
 }

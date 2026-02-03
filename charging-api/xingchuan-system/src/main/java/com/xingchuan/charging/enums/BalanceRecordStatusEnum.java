@@ -19,4 +19,18 @@ public enum BalanceRecordStatusEnum {
     @EnumValue
     private final int code;
     private final String desc;
+
+    public static String getStatusDesc(int status) {
+        switch (status) {
+            case -1:
+                return "失效";
+            case 0:
+                return "处理中";
+            case 1:
+                return "已完成";
+            case 2:
+            default:
+                return "";
+        }
+    }
 }

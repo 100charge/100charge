@@ -550,7 +550,7 @@ CREATE TABLE "app_user_balance_record" (
   "remaining_amount" numeric(12,2) NOT NULL DEFAULT 0,
   "fee" numeric(12,2) NOT NULL DEFAULT 0,
   "status" int2 NOT NULL DEFAULT 1,
-  "pay_channel" text COLLATE "pg_catalog"."default",
+  "payment" text COLLATE "pg_catalog"."default",
   "out_request_no" text COLLATE "pg_catalog"."default",
   "pay_trade_no" text COLLATE "pg_catalog"."default"
 )
@@ -576,7 +576,7 @@ COMMENT ON COLUMN "app_user_balance_record"."allocated_amount" IS '已分账金�
 COMMENT ON COLUMN "app_user_balance_record"."remaining_amount" IS '剩余可分账金额';
 COMMENT ON COLUMN "app_user_balance_record"."fee" IS '手续费';
 COMMENT ON COLUMN "app_user_balance_record"."status" IS '订单状态（-1:失效，0:处理中，1:已完成）';
-COMMENT ON COLUMN "app_user_balance_record"."pay_channel" IS '支付渠道';
+COMMENT ON COLUMN "app_user_balance_record"."payment" IS '支付渠道';
 COMMENT ON COLUMN "app_user_balance_record"."out_request_no" IS '退款请求号';
 COMMENT ON COLUMN "app_user_balance_record"."pay_trade_no" IS '支付订单号';
 COMMENT ON TABLE "app_user_balance_record" IS '用户余额变动记录表';

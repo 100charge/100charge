@@ -3,7 +3,11 @@ package com.xingchuan.web.controller.charging;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xingchuan.charging.domain.req.PayRequest;
 import com.xingchuan.charging.domain.req.RefundRequest;
+import com.xingchuan.charging.domain.resp.AppUserBalanceResponse;
 import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
+import com.xingchuan.charging.enums.AppUserBalanceRecordEnum;
+import com.xingchuan.charging.service.IAppUserBalanceRecordService;
+import com.xingchuan.charging.service.IAppUserService;
 import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.charging.wechat.service.IPayService;
 import com.xingchuan.common.annotation.Log;
@@ -28,10 +32,13 @@ public class PayController extends BaseController {
 
     private final IPayService payService;
     private final IUserWithdrawalRequestService userWithdrawalRequestService;
+    private final IAppUserService appUserService;
 
     @Autowired
-    public PayController(IPayService payService, IUserWithdrawalRequestService userWithdrawalRequestService) {
+    public PayController(IPayService payService, IAppUserService appUserService,
+            IUserWithdrawalRequestService userWithdrawalRequestService) {
         this.payService = payService;
+        this.appUserService = appUserService;
         this.userWithdrawalRequestService = userWithdrawalRequestService;
     }
 
@@ -70,7 +77,7 @@ public class PayController extends BaseController {
     @ApiOperation(value = "分页查询用户提现申请记录")
     public TableDataInfo queryByPage() {
         String userOpenId = SecurityUtils.getUserOpenId();
-        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPage(userOpenId);
+        Page<UserWithdrawalListResponse> response = userWithdrawalRequestService.queryByPageMini(userOpenId);
         return getDataTable(response);
     }
 }

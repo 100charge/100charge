@@ -27,9 +27,9 @@ public class WithdrawalDetailResponse {
     private Long id;
 
     /**
-     * 充电订单编号
+     * 充值订单编号
      */
-    @ApiModelProperty(value = "充电订单编号")
+    @ApiModelProperty(value = "充值订单编号")
     private String rechargeOrderNo;
 
     /**

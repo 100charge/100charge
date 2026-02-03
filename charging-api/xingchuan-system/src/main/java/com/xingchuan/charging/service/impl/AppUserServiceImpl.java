@@ -253,7 +253,7 @@ public class AppUserServiceImpl extends ServiceImpl<AppUserMapper, AppUser> impl
      * @return 结果
      */
     @Override
-    public AppUserBalanceResponse getUserBalance(Date queryDate, String userOpenId) {
+    public AppUserBalanceResponse getUserBalance(Date queryDate, String userOpenId,AppUserBalanceRecordEnum recordEnum) {
         AppUserBalanceResponse response = new AppUserBalanceResponse();
         // 用户余额
         AppUserBalance userBalance = userBalanceMapper.selectOne(Wrappers.<AppUserBalance>lambdaQuery().eq(AppUserBalance::getOpenId, userOpenId));
@@ -267,6 +267,7 @@ public class AppUserServiceImpl extends ServiceImpl<AppUserMapper, AppUser> impl
                 .between(AppUserBalanceRecord::getCreateTime, beginTime, endTime)
                 .eq(AppUserBalanceRecord::getOpenId, userOpenId)
                 .eq(AppUserBalanceRecord::getStatus, BalanceRecordStatusEnum.SUCCESS.getCode())
+                .eq(AppUserBalanceRecord::getType, recordEnum.getCode())
                 .orderByDesc(AppUserBalanceRecord::getCreateTime));
         if (CollectionUtils.isEmpty(balanceRecordList)) {
             return response;

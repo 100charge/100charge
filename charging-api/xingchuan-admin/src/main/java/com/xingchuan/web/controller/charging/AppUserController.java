@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xingchuan.charging.domain.excel.AppUserExportExcel;
 import com.xingchuan.charging.domain.req.*;
 import com.xingchuan.charging.domain.resp.AppEnterpriseUserListResponse;
+import com.xingchuan.charging.domain.resp.AppUserBalanceResponse;
 import com.xingchuan.charging.domain.resp.AppUserInfoResponse;
 import com.xingchuan.charging.domain.resp.AppUserListResponse;
 import com.xingchuan.charging.domain.resp.UserCarPageResponse;
+import com.xingchuan.charging.enums.AppUserBalanceRecordEnum;
 import com.xingchuan.charging.service.IAppUserCarService;
 import com.xingchuan.charging.service.IAppUserService;
 import com.xingchuan.common.annotation.Log;
@@ -43,7 +45,6 @@ public class AppUserController extends BaseController {
     private IAppUserService appUserService;
     @Autowired
     private IAppUserCarService appUserCarService;
-
 
     /**
      * 查询企业用户列表
@@ -109,7 +110,10 @@ public class AppUserController extends BaseController {
     @GetMapping("/getUserBalance")
     @ApiOperation("小程序管理-获取用户余额")
     public AjaxResult getUserBalance(@RequestParam @JsonFormat(pattern = "yyyy-MM") Date queryDate) {
-        return success(appUserService.getUserBalance(queryDate, SecurityUtils.getUserOpenId()));
+
+        AppUserBalanceResponse result = appUserService.getUserBalance(queryDate, SecurityUtils.getUserOpenId(),
+                AppUserBalanceRecordEnum.RECHARGE);
+        return success(result);
     }
 
     /**
