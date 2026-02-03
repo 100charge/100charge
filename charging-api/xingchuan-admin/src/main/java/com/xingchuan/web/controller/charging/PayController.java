@@ -3,10 +3,7 @@ package com.xingchuan.web.controller.charging;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xingchuan.charging.domain.req.PayRequest;
 import com.xingchuan.charging.domain.req.RefundRequest;
-import com.xingchuan.charging.domain.resp.AppUserBalanceResponse;
 import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
-import com.xingchuan.charging.enums.AppUserBalanceRecordEnum;
-import com.xingchuan.charging.service.IAppUserBalanceRecordService;
 import com.xingchuan.charging.service.IAppUserService;
 import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.charging.wechat.service.IPayService;
@@ -32,13 +29,11 @@ public class PayController extends BaseController {
 
     private final IPayService payService;
     private final IUserWithdrawalRequestService userWithdrawalRequestService;
-    private final IAppUserService appUserService;
 
     @Autowired
-    public PayController(IPayService payService, IAppUserService appUserService,
+    public PayController(IPayService payService, 
             IUserWithdrawalRequestService userWithdrawalRequestService) {
         this.payService = payService;
-        this.appUserService = appUserService;
         this.userWithdrawalRequestService = userWithdrawalRequestService;
     }
 
