@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xingchuan.charging.domain.req.*;
 import com.xingchuan.charging.domain.resp.*;
 
-import java.util.List;
-
 /**
  * @Author DYL
  **/
