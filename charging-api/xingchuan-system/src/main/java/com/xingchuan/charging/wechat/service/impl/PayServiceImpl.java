@@ -19,7 +19,6 @@ import com.xingchuan.charging.domain.req.PayRequest;
 import com.xingchuan.charging.domain.req.RefundRequest;
 import com.xingchuan.charging.domain.req.UnifiedPayRequest;
 import com.xingchuan.charging.domain.req.UnifiedRefundRequest;
-import com.xingchuan.charging.domain.resp.BaseRefundResponse;
 import com.xingchuan.charging.enums.*;
 import com.xingchuan.charging.mapper.AppUserBalanceMapper;
 import com.xingchuan.charging.mapper.AppUserBalanceRecordMapper;

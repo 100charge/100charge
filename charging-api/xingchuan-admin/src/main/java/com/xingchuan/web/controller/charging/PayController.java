@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xingchuan.charging.domain.req.PayRequest;
 import com.xingchuan.charging.domain.req.RefundRequest;
 import com.xingchuan.charging.domain.resp.UserWithdrawalListResponse;
-import com.xingchuan.charging.service.IAppUserService;
 import com.xingchuan.charging.service.IUserWithdrawalRequestService;
 import com.xingchuan.charging.wechat.service.IPayService;
 import com.xingchuan.common.annotation.Log;
