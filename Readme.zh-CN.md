@@ -306,7 +306,7 @@ docker tag docker.1ms.run/100charge/charging-api:latest 100charge/charging-api:l
 ```shell
 docker run -d \
   --name charging-api \
-  -p 8080:8080 \
+  -p 8080:9080 \
   -e TZ=Asia/Shanghai \
   -e JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200" \
   -e DB_HOST=数据库所在IP \
