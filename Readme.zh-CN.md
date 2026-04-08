@@ -462,8 +462,8 @@ docker run -d \
 
 <center>
 <div style="text-align: center">
-<img  style="display: inline-block; margin: 5px;" width="250px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
-<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="200px" src="./images/wechat-s.jpg" title="" alt="wechat1.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="200px" src="./images/wechat-y.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
 </center>
 
