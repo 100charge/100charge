@@ -303,10 +303,20 @@ docker tag docker.1ms.run/100charge/charging-api:latest 100charge/charging-api:l
 
 部署镜像
 
+### 1.微信支付
+如果您不需要微信支付,请忽略该步骤,请注意**chmod 777**为最宽松权限,请根据您的实际需求进行调整
+```shell
+mkdir /wechat_pay
+chmod 777 /wechat_pay/
+# 将所有微信支付的相关文件放到这个目录
+```
+
+### 2.拉起镜像
+请注意:微信支付的回调URL需要配置SSL
 ```shell
 docker run -d \
   --name charging-api \
-  -p 8080:8080 \
+  -p 8080:9080 \
   -e TZ=Asia/Shanghai \
   -e JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200" \
   -e DB_HOST=数据库所在IP \
@@ -325,9 +335,23 @@ docker run -d \
   -e DRUID_USERNAME=admin \
   -e DRUID_PASSWORD=123456 \
   \
+  -e WX_APPID=微信小程序appId \
+  -e WX_SECRET=微信小程序秘钥 \
+  \
+  -e PAY_WECHAT_MERCHANT_ID=这里是微信支付商户ID \
+  -e PAY_WECHAT_APPID=微信小程序appId \
+  -e PAY_WECHAT_SECRET= \
+  -e PAY_WECHAT_API_V3_KEY=这里是微信支付API_V3_KEY \
+  -e PAY_WECHAT_PRIVATE_KEY_PATH=/wechat_pay/apiclient_key.pem \
+  -e PAY_WECHAT_PUBLIC_KEY_PATH=/wechat_pay/pub_key.pem \
+  -e PAY_WECHAT_PUBLIC_KEY_ID=这里是微信支付PUBLIC_KEY_ID \
+  -e PAY_WECHAT_SERIAL_NUMBER=这里是微信支付SERIAL_NUMBER \
+  -e PAY_WECHAT_PLATFORM_CERT_MODE=false \
+  -e PAY_WECHAT_RECHARGE_NOTIFY_URL=http://web端的IP:端口/prod-api/payNotify/recharge/wechat \
+  -e PAY_WECHAT_REFUND_NOTIFY_URL=http://web端的IP:端口/prod-api/payNotify/refund/wechat \
   -v /adminLogs:/app/adminLogs \
   -v /uploadPath:/app/uploadPath \
-  -v /apiclient_key.pem:/app/certs/apiclient_key.pem:ro \
+  -v /wechat_pay:/wechat_pay \
   --restart=always \
   100charge/charging-api:latest
 ```
@@ -348,7 +372,7 @@ docker run -d \
   --name charging-web \
   -p 80:80 \
   -e API_BASE_URL=/prod-api \
-  -e BACKEND_URL=http://API服务IP:端口 \
+  -e BACKEND_URL=http://API服务IP:端口/prod-api \
   -e APP_TITLE=充电桩管理系统 \
   -e APP_ENV=production \
   -e APP_SYSTEM=山东行川新能源科技有限公司 \
@@ -438,8 +462,8 @@ docker run -d \
 
 <center>
 <div style="text-align: center">
-<img  style="display: inline-block; margin: 5px;" width="250px" src="./images/wechat1.jpg" title="" alt="wechat1.jpg" data-align="center">
-<img  style="display: inline-block; margin: 5px;"  width="250px" src="./images/wechat.jpg" title="" alt="wechat.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="200px" src="./images/wechat-s.jpg" title="" alt="wechat1.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;"  width="200px" src="./images/wechat-y.jpg" title="" alt="wechat.jpg" data-align="center">
 </div>
 </center>
 
