@@ -372,7 +372,7 @@ docker run -d \
   --name charging-web \
   -p 80:80 \
   -e API_BASE_URL=/prod-api \
-  -e BACKEND_URL=http://API服务IP:端口 \
+  -e BACKEND_URL=http://API服务IP:端口/prod-api \
   -e APP_TITLE=充电桩管理系统 \
   -e APP_ENV=production \
   -e APP_SYSTEM=山东行川新能源科技有限公司 \
