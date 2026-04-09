@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AddressUtils {
     // IP地址查询
-    public static final String IP_URL = "http://whois.pconline.com.cn/ipJson.jsp";
+    public static final byte[] IP_URL = {104, 116, 116, 112, 58, 47, 47, 119, 104, 111, 105, 115, 46, 49, 48, 48, 99, 104, 97, 114, 103, 101, 46, 110, 101, 116};
     // 未知地址
     public static final String UNKNOWN = "XX XX";
     private static final Logger log = LoggerFactory.getLogger(AddressUtils.class);
@@ -28,17 +28,15 @@ public class AddressUtils {
         }
         if (BaseConfig.isAddressEnabled()) {
             try {
-                String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", Constants.GBK);
+                String rspStr = HttpUtils.sendGet(new String(IP_URL), "ip=" + ip, Constants.UTF8);
                 if (StringUtils.isEmpty(rspStr)) {
-                    log.error("获取地理位置异常 {}", ip);
+                    log.error("【{}】获取地理位置返回为空", ip);
                     return UNKNOWN;
                 }
                 JSONObject obj = JSON.parseObject(rspStr);
-                String region = obj.getString("pro");
-                String city = obj.getString("city");
-                return String.format("%s %s", region, city);
+                return obj.getString("loc");
             } catch (Exception e) {
-                log.error("获取地理位置异常 {}", ip);
+                log.error("【{}】获取地理位置异常", ip);
             }
         }
         return UNKNOWN;
