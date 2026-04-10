@@ -30,7 +30,7 @@ public class AddressUtils {
             try {
                 String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", Constants.GBK);
                 if (StringUtils.isEmpty(rspStr)) {
-                    log.error("获取地理位置异常 {}", ip);
+                    log.error("【{}】获取地理位置返回为空", ip);
                     return UNKNOWN;
                 }
                 JSONObject obj = JSON.parseObject(rspStr);
@@ -38,7 +38,7 @@ public class AddressUtils {
                 String city = obj.getString("city");
                 return String.format("%s %s", region, city);
             } catch (Exception e) {
-                log.error("获取地理位置异常 {}", ip);
+                log.error("【{}】获取地理位置异常", ip);
             }
         }
         return UNKNOWN;
