@@ -378,6 +378,7 @@ const { sys_normal_disable, sys_user_sex } = proxy.useDict("sys_normal_disable",
 const userList = ref([])
 const open = ref(false)
 const loading = ref(true)
+const dataBinding = ref(false)
 const showSearch = ref(true)
 const ids = ref([])
 const userNames = ref([])
@@ -464,10 +465,14 @@ function getDeptTree() {
 /** 查询用户列表 */
 function getList() {
   loading.value = true
+  dataBinding.value = true
   listUser(proxy.addDateRange(queryParams.value, dateRange.value)).then((res) => {
     loading.value = false
     userList.value = res.rows
     total.value = res.total
+    nextTick(() => {
+      dataBinding.value = false
+    })
   })
 }
 /** 节点单击事件 */
@@ -515,6 +520,7 @@ function handleExport() {
 }
 /** 用户状态修改  */
 function handleStatusChange(row) {
+  if (dataBinding.value) return
   let text = row.status === "0" ? "启用" : "停用"
   proxy.$modal
     .confirm("确认要" + text + '"' + setUserName(row.userName) + '"用户吗?')
