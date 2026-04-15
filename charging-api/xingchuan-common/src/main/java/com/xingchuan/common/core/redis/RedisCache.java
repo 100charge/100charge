@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  *
  * @author xingchuan
  **/
-@SuppressWarnings(value = {"unchecked", "rawtypes"})
+@SuppressWarnings(value = { "unchecked", "rawtypes" })
 @Component
 public class RedisCache {
     @Resource
@@ -243,5 +243,23 @@ public class RedisCache {
      */
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * Redis中的值加1
+     *
+     * @param key redis的key
+     */
+    public Long increment(final String key) {
+        return redisTemplate.opsForValue().increment(key);
+    }
+
+    /**
+     * Redis中的值减1
+     *
+     * @param key redis的key
+     */
+    public Long decrement(final String key) {
+        return redisTemplate.opsForValue().decrement(key);
     }
 }

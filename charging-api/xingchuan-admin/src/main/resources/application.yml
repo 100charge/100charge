@@ -14,7 +14,7 @@ base:
 
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8080
+  # 服务器的HTTP端口，默认为9080
   port: 9080
   servlet:
     # 应用的访问路径
@@ -47,6 +47,12 @@ user:
     maxRetryCount: 5
     # 密码锁定时间（默认10分钟）
     lockTime: 10
+  # 用户注册时行为配置
+  register:
+    # 新用户注册的默认角色ID
+    defaultRoleId: ${USER_REGISTER_DEFAULT_ROLE_ID:}
+    # 新用户注册是否启用试用过期时间
+    enableTrialExpireTime: ${USER_REGISTER_ENABLE_TRIAL_EXPIRE_TIME:false}
 
 # Spring配置
 spring:
@@ -264,3 +270,18 @@ pay:
     connectTimeoutMs: ${PAY_WECHAT_CONNECT_TIMEOUT:5000}
     writeTimeoutMs: ${PAY_WECHAT_WRITE_TIMEOUT:5000}
     platformCertMode: ${PAY_WECHAT_PLATFORM_CERT_MODE:false}
+
+  #阿里云的短信服务配置
+aliyun:
+  sms:
+    # 是否启用短信服务
+    enable: ${ALIYUN_SMS_ENABLE:false}
+    access-key-id: ${ALIYUN_SMS_ACCESS_KEY_ID:123}
+    access-key-secret: ${ALIYUN_SMS_ACCESS_KEY_SECRET:123}
+    endpoint: ${ALIYUN_SMS_ENDPOINT:dysmsapi.aliyuncs.com}
+    sign-name: ${ALIYUN_SMS_SIGN_NAME:xxxx}
+    template-code: ${ALIYUN_SMS_TEMPLATE_CODE:xxxx}
+    # 验证码失效时间
+    time-minutes: ${ALIYUN_SMS_TIME_MINUTES:40}
+    # 每个手机号每天发送短信的最大次数
+    max-sms-count: ${ALIYUN_SMS_MAX_COUNT:10}

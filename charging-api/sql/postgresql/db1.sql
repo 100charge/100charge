@@ -2520,7 +2520,8 @@ CACHE 10
   "remark" varchar(500) COLLATE "pg_catalog"."default",
   "tenant_id" int8 DEFAULT 0,
   "admin" bool DEFAULT false,
-  "platform_admin" bool DEFAULT false
+  "platform_admin" bool DEFAULT false,
+  "trial_expire_time" timestamp(6),
 )
 ;
 ALTER TABLE "sys_user" OWNER TO "postgres";
@@ -2546,6 +2547,7 @@ COMMENT ON COLUMN "sys_user"."remark" IS '备注';
 COMMENT ON COLUMN "sys_user"."tenant_id" IS '租户id';
 COMMENT ON COLUMN "sys_user"."admin" IS '是否是管理员';
 COMMENT ON COLUMN "sys_user"."platform_admin" IS '是否是平台管理员';
+COMMENT ON COLUMN "sys_user"."trial_expire_time" IS '试用到期时间';
 COMMENT ON TABLE "sys_user" IS '用户信息表';
 CREATE TABLE "sys_user_post" (
   "user_id" int8 NOT NULL,

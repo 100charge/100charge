@@ -5,6 +5,8 @@ import com.xingchuan.framework.miniLoginConfig.MiniAppAuthenticationSecurityConf
 import com.xingchuan.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.xingchuan.framework.security.handle.AuthenticationEntryPointImpl;
 import com.xingchuan.framework.security.handle.LogoutSuccessHandlerImpl;
+import com.xingchuan.framework.security.single.SmsCodeAuthenticationProvider;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -37,6 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 
+    /**
+     * 自定义用户认证逻辑（验证码）
+     */
+    @Resource
+    @Qualifier("userDetailsByPhoneNumber")
+    private UserDetailsService smsUserDetailsService;
     /**
      * 认证失败处理类
      */
@@ -117,7 +125,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/register", "/captchaImage", "/wxQuickLogin", "/appletBindMobile","/payNotify/recharge/wechat","/payNotify/refund/wechat").permitAll()
+                .antMatchers("/login", "/register", "/captchaImage", "/wxQuickLogin", "/appletBindMobile","/payNotify/recharge/wechat","/payNotify/refund/wechat","/sms/send","/loginWithSms").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
@@ -151,5 +159,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+  
+        // 验证码 provider
+        auth.authenticationProvider(new SmsCodeAuthenticationProvider(smsUserDetailsService));
     }
 }

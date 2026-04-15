@@ -2,6 +2,7 @@ package com.xingchuan.common.core.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xingchuan.common.annotation.Excel;
@@ -10,6 +11,7 @@ import com.xingchuan.common.core.domain.BaseEntity;
 import com.xingchuan.common.xss.Xss;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -133,6 +135,13 @@ public class SysUser extends BaseEntity {
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long roleId;
+
+    /**
+     * 体验账户到期时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date trialExpireTime;
 
     public SysUser() {
 
@@ -300,6 +309,14 @@ public class SysUser extends BaseEntity {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public Date getTrialExpireTime() {
+        return trialExpireTime;
+    }
+
+    public void setTrialExpireTime(Date trialExpireTime) {
+        this.trialExpireTime = trialExpireTime;
     }
 
     @Override

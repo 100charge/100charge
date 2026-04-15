@@ -1,4 +1,4 @@
-import { login, logout, getInfo, loginSSO } from "@/api/login"
+import { login, logout, getInfo, loginSSO,loginWithSms } from "@/api/login"
 import { getToken, setToken, removeToken } from "@/utils/auth"
 import defAva from "@/assets/images/user.png"
 
@@ -46,6 +46,24 @@ const useUserStore = defineStore("user", {
             } else {
               reject(error)
             }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+        // 验证码登录
+    loginBySms(userInfo) {
+      const mobile = userInfo.phone
+      const smsCode = userInfo.phoneCode
+
+      console.log("验证码登录", mobile, smsCode)
+      return new Promise((resolve, reject) => {
+        loginWithSms({ phoneNumber: mobile, code: smsCode })
+          .then((res) => {
+            setToken(res.token)
+            this.token = res.token
+            resolve()
           })
           .catch((error) => {
             reject(error)

@@ -72,7 +72,27 @@ docker build -t charding-web .
 
 ## 7. 常见问题
 
-### 7.1 依赖安装慢/失败（国内网络）
+### 7.1 如何更改请求的后端域名/地址?
+
+在当前根目录中的`vite.config.js`文件中的`server`节点
+
+```javascript
+    // vite 相关配置
+    server: {
+      port: 8081,
+      host: true,
+      open: true,
+      proxy: {
+        "/dev-api": {
+          target: "http://localhost:8080", // 接口地址
+          changeOrigin: true,
+        },
+      },
+    },
+```
+
+
+### 7.2 依赖安装慢/失败（国内网络）
 
 可配置 registry：
 
@@ -82,6 +102,6 @@ npm config set registry https://registry.npmmirror.com
 yarn config set registry https://registry.npmmirror.com
 ```
 
-### 7.2 Linux 下构建报 “Could not resolve / Could not load”
+### 7.3 Linux 下构建报 “Could not resolve / Could not load”
 
 请检查 `src/views/**.vue` 中 import 路径与真实文件名是否 **大小写一致**（Linux 文件系统大小写敏感）。
