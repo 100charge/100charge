@@ -18,9 +18,9 @@ public class MiniAppAuthenticationSecurityConfig extends SecurityConfigurerAdapt
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        MiniAppAuthenticationProvider smsCodeAuthenticationProvider = new MiniAppAuthenticationProvider();
-        smsCodeAuthenticationProvider.setUserDetailsService(userDetailsService);
+        MiniAppAuthenticationProvider miniAppAuthenticationProvider = new MiniAppAuthenticationProvider();
+        miniAppAuthenticationProvider.setUserDetailsService(userDetailsService);
 
-        http.authenticationProvider(smsCodeAuthenticationProvider);
+        http.authenticationProvider(miniAppAuthenticationProvider);
     }
 }
