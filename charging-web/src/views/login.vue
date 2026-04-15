@@ -50,17 +50,19 @@
               <div class="phone-code">
                 <el-button :disabled="!canGetCode || countdown > 0" type="default"
                   style="margin-left: 12px; height: 38px" @click="getVerifyCode">{{ countdown > 0 ? `${countdown}s后重试` :
-                  "获取验证码" }}</el-button>
+                    "获取验证码" }}</el-button>
               </div>
             </el-form-item>
 
-            <div class="wx-div" v-if="activePhone">
-              <div class="wx-text" @click="handleWx">
+            <div class="privacy-row" v-if="activePhone">
+              <el-checkbox v-model="agreePrivacy">同意</el-checkbox>
+              <span class="privacy-link" style="z-index: 1000;" @click="openPrivacyModal">《隐私协议》</span>
+              <div class="wx-text" @click="handleWx" style="margin-left: auto">
                 <span class="wx-text-span">联系管理员</span>
 
                 <div class="wx-code-modal">
                   <img v-if="systemInfo.adminWechatQrCode" :src="systemInfo.adminWechatQrCode" alt="" />
-                  <img  v-else src="@/assets/images/adminWx.png" alt="" />
+                  <img v-else src="@/assets/images/adminWx.png" alt="" />
                   扫码加微 请备注 100
                 </div>
               </div>
@@ -77,6 +79,43 @@
         </div>
       </div>
     </div>
+
+    <!-- 隐私协议模态窗 -->
+    <el-dialog v-model="showPrivacyModal" title="隐私协议" width="600px" :close-on-click-modal="false"
+      :close-on-press-escape="false" :show-close="false">
+      <div class="privacy-content">
+        <p>欢迎使用100Charge开源充电桩运营系统（以下简称“本平台”）。我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全。请您在使用本平台前仔细阅读并充分理解本隐私协议的全部内容。</p>
+
+        <p><strong>一、信息收集</strong><br />
+          1.1 当您使用本平台时，您需要使用<strong>本人真实有效的手机号码</strong>进行登录。我们通过发送短信验证码的方式核验您的身份。<br />
+          1.2 您在使用充电桩管理、订单查询、数据统计等功能时，本平台会自动收集相关的业务操作日志，以确保服务正常运行。</p>
+
+        <p><strong>二、信息使用</strong><br />
+          2.1 您的手机号码将作为您登录系统的<strong>唯一账号标识</strong>，用于区分不同的运营主体和用户。<br />
+        
+          2.2 <strong>销售与服务回访</strong>：我们可能会根据您提交的手机号码，在必要时通过电话、短信或微信等方式联系您，用于产品功能通知、技术支持、满意度调研及运营指导。您有权随时拒绝此类回访。</p>
+
+        <p><strong>三、Cookie 使用</strong><br />
+          我们使用 Cookie 来记忆您的登录状态，提升您在使用本平台时的体验。您可以根据浏览器的设置拒绝或管理 Cookie，但可能会影响部分功能的正常使用。</p>
+
+        <p><strong>四、您的权利</strong><br />
+          4.1 您有权在系统设置中<strong>访问和更正</strong>您绑定的手机号码。<br />
+          4.2 您有权通过联系我们<strong>注销账号</strong>，账号注销后我们将删除或匿名化处理您的个人信息。<br />
+          4.3 您有权随时通过联系客服或回复短信，要求停止一切非必要的<strong>销售回访</strong>。</p>
+
+        <p><strong>五、协议变更</strong><br />
+          我们可能会根据法律法规的变化或系统功能的更新对本协议进行修订。对于重大变更，我们将在系统登录页或官网发布公告，修订后的协议将在公告载明的生效日期生效。</p>
+
+        <p><strong>六、联系我们</strong><br />
+          如您对本协议有任何疑问、意见或建议，可通过以下方式联系我们：<br />
+          - 联系电话:15069016292<br />
+        </p>
+      </div>
+      <template #footer>
+        <el-button @click="rejectPrivacy">拒绝</el-button>
+        <el-button type="primary" @click="acceptPrivacy">同意</el-button>
+      </template>
+    </el-dialog>
 
     <!--  底部  -->
     <div class="el-login-footer">
@@ -139,6 +178,24 @@ const loginRules = {
   ],
 }
 
+const agreePrivacy = ref(false)
+const showPrivacyModal = ref(false)
+
+function openPrivacyModal() {
+  console.log("打开隐私协议模态窗")
+  showPrivacyModal.value = true
+}
+
+function acceptPrivacy() {
+  agreePrivacy.value = true
+  showPrivacyModal.value = false
+}
+
+function rejectPrivacy() {
+  agreePrivacy.value = false
+  showPrivacyModal.value = false
+}
+
 const countdown = ref(0)
 const canGetCode = ref(true)
 const timer = ref(null)
@@ -162,6 +219,10 @@ const handlePhone = (type) => {
 async function getVerifyCode() {
   if (!loginForm.value.phone) {
     proxy.$modal.msgError("请输入手机号")
+    return
+  }
+  if (agreePrivacy.value == false) {
+    proxy.$modal.msgError("请同意隐私协议")
     return
   }
   const res = await sendCode({ phoneNumber: loginForm.value.phone })
@@ -199,10 +260,10 @@ function handleLogin() {
 
 
   proxy.$refs.loginRef.validateField(fields, (valid) => {
-   
+
     if (valid) {
       if (activePhone.value) {
-        
+
         loading.value = true
         Cookies.set("phone", loginForm.value.phone, { expires: 30 })
         userStore
@@ -474,12 +535,43 @@ getCookie()
   letter-spacing: 1px;
 }
 
+.privacy-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  height: 60px;
+
+  .privacy-link {
+    color: #3a83fc;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 2px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.privacy-content {
+  max-height: 360px;
+  overflow-y: auto;
+  line-height: 1.8;
+  color: #333;
+  font-size: 14px;
+
+  p {
+    margin-bottom: 12px;
+  }
+}
+
 .wx-div {
   width: 100%;
   text-align: right;
   display: flex;
   justify-content: flex-end;
 }
+
 .wx-text {
   cursor: pointer;
   height: 60px;
@@ -495,6 +587,7 @@ getCookie()
   .wx-code-modal {
     // 隐藏 透明度0
     opacity: 0;
+    pointer-events: none;
     position: absolute;
     right: -230px;
     top: 0;
@@ -505,13 +598,16 @@ getCookie()
     flex-direction: column;
     color: #fff;
     text-align: center;
+
     img {
       width: 160px;
       height: 160px;
     }
   }
 }
-.wx-text:hover > .wx-code-modal {
+
+.wx-text:hover>.wx-code-modal {
   opacity: 1 !important;
+  pointer-events: auto;
 }
 </style>
