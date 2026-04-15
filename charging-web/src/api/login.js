@@ -75,3 +75,21 @@ export function getCodeImg() {
     timeout: 20000
   })
 }
+
+// // 发送短信验证码
+export function sendCode(query) {
+  return request({
+    url: "/sms/send",
+    method: "get",
+    params: query,
+  })
+}
+
+// 短信验证码登录接口
+export function loginWithSms(query) {
+  return request({
+    url: "/loginWithSms",
+    method: "get",
+    params: query,
+  })
+}

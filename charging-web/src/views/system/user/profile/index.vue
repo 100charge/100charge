@@ -37,6 +37,10 @@
                         <svg-icon icon-class="date" />创建日期
                         <div class="pull-right">{{ state.user.createTime }}</div>
                      </li>
+                     <li class="list-group-item">
+                        <svg-icon icon-class="date" />试用到期日期
+                        <div class="pull-right">{{ state.user.trialExpireTime }}</div>
+                     </li>
                   </ul>
                </div>
             </el-card>

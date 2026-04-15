@@ -122,7 +122,7 @@
 |     | 地址                                                                                          | 用户名与密码              |
 | --- | ------------------------------------------------------------------------------------------- | ------------------- |
 | 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
-| 社区版 | https://demo-admin.100charge.cn/                                                       | admin <br> admin123 |
+| 社区版 | https://demo-admin.100charge.cn/                                                       | 手机号<br>验证码 |
 | 标准版 | TODO                                                                                        | TODO                |
 
 # 四 开发环境
@@ -349,6 +349,16 @@ docker run -d \
   -e PAY_WECHAT_PLATFORM_CERT_MODE=false \
   -e PAY_WECHAT_RECHARGE_NOTIFY_URL=http://web端的IP:端口/prod-api/payNotify/recharge/wechat \
   -e PAY_WECHAT_REFUND_NOTIFY_URL=http://web端的IP:端口/prod-api/payNotify/refund/wechat \
+  \
+  -e ALIYUN_SMS_ENABLE=false \
+  -e ALIYUN_SMS_ACCESS_KEY_ID=XX \
+  -e ALIYUN_SMS_ACCESS_KEY_SECRET=XX \
+  -e ALIYUN_SMS_ENDPOINT=dysmsapi.aliyuncs.com \
+  -e ALIYUN_SMS_SIGN_NAME=短信签名 \
+  -e ALIYUN_SMS_TEMPLATE_CODE=短信模块Code \
+  -e ALIYUN_SMS_TIME_MINUTES=40 \
+  -e ALIYUN_SMS_MAX_COUNT=100 \
+  \
   -v /adminLogs:/app/adminLogs \
   -v /uploadPath:/app/uploadPath \
   -v /wechat_pay:/wechat_pay \

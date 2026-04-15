@@ -22,20 +22,24 @@ import com.xingchuan.framework.manager.AsyncManager;
 import com.xingchuan.framework.manager.factory.AsyncFactory;
 import com.xingchuan.framework.miniLoginConfig.MiniAppAuthenticationToken;
 import com.xingchuan.framework.security.context.AuthenticationContextHolder;
+import com.xingchuan.framework.security.single.SmsCodeAuthenticationToken;
+import com.xingchuan.framework.sms.SendCodeService;
 import com.xingchuan.system.service.ISysConfigService;
 import com.xingchuan.system.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
 
 /**
  * 登录校验方法
@@ -45,6 +49,9 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class SysLoginService {
+
+    @Value("${aliyun.sms.enable}")
+    private boolean enable_send_code;
 
     @Resource
     private RedisCache redisCache;
@@ -58,10 +65,17 @@ public class SysLoginService {
     private IAppUserService appUserService;
     @Resource
     private ISysConfigService configService;
+
     @Resource
-    @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    @Resource
+    private SendCodeService smsService;
+
+    @Value("${aliyun.sms.time-minutes}")
+    private Integer SMS_CODE_EXPIRE_MINUTES;
+    @Value("${aliyun.sms.max-sms-count}")
+    private Integer MAX_SMS_DAILY_LIMIT;
 
     /**
      * 登录验证
@@ -80,13 +94,15 @@ public class SysLoginService {
         // 用户验证
         Authentication authentication = null;
         try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                    password);
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
-                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                        MessageUtils.message("user.password.not.match")));
                 throw new UserPasswordNotMatchException();
             } else {
                 AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, e.getMessage()));
@@ -95,7 +111,8 @@ public class SysLoginService {
         } finally {
             AuthenticationContextHolder.clearContext();
         }
-        AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_SUCCESS,
+                MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
         // 生成token
@@ -117,11 +134,13 @@ public class SysLoginService {
             String captcha = redisCache.getCacheObject(verifyKey);
             redisCache.deleteObject(verifyKey);
             if (captcha == null) {
-                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                        MessageUtils.message("user.jcaptcha.expire")));
                 throw new CaptchaExpireException();
             }
             if (!code.equalsIgnoreCase(captcha)) {
-                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                        MessageUtils.message("user.jcaptcha.error")));
                 throw new CaptchaException();
             }
         }
@@ -136,25 +155,29 @@ public class SysLoginService {
     public void loginPreCheck(String username, String password) {
         // 用户名或密码为空 错误
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("not.null")));
+            AsyncManager.me().execute(
+                    AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("not.null")));
             throw new UserNotExistsException();
         }
         // 密码如果不在指定范围内 错误
         if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
                 || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
-            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.password.not.match")));
             throw new UserPasswordNotMatchException();
         }
         // 用户名不在指定范围内 错误
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH
                 || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
-            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.password.not.match")));
             throw new UserPasswordNotMatchException();
         }
         // IP黑名单校验
         String blackStr = configService.selectConfigByKey("sys.login.blackIPList");
         if (IpUtils.isMatchedIp(blackStr, IpUtils.getIpAddr())) {
-            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
+            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(username, Constants.LOGIN_FAIL,
+                    MessageUtils.message("login.blocked")));
             throw new BlackListException();
         }
     }
@@ -244,7 +267,7 @@ public class SysLoginService {
                 appUser.setNickName(phoneNumber);
             }
             appUserService.updateById(appUser);
-            //更新用户手机号
+            // 更新用户手机号
             updateSecurityContext(phoneNumber);
         } catch (WxErrorException exception) {
             log.error("绑定手机号失败:{}", exception.getError().getErrorMsg());
@@ -271,6 +294,101 @@ public class SysLoginService {
         } catch (Exception e) {
             log.error("更新用户手机号失败:", e);
         }
+    }
+
+    /**
+     * 发送短信验证码
+     *
+     * @param phoneNumber 手机号
+     * @return 结果
+     */
+    public void sendSms(String phoneNumber) {
+        String smsFrequencyKey = String.format(CacheConstants.SMS_FREQUENCY_KEY, phoneNumber);
+        Long currentCount = redisCache.increment(smsFrequencyKey);
+        // 首次请求时设置过期时间（24小时重置计数）
+        if (currentCount == 1) {
+            redisCache.expire(smsFrequencyKey, SMS_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
+        }
+        // 超过最大限制次数
+        if (currentCount > MAX_SMS_DAILY_LIMIT) {
+            log.warn("今日短信发送次数超限：手机号 [" + phoneNumber + "] 今日已发送 " + currentCount + " 次（最大允许 " + MAX_SMS_DAILY_LIMIT
+                    + " 次）");
+            throw new ServiceException("今日短信发送次数超限：请联系管理员");
+        }
+
+        // 2. 生成并存储验证码
+        String verificationCode = CodeUtils.generateNumericCode(6); // 6位数字验证码
+        String smsCodeKey = String.format(CacheConstants.SMS_VERIFICATION_CODE_KEY, phoneNumber);
+
+        // 存储验证码（5分钟有效期）
+        redisCache.setCacheObject(smsCodeKey, verificationCode, SMS_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
+
+        // 3. 发送短信
+        try {
+            if (enable_send_code == true) {
+                smsService.sendVerificationCode(phoneNumber, verificationCode);
+            }
+            log.info("短信发送成功：手机号 [{}], 验证码 [{}]", phoneNumber, verificationCode);
+        } catch (Exception e) {
+            log.error("短信发送失败：手机号 [{}], 错误信息：{}", phoneNumber, e.getMessage());
+
+            // 发送失败时回滚计数器（可选）
+            redisCache.decrement(smsFrequencyKey);
+            // 删除验证码
+            redisCache.deleteObject(smsCodeKey);
+            throw new ServiceException("短信发送失败，请稍后再试。");
+        }
+    }
+
+    /**
+     * 验证码登录
+     *
+     * @param phoneNumber 手机号
+     * @param code        验证码
+     * @return 结果
+     */
+    public String loginWithSms(String phoneNumber, String code) {
+        // 从 Redis 中获取验证码
+        String redisKey = String.format(CacheConstants.SMS_VERIFICATION_CODE_KEY, phoneNumber);
+        String cachedCode = redisCache.getCacheObject(redisKey);
+        if (cachedCode == null) {
+            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(phoneNumber, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.jcaptcha.expire")));
+            // 抛出一个验证码过期异常
+            throw new CaptchaExpireException();
+        }
+        if (!cachedCode.equals(code.trim())) {
+            AsyncManager.me().execute(AsyncFactory.recordLoginInfo(phoneNumber, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.jcaptcha.error")));
+            // 抛出一个验证码错误的异常
+            throw new CaptchaException();
+        }
+        redisCache.deleteObject(redisKey);
+        // 用户验证
+        Authentication authentication = null;
+        try {
+            // 该方法会去调用UserDetailsByPhonenumberServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(new SmsCodeAuthenticationToken(phoneNumber));
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(phoneNumber,
+                        Constants.LOGIN_FAIL, MessageUtils.message("account.not.incorrect")));
+                throw new UserPasswordNotMatchException();
+            } else {
+                AsyncManager.me().execute(AsyncFactory.recordLoginInfo(phoneNumber,
+                        Constants.LOGIN_FAIL, e.getMessage()));
+                throw new ServiceException(e.getMessage());
+            }
+        }
+        // 执行异步任务，记录登录信息
+        AsyncManager.me().execute(AsyncFactory.recordLoginInfo(phoneNumber,
+                Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        // 获取登录人信息
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        // 修改最近登录IP和登录时间
+        recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
     }
 
 }
