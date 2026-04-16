@@ -2521,7 +2521,7 @@ CACHE 10
   "tenant_id" int8 DEFAULT 0,
   "admin" bool DEFAULT false,
   "platform_admin" bool DEFAULT false,
-  "trial_expire_time" timestamp(6),
+  "trial_expire_time" timestamp(6)
 )
 ;
 ALTER TABLE "sys_user" OWNER TO "postgres";
