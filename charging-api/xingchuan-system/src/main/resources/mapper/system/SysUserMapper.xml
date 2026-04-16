@@ -23,6 +23,7 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result property="trialExpireTime" column="trial_expire_time"/>
         <association property="dept" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -48,7 +49,7 @@
 
     <sql id="selectUserVo">
         select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phone_number, u.password, u.sex,
-        u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+        u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, u.trial_expire_time,
         d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
@@ -59,7 +60,7 @@
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phone_number, u.sex, u.status,
-        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user
+        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, u.trial_expire_time, d.dept_name, d.leader from sys_user
         u
         left join sys_dept d on u.dept_id = d.dept_id
         where u.del_flag = '0'
@@ -161,6 +162,7 @@
         <if test="status != null and status != ''">status,</if>
         <if test="createBy != null and createBy != ''">create_by,</if>
         <if test="remark != null and remark != ''">remark,</if>
+        <if test="trialExpireTime != null">trial_expire_time,</if>
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -175,6 +177,7 @@
         <if test="status != null and status != ''">#{status},</if>
         <if test="createBy != null and createBy != ''">#{createBy},</if>
         <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="trialExpireTime != null">#{trialExpireTime},</if>
         now()
         )
     </insert>
@@ -195,6 +198,7 @@
             <if test="loginDate != null">login_date = #{loginDate},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="trialExpireTime != null">trial_expire_time = #{trialExpireTime},</if>
             update_time = now()
         </set>
         where user_id = #{userId}
