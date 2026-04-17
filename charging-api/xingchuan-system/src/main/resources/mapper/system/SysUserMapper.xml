@@ -88,6 +88,7 @@
         </if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by u.create_time desc
     </select>
 
     <select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
