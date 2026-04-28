@@ -90,6 +90,9 @@
               <span>{{ parseTime(scope.row.trialExpireTime) }}</span>
             </template>
           </el-table-column>
+
+          <el-table-column label="备注" align="center" key="remark" prop="remark"  />
+
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
             <template #default="scope">
               <el-tooltip content="修改" placement="top">
