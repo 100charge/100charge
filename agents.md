@@ -6,7 +6,7 @@
 
 - **开源协议**：AGPL v3 + XCPL 双协议
 - **仓库地址**：https://gitee.com/ustcyc/100charge
-- **演示站点**：https://demo-admin.100charge.cn （admin / admin123）
+- **演示站点**：https://demo-admin.100charge.cn 
 
 ---
 
