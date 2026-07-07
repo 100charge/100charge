@@ -121,7 +121,7 @@
 
 |     | 地址                                                                                          | 用户名与密码              |
 | --- | ------------------------------------------------------------------------------------------- | ------------------- |
-| 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
+| 小程序 | TODO | TODO                    |
 | 社区版 | https://demo-admin.100charge.cn/                                                       | admin <br> admin123 |
 | 标准版 | TODO                                                                                        | TODO                |
 
