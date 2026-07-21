@@ -121,7 +121,7 @@
 
 |     | 地址                                                                                          | 用户名与密码              |
 | --- | ------------------------------------------------------------------------------------------- | ------------------- |
-| 小程序 | <img  width="150px"   src="./images/wxp.jpg" title="" alt="wechat.jpg" data-align="center"> |                     |
+| 小程序 | TODO | TODO                    |
 | 社区版 | https://demo-admin.100charge.cn/                                                       | admin <br> admin123 |
 | 标准版 | TODO                                                                                        | TODO                |
 
@@ -462,8 +462,8 @@ docker run -d \
 
 <center>
 <div style="text-align: center">
-<img  style="display: inline-block; margin: 5px;" width="200px" src="./images/wechat-s.jpg" title="" alt="wechat1.jpg" data-align="center">
 <img  style="display: inline-block; margin: 5px;"  width="200px" src="./images/wechat-y.jpg" title="" alt="wechat.jpg" data-align="center">
+<img  style="display: inline-block; margin: 5px;" width="200px" src="./images/wechat-s.jpg" title="" alt="wechat1.jpg" data-align="center">
 </div>
 </center>
 
