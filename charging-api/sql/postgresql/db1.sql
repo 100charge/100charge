@@ -3019,7 +3019,7 @@ COMMIT;
 BEGIN;
 LOCK TABLE "public"."sys_user" IN SHARE MODE;
 DELETE FROM "public"."sys_user";
-INSERT INTO "public"."sys_user" ("user_id","dept_id","user_name","nick_name","user_type","email","phone_number","sex","avatar","password","status","del_flag","login_ip","login_date","create_by","create_time","update_by","update_time","remark","tenant_id","admin","platform_admin") VALUES (1, 0, 'admin', '平台管理员', '00', '123456@163.com', '13000000000', '1', '/profile/avatar/2025/11/14/avatar_20251114153256A003.png', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '36.149.34.85', '2025-11-18 10:04:17.715', 'admin', '2024-05-27 10:15:32', 'admin', '2025-11-18 10:04:17.721729', '管理员', 0, 't', 't');
+INSERT INTO "public"."sys_user" ("user_id","dept_id","user_name","nick_name","user_type","email","phone_number","sex","avatar","password","status","del_flag","login_ip","login_date","create_by","create_time","update_by","update_time","remark","tenant_id","admin","platform_admin") VALUES (1, 0, 'admin', '平台管理员', '00', '123456@163.com', '13000000000', '1', NULL, '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '36.149.34.85', '2025-11-18 10:04:17.715', 'admin', '2024-05-27 10:15:32', 'admin', '2025-11-18 10:04:17.721729', '管理员', 0, 't', 't');
 COMMIT;
 BEGIN;
 LOCK TABLE "public"."sys_user_post" IN SHARE MODE;
