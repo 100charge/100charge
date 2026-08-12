@@ -76,8 +76,7 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
-    console.log(error)
-    Promise.reject(error)
+    return Promise.reject(error)
   }
 )
 
@@ -127,7 +126,6 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log("err" + error)
     let { message, response } = error
     if (response && response.data && response.data.msg) {
       message = response.data.msg
