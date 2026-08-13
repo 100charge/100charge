@@ -2867,12 +2867,6 @@ INSERT INTO "public"."charging_stations" ("id","name","province","city","region"
 COMMIT;
 
 BEGIN;
-LOCK TABLE "public"."sys_dept" IN SHARE MODE;
-DELETE FROM "public"."sys_dept";
-INSERT INTO "public"."sys_dept" ("dept_id","parent_id","ancestors","dept_name","order_num","leader","phone","email","status","del_flag","create_by","create_time","update_by","update_time") VALUES (1, 0, '0', '充电桩科技', 0, '行川', '', '', '0', '0', 'admin', '2024-05-27 10:15:32', 'admin', '2024-05-27 11:09:29');
-COMMIT;
-
-BEGIN;
 LOCK TABLE "public"."company_balance_record" IN SHARE MODE;
 DELETE FROM "public"."company_balance_record";
 COMMIT;
@@ -2975,6 +2969,7 @@ COMMIT;
 BEGIN;
 LOCK TABLE "public"."sys_dept" IN SHARE MODE;
 DELETE FROM "public"."sys_dept";
+INSERT INTO "public"."sys_dept" ("dept_id","parent_id","ancestors","dept_name","order_num","leader","phone","email","status","del_flag","create_by","create_time","update_by","update_time") VALUES (1, 0, '0', '充电桩科技', 0, '行川', '', '', '0', '0', 'admin', '2024-05-27 10:15:32', 'admin', '2024-05-27 11:09:29');
 COMMIT;
 BEGIN;
 LOCK TABLE "public"."sys_dict_data" IN SHARE MODE;
@@ -3100,17 +3095,17 @@ CREATE INDEX "idx_device_no_msg_body_json" ON "history_message" USING btree (
 CREATE INDEX "idx_msg_body_json" ON "history_message" USING btree (
   "msg_body_json" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
 );
-SELECT setval('"app_user_balance_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM app_user_balance), true);
+SELECT setval('"app_user_balance_id_seq"', (SELECT GREATEST(COALESCE(MAX(id), 1), 1) FROM app_user_balance), (SELECT COALESCE(MAX(id), 0) > 0 FROM app_user_balance));
 ALTER SEQUENCE "app_user_balance_id_seq" OWNER TO "postgres";
-SELECT setval('"app_user_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM app_user), true);
+SELECT setval('"app_user_id_seq"', (SELECT GREATEST(COALESCE(MAX(id), 1), 1) FROM app_user), (SELECT COALESCE(MAX(id), 0) > 0 FROM app_user));
 ALTER SEQUENCE "app_user_id_seq" OWNER TO "postgres";
-SELECT setval('"charging_guns_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM charging_guns), true);
+SELECT setval('"charging_guns_id_seq"', (SELECT GREATEST(COALESCE(MAX(id), 1), 1) FROM charging_guns), (SELECT COALESCE(MAX(id), 0) > 0 FROM charging_guns));
 ALTER SEQUENCE "charging_guns_id_seq" OWNER TO "postgres";
 SELECT setval('"charging_order_id_seq"', 1, false);
 ALTER SEQUENCE "charging_order_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "charging_order_id_seq1"
 OWNED BY "charging_order"."id";
-SELECT setval('"charging_order_id_seq1"', (SELECT COALESCE(MAX(id), 0) FROM charging_order), true);
+SELECT setval('"charging_order_id_seq1"', (SELECT GREATEST(COALESCE(MAX(id), 1), 1) FROM charging_order), (SELECT COALESCE(MAX(id), 0) > 0 FROM charging_order));
 ALTER SEQUENCE "charging_order_id_seq1" OWNER TO "postgres";
 SELECT setval('"charging_order_log_id_seq"', 1, false);
 ALTER SEQUENCE "charging_order_log_id_seq" OWNER TO "postgres";
@@ -3144,25 +3139,25 @@ SELECT setval('"sys_config_config_id_seq"', 1, false);
 ALTER SEQUENCE "sys_config_config_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_config_config_id_seq1"
 OWNED BY "sys_config"."config_id";
-SELECT setval('"sys_config_config_id_seq1"', (SELECT COALESCE(MAX(config_id), 0) FROM sys_config), true);
+SELECT setval('"sys_config_config_id_seq1"', (SELECT GREATEST(COALESCE(MAX(config_id), 1), 1) FROM sys_config), (SELECT COALESCE(MAX(config_id), 0) > 0 FROM sys_config));
 ALTER SEQUENCE "sys_config_config_id_seq1" OWNER TO "postgres";
 SELECT setval('"sys_dept_dept_id_seq"', 1, false);
 ALTER SEQUENCE "sys_dept_dept_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_dept_dept_id_seq1"
 OWNED BY "sys_dept"."dept_id";
-SELECT setval('"sys_dept_dept_id_seq1"', (SELECT COALESCE(MAX(dept_id), 0) FROM sys_dept), true);
+SELECT setval('"sys_dept_dept_id_seq1"', (SELECT GREATEST(COALESCE(MAX(dept_id), 1), 1) FROM sys_dept), (SELECT COALESCE(MAX(dept_id), 0) > 0 FROM sys_dept));
 ALTER SEQUENCE "sys_dept_dept_id_seq1" OWNER TO "postgres";
 SELECT setval('"sys_dict_data_dict_code_seq"', 1, false);
 ALTER SEQUENCE "sys_dict_data_dict_code_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_dict_data_dict_code_seq1"
 OWNED BY "sys_dict_data"."dict_code";
-SELECT setval('"sys_dict_data_dict_code_seq1"', (SELECT COALESCE(MAX(dict_code), 0) FROM sys_dict_data), true);
+SELECT setval('"sys_dict_data_dict_code_seq1"', (SELECT GREATEST(COALESCE(MAX(dict_code), 1), 1) FROM sys_dict_data), (SELECT COALESCE(MAX(dict_code), 0) > 0 FROM sys_dict_data));
 ALTER SEQUENCE "sys_dict_data_dict_code_seq1" OWNER TO "postgres";
 SELECT setval('"sys_dict_type_dict_id_seq"', 1, false);
 ALTER SEQUENCE "sys_dict_type_dict_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_dict_type_dict_id_seq1"
 OWNED BY "sys_dict_type"."dict_id";
-SELECT setval('"sys_dict_type_dict_id_seq1"', (SELECT COALESCE(MAX(dict_id), 0) FROM sys_dict_type), true);
+SELECT setval('"sys_dict_type_dict_id_seq1"', (SELECT GREATEST(COALESCE(MAX(dict_id), 1), 1) FROM sys_dict_type), (SELECT COALESCE(MAX(dict_id), 0) > 0 FROM sys_dict_type));
 ALTER SEQUENCE "sys_dict_type_dict_id_seq1" OWNER TO "postgres";
 SELECT setval('"sys_job_log_job_log_id_seq"', 1, false);
 ALTER SEQUENCE "sys_job_log_job_log_id_seq" OWNER TO "postgres";
@@ -3180,7 +3175,7 @@ SELECT setval('"sys_menu_menu_id_seq"', 1, false);
 ALTER SEQUENCE "sys_menu_menu_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_menu_menu_id_seq1"
 OWNED BY "sys_menu"."menu_id";
-SELECT setval('"sys_menu_menu_id_seq1"', (SELECT COALESCE(MAX(menu_id), 0) FROM sys_menu), true);
+SELECT setval('"sys_menu_menu_id_seq1"', (SELECT GREATEST(COALESCE(MAX(menu_id), 1), 1) FROM sys_menu), (SELECT COALESCE(MAX(menu_id), 0) > 0 FROM sys_menu));
 ALTER SEQUENCE "sys_menu_menu_id_seq1" OWNER TO "postgres";
 SELECT setval('"sys_notice_notice_id_seq"', 1, false);
 ALTER SEQUENCE "sys_notice_notice_id_seq" OWNER TO "postgres";
@@ -3234,7 +3229,7 @@ SELECT setval('"sys_user_user_id_seq"', 1, false);
 ALTER SEQUENCE "sys_user_user_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "sys_user_user_id_seq1"
 OWNED BY "sys_user"."user_id";
-SELECT setval('"sys_user_user_id_seq1"', (SELECT COALESCE(MAX(user_id), 0) FROM sys_user), true);
+SELECT setval('"sys_user_user_id_seq1"', (SELECT GREATEST(COALESCE(MAX(user_id), 1), 1) FROM sys_user), (SELECT COALESCE(MAX(user_id), 0) > 0 FROM sys_user));
 ALTER SEQUENCE "sys_user_user_id_seq1" OWNER TO "postgres";
 SELECT setval('"xxl_job_group_id_seq"', 1, false);
 ALTER SEQUENCE "xxl_job_group_id_seq" OWNER TO "postgres";
