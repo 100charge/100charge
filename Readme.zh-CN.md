@@ -91,64 +91,70 @@
 
 ```
 100charge/
-├─ charging-api/                    # 后端（多模块 Maven 聚合工程，业务与支撑服务）
-│  ├─ pom.xml                       # 父 POM：统一依赖 & 版本管理 (Spring Boot 2.6.x, Java 8 -> 计划升级 21)
-│  ├─ start.bat / start.sh          # 启动脚本（打包 & 运行封装）
-│  ├─ sql/                          # 数据库初始化脚本
-│  │  ├─ BaseAdminAPI.sql
-│  │  └─ postgresql/                # 分步骤建库脚本（step1/step2）
-│  ├─ xingchuan-admin/              # Admin 接口层模块（可能聚合管理端业务入口，Controller/接口适配）
-│  ├─ xingchuan-framework/          # 框架核心：基础配置、通用组件（安全、异常、日志、序列化等）
-│  ├─ xingchuan-system/             # 系统业务模块：用户、角色、权限、配置、认证集成等
-│  ├─ xingchuan-quartz/             # 定时任务调度模块（Quartz 封装，任务定义 & 执行管理）
-│  ├─ xingchuan-generator/          # 代码生成模块（基于 Velocity/模板生成 CRUD、前端页面等）
-│  ├─ xingchuan-common/             # 通用工具类：POJO、枚举、工具方法、常量、通用响应封装
-│  └─ target/                       # 编译输出（各子模块也有各自 target）
+├─ charging-api/                    # 后端 API 服务（Spring Boot + RuoYi，多模块 Maven 工程）
+│  ├─ pom.xml                       # Maven 父 POM，统一依赖和模块管理
+│  ├─ Dockerfile                    # 后端镜像构建文件
+│  ├─ .docker.env                   # Docker 部署环境变量示例
+│  ├─ start.bat / start.sh          # 后端服务启动脚本
+│  ├─ bin/                          # 运行脚本与辅助脚本
+│  ├─ sql/
+│  │  └─ postgresql/                # PostgreSQL 初始化脚本
+│  │     ├─ db1.sql                 # 表结构和初始化数据
+│  │     └─ db2.sql                 # 初始化后序列修正脚本
+│  ├─ xingchuan-admin/              # 启动入口与 Controller 层
+│  ├─ xingchuan-framework/          # 框架核心配置、安全、过滤器、AOP 等
+│  ├─ xingchuan-system/             # 系统与充电业务 Service、Mapper、Entity
+│  ├─ xingchuan-common/             # 通用工具、注解、常量、异常、基础类
+│  ├─ xingchuan-quartz/             # 定时任务模块
+│  └─ xingchuan-generator/          # 代码生成模块
 │
-├─ charging-web/                    # Vue3 + Vite 管理后台前端
-│  ├─ package.json                  # 前端依赖 (Vue3, ElementPlus, Pinia, Axios, ECharts)
-│  ├─ vite.config.js                # Vite 构建配置（按环境区分 dev/staging/prod）
-│  ├─ src/
-│  │  ├─ main.js                    # 入口文件（注册全局组件、路由、状态）
-│  │  ├─ App.vue
-│  │  ├─ permission.js              # 路由权限守卫（token/role 校验）
-│  │  ├─ systemConfig.js            # 系统常量或运行时配置
-│  │  ├─ api/                       # 后端接口封装（Axios 封装、模块化 API）
-│  │  ├─ assets/                    # 静态资源（样式、图片、图标）
-│  │  ├─ components/                # 通用业务组件（表格、上传、富文本、选择器等）
-│  │  ├─ directive/                 # 全局指令（权限指令、焦点指令等）
-│  │  ├─ layout/                    # 主布局（侧边栏、头部、标签页容器）
-│  │  ├─ plugins/                   # 插件注册（图标、富文本、SVG 等）
-│  │  ├─ router/                    # 路由定义（动态菜单/权限路由）
-│  │  ├─ store/                     # Pinia 状态（用户、菜单、设置）
-│  │  ├─ utils/                     # 工具方法（请求封装、缓存、加解密）
-│  │  └─ views/                     # 业务页面（用户管理、订单管理、统计报表等）
-│  └─ public/                       # 公共静态资源
+├─ charging-web/                    # 管理后台前端（Vue 3 + Vite + Element Plus）
+│  ├─ package.json                  # 前端依赖与 npm 脚本
+│  ├─ package-lock.json             # npm 依赖锁定文件
+│  ├─ vite.config.js                # Vite 构建与代理配置
+│  ├─ Dockerfile / nginx.conf       # 前端镜像与 Nginx 配置
+│  ├─ .env.development              # 开发环境变量
+│  ├─ .env.staging                  # 预发布环境变量
+│  ├─ .env.production               # 生产环境变量
+│  ├─ public/                       # 公共静态资源
+│  ├─ html/                         # HTML 模板片段
+│  ├─ vite/                         # Vite 插件和构建辅助配置
+│  └─ src/
+│     ├─ main.js                    # 前端入口
+│     ├─ App.vue                    # 根组件
+│     ├─ permission.js              # 路由权限守卫
+│     ├─ settings.js                # 后台布局配置
+│     ├─ systemConfig.js            # 系统名称等项目配置
+│     ├─ api/                       # 接口封装
+│     ├─ assets/                    # 样式、图片、图标等资源
+│     ├─ components/                # 通用组件
+│     ├─ directive/                 # 自定义指令
+│     ├─ layout/                    # 后台布局组件
+│     ├─ plugins/                   # 插件注册
+│     ├─ router/                    # 路由配置
+│     ├─ store/                     # Pinia 状态管理
+│     ├─ utils/                     # 请求、鉴权、缓存等工具
+│     └─ views/                     # 业务页面
 │
-├─ charging-mini/                   # 微信/小程序 & H5 端（基于 uni-app）
-│  ├─ package.json                  # 依赖 (uview-ui, echarts, md5 等)
-│  ├─ pages.json / manifest.json    # 页面与应用配置（路由/窗口/运行时）
-│  ├─ main.js                       # 入口初始化（全局组件 & 请求封装挂载）
-│  ├─ App.vue
-│  ├─ uni.scss / common.scss        # 全局样式/主题
-│  ├─ components/                   # 复用组件（站点卡片、地图、搜索、优惠券等）
-│  │  ├─ home-map/
-│  │  ├─ home-station-card/
-│  │  ├─ tabbar/
-│  ├─ config/
-│  │  ├─ api.js                     # 后端接口地址集中管理
-│  │  ├─ request.js                 # 请求封装（拦截器、token 注入）
-│  │  └─ md5Utils.js                # 加密/签名工具
-│  ├─ pages/
-│  │  ├─ index/                     # 首页/个人中心/启动页
-│  │  ├─ login/                     # 登录流程（手机号/验证码/微信授权）
-│  │  ├─ scan/                      # 扫码充电入口
-│  │  ├─ stations/                  # 站点列表 & 地图模式
-│  │  └─ wode/                      # 我的订单/账户/优惠券等
-│  ├─ utils/                        # mixin、通用方法
-│  ├─ wxcomponents/                 # 微信官方组件（隐私弹窗等）
-│  └─ static/                       # 图片/脚本资源
-
+├─ charging-mini/                   # 微信小程序用户端（uni-app + Vue 2）
+│  ├─ package.json                  # 小程序端依赖
+│  ├─ manifest.json                 # uni-app 应用配置
+│  ├─ pages.json                    # 页面路由、分包、tabBar 配置
+│  ├─ project.config.json           # 微信开发者工具项目配置
+│  ├─ App.vue / main.js             # 应用入口
+│  ├─ common.scss / uni.scss        # 全局样式与主题变量
+│  ├─ components/                   # 小程序复用组件
+│  ├─ config/                       # API 地址、请求封装、签名工具
+│  ├─ pages/                        # 页面与分包页面
+│  ├─ static/                       # 静态资源
+│  ├─ utils/                        # 全局 mixin 与通用方法
+│  └─ wxcomponents/                 # 微信原生组件
+│
+├─ images/                          # README 和文档使用的图片资源
+├─ agents.md                        # AI / Developer Guide
+├─ LICENSE                          # 开源协议文件
+├─ Readme.md                        # 项目说明文档
+└─ Readme.zh-CN.md                  # 中文项目说明文档
 ```
 
 ## 2. 依赖组件
