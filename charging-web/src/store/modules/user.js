@@ -1,4 +1,4 @@
-import { login, logout, getInfo, loginSSO,loginWithSms } from "@/api/login"
+import { login, logout, getInfo, loginSSO, loginWithSms } from "@/api/login"
 import { getToken, setToken, removeToken } from "@/utils/auth"
 import defAva from "@/assets/images/user.png"
 
@@ -38,13 +38,12 @@ const useUserStore = defineStore("user", {
       return new Promise((resolve, reject) => {
         loginSSO(ticket)
           .then((res) => {
-            console.log("票据登录", res)
             if (res.code === 200 && res.token) {
               setToken(res.token)
               this.token = res.token
               resolve()
             } else {
-              reject(error)
+              reject(new Error(res.msg || "票据登录失败"))
             }
           })
           .catch((error) => {
@@ -56,8 +55,6 @@ const useUserStore = defineStore("user", {
     loginBySms(userInfo) {
       const mobile = userInfo.phone
       const smsCode = userInfo.phoneCode
-
-      console.log("验证码登录", mobile, smsCode)
       return new Promise((resolve, reject) => {
         loginWithSms({ phoneNumber: mobile, code: smsCode })
           .then((res) => {

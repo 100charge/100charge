@@ -168,7 +168,6 @@ function handleDelete(file) {
 
 // 上传结束处理
 function uploadedSuccessfully() {
-  debugger;
   if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter((f) => f.url !== undefined).concat(uploadList.value)
     uploadList.value = []

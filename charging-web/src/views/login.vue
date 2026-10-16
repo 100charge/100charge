@@ -182,7 +182,6 @@ const agreePrivacy = ref(false)
 const showPrivacyModal = ref(false)
 
 function openPrivacyModal() {
-  console.log("打开隐私协议模态窗")
   showPrivacyModal.value = true
 }
 
