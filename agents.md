@@ -32,7 +32,7 @@
                 ▼
 ┌───────────────────────────────┐
 │      charging-api (后端)       │
-│   Spring Boot 2.6.15 + Java 8  │
+│   Spring Boot 2.6.15 + Java 17 │
 │   端口 9080, context /prod-api │
 └───┬───────┬───────┬───────────┘
     │       │       │
@@ -53,13 +53,13 @@
 |------|------|
 | 构建工具 | Maven 多模块聚合工程 |
 | GroupId / ArtifactId | `com.xingchuan` / `charging-api` |
-| Java 版本 | JDK 1.8 |
+| Java 版本 | JDK 17 |
 | Spring Boot 版本 | 2.6.15 |
 | 启动类 | `xingchuan-admin/.../AdminApplication.java` |
 | 服务端口 | 9080 |
 | 上下文路径 | `/prod-api` |
 | 数据库初始化脚本 | `charging-api/sql/postgresql/db1.sql`, `db2.sql` (按顺序执行) |
-| Dockerfile | 多阶段构建 (maven:3.9.11 → eclipse-temurin:8-jre) |
+| Dockerfile | 多阶段构建 (maven:3.9.11-eclipse-temurin:17 → eclipse-temurin:17-jre) |
 
 ### 1.2 Maven 模块结构
 
