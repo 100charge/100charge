@@ -131,7 +131,7 @@
 
 ```
 100charge/
-├─ charging-api/                    # 后端 API 服务（Spring Boot + RuoYi，多模块 Maven 工程）
+├─ charging-api/                    # 后端 API 服务（Spring Boot + RuoYi，多模块 Maven 工程，需 JDK 17 构建与运行）
 │  ├─ pom.xml                       # Maven 父 POM，统一依赖和模块管理
 │  ├─ Dockerfile                    # 后端镜像构建文件
 │  ├─ .docker.env                   # Docker 部署环境变量示例
