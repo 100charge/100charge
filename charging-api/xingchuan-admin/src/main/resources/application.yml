@@ -193,6 +193,13 @@ swagger:
   # 请求前缀
   pathMapping: /dev-api
 
+# springdoc-openapi（JDK17 后替代 springfox；与 swagger.enabled 联动控制文档开关）
+springdoc:
+  api-docs:
+    enabled: ${swagger.enabled:true}
+  swagger-ui:
+    enabled: ${swagger.enabled:true}
+
 # 防止XSS攻击
 xss:
   # 过滤开关
